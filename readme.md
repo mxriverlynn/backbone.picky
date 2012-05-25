@@ -11,6 +11,41 @@ which means
 
 **THIS CODE IS UNTESTED. USE AT YOUR OWN RISK**
 
+## Model and Collection Interactions
+
+If you implement a `Selectable` model, the methods on the models and the
+`MultiSelect` collection will keep each other in sync. That is, if you
+call `model.select()` on a model, the collection will be notified of the
+model being selected and it will correctly update the `selectedLength` and
+fire the correct events.
+
+Therefore, the following are functionally the same:
+
+```js
+model = new MyModel();
+col = new MyCollection([model]);
+
+model.select();
+```
+
+```js
+model = new MyModel();
+col = new MyCollection([model]);
+
+col.select(model);
+```
+
+### Model Requirements For Picky Collections
+
+Your model for a Picky collection must implement the following API to be
+usable by the selection methods and functionality:
+
+* `select: function(){...}`
+* `deselect: function(){...}`
+
+The easiest way to do this is to have your model extend `Selectable`. You
+can, however, implement your own version of these methods.
+
 ## Picky.Selectable
 
 Creates selectable capabilities for a model, including tracking whether or
@@ -122,25 +157,6 @@ select all, select none and select some features.
 ```js
 var multiSelect = new Backbone.Picky.MultiSelect(myCollection) ;
 ```
-
-### Model Requirements
-
-Your model for the collection must implement the following API to be
-usable by a `MultiSelect` collection:
-
-* `select: function(){...}`
-* `deselect: function(){...}`
-
-The easiest way to do this is to have your model extend `Selectable` as
-shown above.
-
-### Model and Collection Interactions
-
-If you implement a `Selectable` model, the methods on the models and the
-`MultiSelect` collection will keep each other in sync. That is, if you
-call `model.select()` on a model, the collection will be notified of the
-model being selected and it will correctly update the `selectedLength` and
-fire the correct events.
 
 ### Basic Usage
 
