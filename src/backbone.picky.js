@@ -21,7 +21,7 @@ Backbone.Picky = (function (Backbone, _) {
     Picky.MultiSelect = function (collection) {
         this.collection = collection;
         this.selected = {};
-    }
+    };
 
     _.extend(Picky.MultiSelect.prototype, {
 
@@ -79,7 +79,7 @@ Backbone.Picky = (function (Backbone, _) {
 
     Picky.Selectable = function (model) {
         this.model = model;
-    }
+    };
 
     _.extend(Picky.Selectable.prototype, {
 
