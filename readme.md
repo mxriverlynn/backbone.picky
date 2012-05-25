@@ -148,7 +148,6 @@ Extend your collection with the `MultiSleect` instance to make your
 collection support multiple selections directly.
 
 ```js
-
 SelectableModel = Backbone.Model.extend({
   initialize: function(){
     var selectable = new Backbone.Picky.Selectable(this);
@@ -176,24 +175,71 @@ Select a model. This method will store the selected model in
 the collection's `selected` list, and call the model's `select`
 method to ensure the model knows it has been selected.
 
+```js
+myCol = new MultiCollection();
+
+myCol.select(myModel);
+```
+
+If the model is already selected, this is a no-op.
+
 #### MultiSelect#deselect(model)
 
 Deselect a model. This method will remove the  model from
 the collection's `selected` list, and call the model's `deselect`
 method to ensure the model knows it has been deselected.
 
+```js
+myCol = new MultiCollection();
+
+myCol.deselect(myModel);
+```
+
+If the model is not currently selected, this is a no-op.
+
 #### MultiSelect#selectAll
 
 Select all models in the collection.
+
+```js
+myCol = new MultiCollection();
+
+myCol.selectAll();
+```
+
+Models that are already selected will not be re-selected. 
+Models that are not currently selected will be selected.
+The end result will be all models in the collection are
+selected.
 
 #### MultiSelect#deselectAll
 
 Deselect all models in the collection.
 
+```js
+myCol = new MultiCollection();
+
+myCol.deselectAll();
+```
+
+Models that are selected will be deselected. 
+Models that are not selected will not be deselected again.
+The end result will be no models in the collection are
+selected.
+
 #### MultiSelect#toggleSelectAll
 
-Toggle selection of all models in the collection with the
-following rules:
+Toggle selection of all models in the collection:
+
+```js
+myCol = new MultiCollection();
+
+myCol.toggleSelectAll(); // select all models in the collection
+
+myCol.toggleSelectAll(); // de-select all models in the collection
+```
+
+The following rules are used when toggling:
 
 * If no models are selected, select them all
 * If 1 or more models, but less than all models are selected, select them all
@@ -207,9 +253,28 @@ The following attribute is set by the multi-select automatically
 
 Returns a hash of selected models, keyed from the model `cid`.
 
+```js
+myCol = new MultiCollection();
+myCol.select(model);
+
+myCol.selected;
+
+//=> produces
+// {
+//   "c1": (model object here)
+// }
+```
+
 #### MultiSelect#selectedLength
 
 Returns the number of items in the collection that are selected.
+
+```js
+myCol = new MultiCollection();
+myCol.select(model);
+
+myCol.selectedLength; //=> 1
+```
 
 ### MultiSelect Events
 
