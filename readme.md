@@ -7,9 +7,30 @@ Selectable entities as mixins for Backbone.Model and Backbone.Collection!
 I hacked this together over the last hour, while building out some functionality
 for a client project. I have not written any automated tests for this
 project specifically. I've tested this through my client project only,
-which means 
+which means:
 
 **THIS CODE IS UNTESTED. USE AT YOUR OWN RISK**
+
+## Source Code And Downloads
+
+You can download the raw source code from the "src" 
+folder above, or grab one of the builds from the 
+"lib" folder. 
+
+To get the latest stable release, use these links 
+which point to the 'master' branch's builds:
+
+### Standard Builds
+
+Development: [backbone.picky.js](https://raw.github.com/derickbailey/backbone.picky/master/lib/backbone.picky.js)
+
+Production: [backbone.picky.min.js](https://raw.github.com/derickbailey/backbone.picky/master/lib/backbone.picky.min.js)
+
+### AMD/RequireJS Builds
+
+Development: [backbone.picky.js](https://raw.github.com/derickbailey/backbone.picky/master/lib/amd/backbone.picky.js)
+
+Production: [backbone.picky.min.js](https://raw.github.com/derickbailey/backbone.picky/master/lib/amd/backbone.picky.min.js)
 
 ## Model and Collection Interactions
 
