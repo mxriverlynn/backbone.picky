@@ -1,0 +1,7 @@
+.DS_Store
+*.swp
+*.swo
+*.orig
+tmp/
+ext/
+node_modules
