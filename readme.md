@@ -93,6 +93,27 @@ myModel.toggleSelected(); //=> "I'm selected!"
 myModel.toggleSelected(); //=> "I'm no longer selected!"
 ```
 
+### Selectable Attributes
+
+The following attributes are manipulated by the Selectable object
+
+#### Selectable#selected
+
+Returns a boolean value indicating whether or not the model is
+currently selected.
+
+### Selectable Events
+
+The following events are triggered from Selectable models
+
+#### "selected"
+
+Triggers when a model is selected. 
+
+#### "deselected"
+
+Triggers when a model is deselected.
+
 ## Picky.MultiSelect
 
 Creates multi-select capabilities for a `Backbone.Collection`, including
@@ -149,25 +170,44 @@ MultiCollection = Backbone.Collection.extend({
 
 The following methods are provided by the `MultiSelect` object
 
-#### select(model)
+#### MultiSelect#select(model)
 
-#### deselect(model)
+Select a model. This method will store the selected model in
+the collection's `selected` list, and call the model's `select`
+method to ensure the model knows it has been selected.
 
-#### selectAll
+#### MultiSelect#deselect(model)
 
-#### deselectAll
+Deselect a model. This method will remove the  model from
+the collection's `selected` list, and call the model's `deselect`
+method to ensure the model knows it has been deselected.
 
-#### toggleSelectAll
+#### MultiSelect#selectAll
+
+Select all models in the collection.
+
+#### MultiSelect#deselectAll
+
+Deselect all models in the collection.
+
+#### MultiSelect#toggleSelectAll
+
+Toggle selection of all models in the collection with the
+following rules:
+
+* If no models are selected, select them all
+* If 1 or more models, but less than all models are selected, select them all
+* If all models are selected, deselect them all
 
 ### MultiSelect Attributes
 
 The following attribute is set by the multi-select automatically
 
-### selected
+### MultiSelect#selected
 
 Returns a hash of selected models, keyed from the model `cid`.
 
-#### selectedLength
+#### MultiSelect#selectedLength
 
 Returns the number of items in the collection that are selected.
 
