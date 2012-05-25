@@ -41,7 +41,7 @@ The following methods are included in the `Selectable` object
 #### Selectable#select
 
 Select a model, setting the model's `selected` attribute to true and 
-triggering a "selected" event.
+triggering a "select" event.
 
 ```js
 var myModel = new SelectableModel();
@@ -55,8 +55,8 @@ myModel.selected; //=> true
 ```
 #### Selectable#deselect
 
-Select a model, setting the model's `selected` attribute to true and 
-triggering a "selected" event.
+Deselect a model, setting the model's `selected` attribute to false and 
+triggering a "deselect" event.
 
 ```js
 var myModel = new SelectableModel();
@@ -69,7 +69,7 @@ myModel.on("deselect", function(){
 myModel.select();
 
 myModel.deselect(); //=> logs "I'm no longer selected!";
-myModel.selected; //=> true
+myModel.selected; //=> false
 ```
 
 #### Selectable#toggleSelected
