@@ -23,6 +23,20 @@ Development: [backbone.picky.js](https://raw.github.com/derickbailey/backbone.pi
 
 Production: [backbone.picky.min.js](https://raw.github.com/derickbailey/backbone.picky/master/lib/amd/backbone.picky.min.js)
 
+## Documentation
+
+This readme file contains basic usage examples and 
+details on the full API, including methods, 
+attributes and events.
+
+### Annotated Source Code
+
+Picky has annotated source code using the Docco tool to turn
+comments in to documentation. This provides an in-depth look
+at what each section of is doing.
+
+##### [View The Annotated Source Code](http://derickbailey.github.com/backbone.picky/docs/backbone.picky.html)
+
 ## Model and Collection Interactions
 
 If you implement a `Selectable` model, the methods on the models and the
