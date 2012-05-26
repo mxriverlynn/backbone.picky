@@ -2,15 +2,6 @@
 
 Selectable entities as mixins for Backbone.Model and Backbone.Collection!
 
-#### NOTE: THIS CODE IS UNTESTED
-
-I hacked this together while building out some functionality
-for a client project. I have not written any automated tests for this
-project specifically. I've tested this through my client project only,
-which means:
-
-**THIS CODE IS UNTESTED. USE AT YOUR OWN RISK**
-
 ## Source Code And Downloads
 
 You can download the raw source code from the "src" 
@@ -66,6 +57,12 @@ usable by the selection methods and functionality:
 
 The easiest way to do this is to have your model extend `Selectable`. You
 can, however, implement your own version of these methods.
+
+## Backbone.Picky's Components:
+
+* **Picky.Selectable:** Creates select / deselect capabilities for a model
+* **Picky.MultiSelect:** Allows a collection to know about the selection of multiple models, including select all / deselect all
+* **Picky.SingleSelect: COMING SOON**. Allow a collection to have an exclusively selected model
 
 ## Picky.Selectable
 
