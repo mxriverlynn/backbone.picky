@@ -357,7 +357,7 @@ run `bundle install` from the project folder
 Jasmine server
 
 3. Point your browser at `http://localhost:8888` and you will
-see all of the specs for Backbone.Syphon
+see all of the specs for Backbone.Picky
 
 ### To Build The Packages
 
