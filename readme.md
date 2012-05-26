@@ -4,7 +4,7 @@ Selectable entities as mixins for Backbone.Model and Backbone.Collection!
 
 #### NOTE: THIS CODE IS UNTESTED
 
-I hacked this together over the last hour, while building out some functionality
+I hacked this together while building out some functionality
 for a client project. I have not written any automated tests for this
 project specifically. I've tested this through my client project only,
 which means:
