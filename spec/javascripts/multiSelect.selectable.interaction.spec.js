@@ -205,6 +205,40 @@ describe("multi-select selectable interaction", function(){
 
   describe("select / deselect through the collection", function(){
 
+    describe("when selecting a model through the collection's select method", function(){
+      var m1, collection;
+
+      beforeEach(function(){
+        m1 = new Model();
+        spyOn(m1, "select").andCallThrough();
+        collection = new Collection([m1]);
+
+        collection.select(m1);
+      });
+
+      it("should select the model", function(){
+        expect(m1.select).toHaveBeenCalled();
+      });
+    });
+
+    describe("when deselecting a model through the collection's select method", function(){
+      var m1, collection;
+
+      beforeEach(function(){
+        m1 = new Model();
+        spyOn(m1, "deselect").andCallThrough();
+
+        collection = new Collection([m1]);
+        m1.select();
+
+        collection.deselect(m1);
+      });
+
+      it("should deselect the model", function(){
+        expect(m1.deselect).toHaveBeenCalled();
+      });
+    });
+
     describe("when 1 out of 2 models in a collection is selected, and selecting the last one via the collection's select", function(){
       var m1, m2, collection;
 
