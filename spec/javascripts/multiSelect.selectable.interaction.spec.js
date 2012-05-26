@@ -1,4 +1,4 @@
-describe("multi-select collection", function(){
+describe("multi-select selectable interaction", function(){
   var Model = Backbone.Model.extend({
     initialize: function(){
       var selectable = new Backbone.Picky.Selectable();
