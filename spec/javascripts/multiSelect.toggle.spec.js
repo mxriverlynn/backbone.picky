@@ -1,4 +1,4 @@
-describe("multi-select collection deselecting", function(){
+describe("multi-select collection toggle", function(){
   var Model = Backbone.Model.extend({
     initialize: function(){
       var selectable = new Backbone.Picky.Selectable();
@@ -14,8 +14,8 @@ describe("multi-select collection deselecting", function(){
       _.extend(this, multiSelect);
     }
   });
-  
-  describe("when no models are selected, and deselecting all", function(){
+
+  describe("when no models are selected, and toggling", function(){
     var m1, m2, collection;
 
     beforeEach(function(){
@@ -25,24 +25,24 @@ describe("multi-select collection deselecting", function(){
       collection = new Collection([m1, m2]);
       spyOn(collection, "trigger").andCallThrough();
 
-      collection.selectNone();
+      collection.toggleSelectAll();
     });
     
-    it("should trigger 'none' selected event", function(){
-      expect(collection.trigger).toHaveBeenCalledWith("select:none", collection);
+    it("should trigger 'all' selected event", function(){
+      expect(collection.trigger).toHaveBeenCalledWith("select:all", collection);
     });
 
-    it("should have a selected count of 0", function(){
-      expect(collection.selectedLength).toBe(0);
+    it("should have a selected count of 2", function(){
+      expect(collection.selectedLength).toBe(2);
     });
 
-    it("should not have any models in the selected list", function(){
+    it("should have 2 models in the selected list", function(){
       var size = _.size(collection.selected);
-      expect(size).toBe(0);
+      expect(size).toBe(2);
     });
   });
-
-  describe("when 1 model is selected, and deselecting all", function(){
+  
+  describe("when some models are selected, and toggling", function(){
     var m1, m2, collection;
 
     beforeEach(function(){
@@ -53,24 +53,25 @@ describe("multi-select collection deselecting", function(){
       m1.select();
 
       spyOn(collection, "trigger").andCallThrough();
-      collection.selectNone();
+
+      collection.toggleSelectAll();
     });
     
-    it("should trigger 'none' selected event", function(){
-      expect(collection.trigger).toHaveBeenCalledWith("select:none", collection);
+    it("should trigger 'all' selected event", function(){
+      expect(collection.trigger).toHaveBeenCalledWith("select:all", collection);
     });
 
-    it("should have a selected count of 0", function(){
-      expect(collection.selectedLength).toBe(0);
+    it("should have a selected count of 2", function(){
+      expect(collection.selectedLength).toBe(2);
     });
 
-    it("should not have any models in the selected list", function(){
+    it("should have 2 models in the selected list", function(){
       var size = _.size(collection.selected);
-      expect(size).toBe(0);
+      expect(size).toBe(2);
     });
   });
-
-  describe("when all models are selected, and deselecting all", function(){
+  
+  describe("when all models are selected, and toggling", function(){
     var m1, m2, collection;
 
     beforeEach(function(){
@@ -82,7 +83,8 @@ describe("multi-select collection deselecting", function(){
       m2.select();
 
       spyOn(collection, "trigger").andCallThrough();
-      collection.selectNone();
+
+      collection.toggleSelectAll();
     });
     
     it("should trigger 'none' selected event", function(){
@@ -93,7 +95,7 @@ describe("multi-select collection deselecting", function(){
       expect(collection.selectedLength).toBe(0);
     });
 
-    it("should not have any models in the selected list", function(){
+    it("should have 0 models in the selected list", function(){
       var size = _.size(collection.selected);
       expect(size).toBe(0);
     });
