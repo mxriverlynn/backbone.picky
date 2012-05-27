@@ -1,146 +1,176 @@
 Backbone.Picky = (function (Backbone, _) {
-    var Picky = {};
+  var Picky = {};
 
-    // Picky.SingleSelect
-    // ------------------
+  // Picky.SingleSelect
+  // ------------------
+  // A single-select mixin for Backbone.Collection, allowing a single
+  // model to be selected within a collection. Selection of another
+  // model within the collection causes the previous model to be
+  // deselected.
 
-    // Coming Soon!
+  Picky.SingleSelect = function(collection){
+    this.collection = collection;
+  };
 
-    // Picky.MultiSelect
-    // -----------------
-    // A mult-select mixin for Backbone.Collection, allowing a collection to
-    // have multiple items selected, including `selectAll` and `selectNone`
-    // capabilities.
+  _.extend(Picky.SingleSelect.prototype, {
 
-    Picky.MultiSelect = function (collection) {
-        this.collection = collection;
-        this.selected = {};
-    };
+    // Select a model, deselecting any previously
+    // select model
+    select: function(model){
+      if (this.selected === model) { return; }
 
-    _.extend(Picky.MultiSelect.prototype, {
+      this.deselect();
+      this.selected = model;
+      this.trigger("selected", model);
+    },
 
-        // Select a specified model, make sure the
-        // model knows it's selected, and hold on to
-        // the selected model.
-        select: function (model) {
-            if (this.selected[model.cid]) { return; }
+    // Deselect a model, resulting in no model
+    // being selected
+    deselect: function(){
+      if (!this.selected){ return; }
 
-            this.selected[model.cid] = model;
-            model.select();
-            calculateSelectedLength(this);
-        },
+      this.selected.deselect();
+      this.trigger("deselected", this.selected);
+      delete this.selected;
+    }
 
-        // Deselect a specified model, make sure the
-        // model knows it has been deselected, and remove
-        // the model from the selected list.
-        deselect: function (model) {
-            if (!this.selected[model.cid]) { return; }
+  });
 
-            delete this.selected[model.cid];
-            model.deselect();
-            calculateSelectedLength(this);
-        },
+  // Picky.MultiSelect
+  // -----------------
+  // A mult-select mixin for Backbone.Collection, allowing a collection to
+  // have multiple items selected, including `selectAll` and `selectNone`
+  // capabilities.
 
-        // Select all models in this collection
-        selectAll: function () {
-            this.each(function (model) { model.select(); });
-            calculateSelectedLength(this);
-        },
+  Picky.MultiSelect = function (collection) {
+    this.collection = collection;
+    this.selected = {};
+  };
 
-        // Deselect all models in this collection
-        selectNone: function () {
-            if (this.selectedLength === 0) { return; }
-            this.each(function (model) { model.deselect(); });
-            calculateSelectedLength(this);
-        },
+  _.extend(Picky.MultiSelect.prototype, {
 
-        // Toggle select all / none. If some are selected, it
-        // will select all. If all are selected, it will select 
-        // none. If none are selected, it will select all.
-        toggleSelectAll: function () {
-            if (this.selectedLength === this.length) {
-                this.selectNone();
-            } else {
-                this.selectAll();
-            }
-        }
-    });
+    // Select a specified model, make sure the
+    // model knows it's selected, and hold on to
+    // the selected model.
+    select: function (model) {
+      if (this.selected[model.cid]) { return; }
 
-    // Picky.Selectable
-    // ----------------
-    // A selectable mixin for Backbone.Model, allowing a model to be selected,
-    // enabling it to work with Picky.MultiSelect or on it's own
+      this.selected[model.cid] = model;
+      model.select();
+      calculateSelectedLength(this);
+    },
 
-    Picky.Selectable = function (model) {
-        this.model = model;
-    };
+    // Deselect a specified model, make sure the
+    // model knows it has been deselected, and remove
+    // the model from the selected list.
+    deselect: function (model) {
+      if (!this.selected[model.cid]) { return; }
 
-    _.extend(Picky.Selectable.prototype, {
+      delete this.selected[model.cid];
+      model.deselect();
+      calculateSelectedLength(this);
+    },
 
-        // Select this model, and tell our
-        // collection that we're selected
-        select: function () {
-            if (this.selected) { return; }
+    // Select all models in this collection
+    selectAll: function () {
+      this.each(function (model) { model.select(); });
+      calculateSelectedLength(this);
+    },
 
-            this.selected = true;
-            this.trigger("selected");
+    // Deselect all models in this collection
+    selectNone: function () {
+      if (this.selectedLength === 0) { return; }
+      this.each(function (model) { model.deselect(); });
+      calculateSelectedLength(this);
+    },
 
-            if (this.collection) {
-                this.collection.select(this);
-            }
-        },
+    // Toggle select all / none. If some are selected, it
+    // will select all. If all are selected, it will select 
+    // none. If none are selected, it will select all.
+    toggleSelectAll: function () {
+      if (this.selectedLength === this.length) {
+        this.selectNone();
+      } else {
+        this.selectAll();
+      }
+    }
+  });
 
-        // Deselect this model, and tell our
-        // collection that we're deselected
-        deselect: function () {
-            if (!this.selected) { return; }
+  // Picky.Selectable
+  // ----------------
+  // A selectable mixin for Backbone.Model, allowing a model to be selected,
+  // enabling it to work with Picky.MultiSelect or on it's own
 
-            this.selected = false;
-            this.trigger("deselected");
+  Picky.Selectable = function (model) {
+    this.model = model;
+  };
 
-            if (this.collection) {
-                this.collection.deselect(this);
-            }
-        },
+  _.extend(Picky.Selectable.prototype, {
 
-        // Change selected to the opposite of what
-        // it currently is
-        toggleSelected: function () {
-            if (this.selected) {
-                this.deselect();
-            } else {
-                this.select();
-            }
-        }
-    });
+    // Select this model, and tell our
+    // collection that we're selected
+    select: function () {
+      if (this.selected) { return; }
 
-    // Helper Methods
-    // --------------
+      this.selected = true;
+      this.trigger("selected");
 
-    // Calculate the number of selected items in a collection
-    // and update the collection with that length. Trigger events
-    // from the collection based on the number of selected items.
-    var calculateSelectedLength = function (collection) {
-        collection.selectedLength = _.size(collection.selected);
+      if (this.collection) {
+        this.collection.select(this);
+      }
+    },
 
-        var selectedLength = collection.selectedLength;
-        var length = collection.length;
+    // Deselect this model, and tell our
+    // collection that we're deselected
+    deselect: function () {
+      if (!this.selected) { return; }
 
-        if (selectedLength === length) {
-            collection.trigger("select:all", collection);
-            return;
-        }
+      this.selected = false;
+      this.trigger("deselected");
 
-        if (selectedLength === 0) {
-            collection.trigger("select:none", collection);
-            return;
-        }
+      if (this.collection) {
+        this.collection.deselect(this);
+      }
+    },
 
-        if (selectedLength > 0 && selectedLength < length) {
-            collection.trigger("select:some", collection);
-            return;
-        }
-    };
+    // Change selected to the opposite of what
+    // it currently is
+    toggleSelected: function () {
+      if (this.selected) {
+        this.deselect();
+      } else {
+        this.select();
+      }
+    }
+  });
 
-    return Picky;
+  // Helper Methods
+  // --------------
+
+  // Calculate the number of selected items in a collection
+  // and update the collection with that length. Trigger events
+  // from the collection based on the number of selected items.
+  var calculateSelectedLength = function (collection) {
+    collection.selectedLength = _.size(collection.selected);
+
+    var selectedLength = collection.selectedLength;
+    var length = collection.length;
+
+    if (selectedLength === length) {
+      collection.trigger("select:all", collection);
+      return;
+    }
+
+    if (selectedLength === 0) {
+      collection.trigger("select:none", collection);
+      return;
+    }
+
+    if (selectedLength > 0 && selectedLength < length) {
+      collection.trigger("select:some", collection);
+      return;
+    }
+  };
+
+  return Picky;
 })(Backbone, _);
