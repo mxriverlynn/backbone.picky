@@ -37,6 +37,16 @@ at what each section of is doing.
 
 ##### [View The Annotated Source Code](http://derickbailey.github.com/backbone.picky/docs/backbone.picky.html)
 
+## Method Name Overrides
+
+#### IMPORTANT NOTE ABOUT METHOD NAME "select"
+
+The Picky collections override the metho `select` on collections. At this
+point, I can't think of a better name for specifying a model has been
+selected. Once I find a better name, the API will change. But for now,
+you will not be able to use the standard `select` method on any
+collection that has a Picky collection mixin.
+
 ## Model and Collection Interactions
 
 If you implement a `Selectable` model, the methods on the models and the
@@ -265,83 +275,19 @@ If the model is not currently selected, this is a no-op. If you try to
 deselect a model that is not the currently selected model, the actual
 selected model will not be deselected.
 
-#### MultiSelect#selectAll
-
-Select all models in the collection.
-
-```js
-myCol = new MultiCollection();
-
-myCol.selectAll();
-```
-
-Models that are already selected will not be re-selected. 
-Models that are not currently selected will be selected.
-The end result will be all models in the collection are
-selected.
-
-#### MultiSelect#deselectAll
-
-Deselect all models in the collection.
-
-```js
-myCol = new MultiCollection();
-
-myCol.deselectAll();
-```
-
-Models that are selected will be deselected. 
-Models that are not selected will not be deselected again.
-The end result will be no models in the collection are
-selected.
-
-#### MultiSelect#toggleSelectAll
-
-Toggle selection of all models in the collection:
-
-```js
-myCol = new MultiCollection();
-
-myCol.toggleSelectAll(); // select all models in the collection
-
-myCol.toggleSelectAll(); // de-select all models in the collection
-```
-
-The following rules are used when toggling:
-
-* If no models are selected, select them all
-* If 1 or more models, but less than all models are selected, select them all
-* If all models are selected, deselect them all
-
-### MultiSelect Attributes
+### SingleSelect Attributes
 
 The following attribute is set by the multi-select automatically
 
-### MultiSelect#selected
+### SingleSelect#selected
 
-Returns a hash of selected models, keyed from the model `cid`.
-
-```js
-myCol = new MultiCollection();
-myCol.select(model);
-
-myCol.selected;
-
-//=> produces
-// {
-//   "c1": (model object here)
-// }
-```
-
-#### MultiSelect#selectedLength
-
-Returns the number of items in the collection that are selected.
+Returns the one selected model for this collection
 
 ```js
 myCol = new MultiCollection();
 myCol.select(model);
 
-myCol.selectedLength; //=> 1
+myCol.selected; //=> model
 ```
 
 ### MultiSelect Events
@@ -349,18 +295,18 @@ myCol.selectedLength; //=> 1
 The following events are triggered by the MultiSelect based on changes
 in selection:
 
-#### "select:all"
+#### "selected"
 
-Triggered when all models have been selected
+Triggered when a model has been selected. Provides the selected model
+as the first parameter.
 
-#### "select:none"
+#### "deselected"
 
-Triggered when all models have been deselected
+Triggered when a model has been deselected. Provides the deselected model
+as the first parameter.
 
-#### "select:some"
-
-Triggered when at least 1 model is selected, but less than all models have
-been selected
+This fires whether `deselect` has been called explicitly, or the
+selection is being replace through another call to `select`.
 
 ## Picky.MultiSelect
 
@@ -549,6 +495,11 @@ see all of the specs for Backbone.Picky
 3. From the project folder, run `grunt` to produce a build
 
 ## Release Notes
+
+### v0.1.0
+
+* Added Picky.SingleSelect
+* Fleshed out the specs more
 
 ### v0.0.1
 
