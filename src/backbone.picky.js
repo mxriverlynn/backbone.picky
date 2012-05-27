@@ -17,17 +17,22 @@ Backbone.Picky = (function (Backbone, _) {
     // Select a model, deselecting any previously
     // select model
     select: function(model){
-      if (this.selected === model) { return; }
+      if (model && this.selected === model) { return; }
 
       this.deselect();
+
       this.selected = model;
+      this.selected.select();
       this.trigger("selected", model);
     },
 
     // Deselect a model, resulting in no model
     // being selected
-    deselect: function(){
+    deselect: function(model){
       if (!this.selected){ return; }
+
+      model = model || this.selected;
+      if (this.selected !== model){ return; }
 
       this.selected.deselect();
       this.trigger("deselected", this.selected);

@@ -76,7 +76,7 @@ can, however, implement your own version of these methods.
 
 * **Picky.Selectable:** Creates select / deselect capabilities for a model
 * **Picky.MultiSelect:** Allows a collection to know about the selection of multiple models, including select all / deselect all
-* **Picky.SingleSelect: COMING SOON**. Allow a collection to have an exclusively selected model
+* **Picky.SingleSelect:** Allow a collection to have an exclusively selected model
 
 ## Picky.Selectable
 
@@ -180,6 +180,187 @@ Triggers when a model is selected.
 #### "deselected"
 
 Triggers when a model is deselected.
+
+## Picky.SingleSelect
+
+Creates single-select capabilities for a `Backbone.Collection`, allowing
+a single model to be exclusively selected within the colllection. Selecting
+another model will cause the first one to be deselected.
+
+```js
+var singleSelect = new Backbone.Picky.SingleSelect(myCollection) ;
+```
+
+### Basic Usage
+
+Extend your collection with the `SingleSelect` instance to make your 
+collection support exclusive selections directly.
+
+```js
+SelectableModel = Backbone.Model.extend({
+  initialize: function(){
+    var selectable = new Backbone.Picky.Selectable(this);
+    _.extend(this, selectable);
+  }
+});
+
+SingleCollection = Backbone.Collection.extend({
+  model: SelectableModel,
+
+  initialize: function(){
+    var singleSelect = new Backbone.Picky.SingleSelect(this);
+    _.extend(this, singleSelect);
+  }
+});
+```
+
+### SingleSelect Methods
+
+The following methods are provided by the `SingleSelect` object.
+
+#### SingleSelect#select(model)
+
+Select a model. This method will store the selected model in
+the collection's `selected` attribute, and call the model's `select`
+method to ensure the model knows it has been selected.
+
+```js
+myModel = new SelectableModel();
+myCol = new MultiCollection();
+myCol.select(myModel);
+```
+
+Or
+
+```js
+myModel = new SelectableModel();
+myCol = new MultiCollection([myModel]);
+myModel.select();
+```
+
+If the model is already selected, this is a no-op. If a previous model
+is already selected, the previous model will be deselected.
+
+#### SingleSelect#deselect(model)
+
+Deselect the currently selected model. This method will remove the 
+model from the collection's `selected` attribute, and call the model's 
+`deselect` method to ensure the model knows it has been deselected.
+
+```js
+myModel = new SelectableModel();
+myCol = new MultiCollection();
+myCol.deselect(myModel);
+```
+
+Or
+
+```js
+myModel = new SelectableModel();
+myCol = new MultiCollection();
+myModel.deselect();
+```
+
+If the model is not currently selected, this is a no-op. If you try to
+deselect a model that is not the currently selected model, the actual
+selected model will not be deselected.
+
+#### MultiSelect#selectAll
+
+Select all models in the collection.
+
+```js
+myCol = new MultiCollection();
+
+myCol.selectAll();
+```
+
+Models that are already selected will not be re-selected. 
+Models that are not currently selected will be selected.
+The end result will be all models in the collection are
+selected.
+
+#### MultiSelect#deselectAll
+
+Deselect all models in the collection.
+
+```js
+myCol = new MultiCollection();
+
+myCol.deselectAll();
+```
+
+Models that are selected will be deselected. 
+Models that are not selected will not be deselected again.
+The end result will be no models in the collection are
+selected.
+
+#### MultiSelect#toggleSelectAll
+
+Toggle selection of all models in the collection:
+
+```js
+myCol = new MultiCollection();
+
+myCol.toggleSelectAll(); // select all models in the collection
+
+myCol.toggleSelectAll(); // de-select all models in the collection
+```
+
+The following rules are used when toggling:
+
+* If no models are selected, select them all
+* If 1 or more models, but less than all models are selected, select them all
+* If all models are selected, deselect them all
+
+### MultiSelect Attributes
+
+The following attribute is set by the multi-select automatically
+
+### MultiSelect#selected
+
+Returns a hash of selected models, keyed from the model `cid`.
+
+```js
+myCol = new MultiCollection();
+myCol.select(model);
+
+myCol.selected;
+
+//=> produces
+// {
+//   "c1": (model object here)
+// }
+```
+
+#### MultiSelect#selectedLength
+
+Returns the number of items in the collection that are selected.
+
+```js
+myCol = new MultiCollection();
+myCol.select(model);
+
+myCol.selectedLength; //=> 1
+```
+
+### MultiSelect Events
+
+The following events are triggered by the MultiSelect based on changes
+in selection:
+
+#### "select:all"
+
+Triggered when all models have been selected
+
+#### "select:none"
+
+Triggered when all models have been deselected
+
+#### "select:some"
+
+Triggered when at least 1 model is selected, but less than all models have
+been selected
 
 ## Picky.MultiSelect
 
