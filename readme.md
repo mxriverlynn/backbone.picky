@@ -290,7 +290,7 @@ myCol.select(model);
 myCol.selected; //=> model
 ```
 
-### MultiSelect Events
+### SingleSelect Events
 
 The following events are triggered by the MultiSelect based on changes
 in selection:
