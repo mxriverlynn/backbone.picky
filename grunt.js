@@ -2,6 +2,7 @@
 module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-rigger');
+  grunt.loadNpmTasks('grunt-jasmine-runner');
 
   // Project configuration.
   grunt.initConfig({
@@ -37,6 +38,20 @@ module.exports = function(grunt) {
         src: ['<banner:meta.banner>', '<config:rig.amd.dest>'],
         dest: 'lib/amd/backbone.picky.min.js'
       }
+    },
+
+    jasmine: {
+      src: [
+        'public/javascripts/underscore.js',
+        'public/javascripts/backbone.js',
+        'src/backbone.picky.js'
+      ],
+      helpers: 'spec/javascripts/helpers/*.js',
+      specs: 'spec/javascripts/**/*.spec.js'
+    },
+
+    'jasmine-server': {
+      browser: false
     },
 
     jshint: {
