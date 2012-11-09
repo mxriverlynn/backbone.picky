@@ -86,14 +86,22 @@ describe("multi-select selectable interaction", function(){
         m1 = new Model();
 
         collection = new Collection([m1]);
-        m1.select();
         spyOn(collection, "trigger").andCallThrough();
 
+        m1.select();
         m1.deselect();
       });
 
       it("should trigger 'none' selected event", function(){
         expect(collection.trigger).toHaveBeenCalledWith("select:none", collection);
+      });
+
+      it("should trigger 'selected' event with the selected model", function(){
+        expect(collection.trigger).toHaveBeenCalledWith("selected", m1);
+      });
+
+      it("should trigger 'deselected' event with the deselected model", function(){
+        expect(collection.trigger).toHaveBeenCalledWith("deselected", m1);
       });
 
       it("should have a selected count of 0", function(){
