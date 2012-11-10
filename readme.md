@@ -133,12 +133,12 @@ myModel.selected; //=> true
 #### Selectable#deselect
 
 Deselect a model, setting the model's `selected` attribute to false and 
-triggering a "deselect" event.
+triggering a "deselected" event.
 
 ```js
 var myModel = new SelectableModel();
 
-myModel.on("deselect", function(){
+myModel.on("deselected", function(){
   console.log("I'm no longer selected!");
 });
 
@@ -161,7 +161,7 @@ myModel.on("select", function(){
   console.log("I'm selected!");
 });
 
-myModel.on("deselect", function(){
+myModel.on("deselected", function(){
   console.log("I'm no longer selected!");
 });
 
