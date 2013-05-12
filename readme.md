@@ -41,7 +41,7 @@ at what each section of is doing.
 
 #### IMPORTANT NOTE ABOUT METHOD NAME "select"
 
-The Picky collections override the metho `select` on collections. At this
+The Picky collections override the method `select` on collections. At this
 point, I can't think of a better name for specifying a model has been
 selected. Once I find a better name, the API will change. But for now,
 you will not be able to use the standard `select` method on any
