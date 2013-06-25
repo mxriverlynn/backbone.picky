@@ -1,9 +1,6 @@
 /*global module:false*/
 module.exports = function(grunt) {
 
-  // Load Grunt tasks declared in the package.json file
-  require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
-
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -44,13 +41,6 @@ module.exports = function(grunt) {
       }
     },
 
-    jshint: {
-      options: {
-        jshintrc : '.jshintrc'
-      },
-      picky : [ 'src/backbone.picky.js' ]
-    },
-
     uglify : {
       options: {
         banner: "<%= meta.banner %>"
@@ -69,7 +59,55 @@ module.exports = function(grunt) {
         }
       }
     },
+
+    jasmine : {
+      options : {
+        helpers : 'spec/javascripts/helpers/*.js',
+        specs : 'spec/javascripts/**/*.spec.js',
+        vendor : [
+          'public/javascripts/underscore.js',
+          'public/javascripts/backbone.js'
+        ],
+      },
+      coverage : {
+        src : 'src/backbone.picky.js',
+        options : {
+          template : require('grunt-template-jasmine-istanbul'),
+          templateOptions: {
+            coverage: 'reports/coverage.json',
+            report: 'reports/coverage'
+          }
+        }
+      }
+    },
+
+    jshint: {
+      options: {
+        jshintrc : '.jshintrc'
+      },
+      picky : 'src/backbone.picky.js'
+    },
+
+    plato: {
+      picky : {
+        src : 'src/*.js',
+        dest : 'reports',
+        options : {
+          jshint : grunt.file.readJSON('.jshintrc')
+        }
+      }
+    }
+
   });
+
+  grunt.loadNpmTasks('grunt-plato');
+  grunt.loadNpmTasks('grunt-preprocess');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-jasmine');
+
+  grunt.registerTask('test', ['jshint', 'jasmine']);
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'preprocess', 'concat', 'uglify']);
