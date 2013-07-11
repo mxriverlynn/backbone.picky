@@ -185,11 +185,13 @@ The following events are triggered from Selectable models
 
 #### "selected"
 
-Triggers when a model is selected. 
+Triggers when a model is selected. Provides the selected model
+as the first parameter.
 
 #### "deselected"
 
-Triggers when a model is deselected.
+Triggers when a model is deselected. Provides the selected model
+as the first parameter.
 
 ## Picky.SingleSelect
 
@@ -292,15 +294,15 @@ myCol.selected; //=> model
 
 ### MultiSelect Events
 
-The following events are triggered by the MultiSelect based on changes
+The following events are triggered by the SingleSelect based on changes
 in selection:
 
-#### "selected"
+#### "select:one"
 
 Triggered when a model has been selected. Provides the selected model
 as the first parameter.
 
-#### "deselected"
+#### "deselect:one"
 
 Triggered when a model has been deselected. Provides the deselected model
 as the first parameter.
