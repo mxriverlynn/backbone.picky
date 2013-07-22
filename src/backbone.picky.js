@@ -23,7 +23,6 @@ Backbone.Picky = (function (Backbone, _) {
 
       this.selected = model;
       this.selected.select();
-      this.trigger("selected", model);
     },
 
     // Deselect a model, resulting in no model
@@ -35,7 +34,6 @@ Backbone.Picky = (function (Backbone, _) {
       if (this.selected !== model){ return; }
 
       this.selected.deselect();
-      this.trigger("deselected", this.selected);
       delete this.selected;
     }
 
@@ -118,7 +116,7 @@ Backbone.Picky = (function (Backbone, _) {
       if (this.selected) { return; }
 
       this.selected = true;
-      this.trigger("selected");
+      this.trigger("selected", this);
 
       if (this.collection) {
         this.collection.select(this);
@@ -131,7 +129,7 @@ Backbone.Picky = (function (Backbone, _) {
       if (!this.selected) { return; }
 
       this.selected = false;
-      this.trigger("deselected");
+      this.trigger("deselected", this);
 
       if (this.collection) {
         this.collection.deselect(this);
