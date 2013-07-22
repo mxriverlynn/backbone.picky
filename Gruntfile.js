@@ -110,6 +110,6 @@ module.exports = function(grunt) {
   grunt.registerTask('test', ['jshint', 'jasmine']);
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'preprocess', 'concat', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'jasmine', 'preprocess', 'concat', 'uglify']);
 
 };
