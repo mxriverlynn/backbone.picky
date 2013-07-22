@@ -185,11 +185,13 @@ The following events are triggered from Selectable models
 
 #### "selected"
 
-Triggers when a model is selected. 
+Triggers when a model is selected. Provides the selected model
+as the first parameter.
 
 #### "deselected"
 
-Triggers when a model is deselected.
+Triggers when a model is deselected. Provides the selected model
+as the first parameter.
 
 ## Picky.SingleSelect
 
@@ -292,15 +294,15 @@ myCol.selected; //=> model
 
 ### SingleSelect Events
 
-The following events are triggered by the MultiSelect based on changes
+The following events are triggered by the SingleSelect based on changes
 in selection:
 
-#### "selected"
+#### "select:one"
 
 Triggered when a model has been selected. Provides the selected model
 as the first parameter.
 
-#### "deselected"
+#### "deselect:one"
 
 Triggered when a model has been deselected. Provides the deselected model
 as the first parameter.
@@ -496,9 +498,10 @@ see all of the specs for Backbone.Picky
 
 ## Release Notes
 
-### v0.1.1
+### v0.2.0
 
-* Pass model as argument in selected / deselected events
+* Renamed `SingleSelect` events from "select" and "deselect" to "select:one" and "deselect:one"
+* Pass model as argument in select:one / deselect:one events
 * Updated the build to use latest grunt and related tools
 * Removed reliance on ruby for any part of this project
 
