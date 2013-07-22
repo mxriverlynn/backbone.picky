@@ -499,6 +499,8 @@ see all of the specs for Backbone.Picky
 ### v0.1.1
 
 * Pass model as argument in selected / deselected events
+* Updated the build to use latest grunt and related tools
+* Removed reliance on ruby for any part of this project
 
 ### v0.1.0
 
