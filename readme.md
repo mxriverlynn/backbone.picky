@@ -496,6 +496,10 @@ see all of the specs for Backbone.Picky
 
 ## Release Notes
 
+### v0.1.1
+
+* Pass model as argument in selected / deselected events
+
 ### v0.1.0
 
 * Added Picky.SingleSelect
