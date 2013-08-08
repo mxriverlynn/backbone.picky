@@ -10,6 +10,8 @@ Backbone.Picky = (function (Backbone, _) {
 
   Picky.SingleSelect = function(collection){
     this.collection = collection;
+    this.collection.listenTo(this.collection, 'selected', this.select);
+    this.collection.listenTo(this.collection, 'deselected', this.deselect);
   };
 
   _.extend(Picky.SingleSelect.prototype, {
@@ -50,6 +52,9 @@ Backbone.Picky = (function (Backbone, _) {
   Picky.MultiSelect = function (collection) {
     this.collection = collection;
     this.selected = {};
+    this.collection.listenTo(this.collection, 'selected', this.select);
+    this.collection.listenTo(this.collection, 'deselected', this.deselect);
+
   };
 
   _.extend(Picky.MultiSelect.prototype, {
@@ -119,10 +124,6 @@ Backbone.Picky = (function (Backbone, _) {
 
       this.selected = true;
       this.trigger("selected", this);
-
-      if (this.collection) {
-        this.collection.select(this);
-      }
     },
 
     // Deselect this model, and tell our
@@ -132,10 +133,6 @@ Backbone.Picky = (function (Backbone, _) {
 
       this.selected = false;
       this.trigger("deselected", this);
-
-      if (this.collection) {
-        this.collection.deselect(this);
-      }
     },
 
     // Change selected to the opposite of what
