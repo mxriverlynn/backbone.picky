@@ -118,11 +118,12 @@ Backbone.Picky = (function (Backbone, _) {
       if (this.selected) { return; }
 
       this.selected = true;
-      this.trigger("selected", this);
 
       if (this.collection) {
         this.collection.select(this);
       }
+
+      this.trigger("selected");
     },
 
     // Deselect this model, and tell our
@@ -131,11 +132,12 @@ Backbone.Picky = (function (Backbone, _) {
       if (!this.selected) { return; }
 
       this.selected = false;
-      this.trigger("deselected", this);
 
       if (this.collection) {
         this.collection.deselect(this);
       }
+
+      this.trigger("deselected");
     },
 
     // Change selected to the opposite of what
