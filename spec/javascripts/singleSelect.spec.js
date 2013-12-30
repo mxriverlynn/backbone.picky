@@ -2,7 +2,7 @@ describe("single select collection", function(){
 
   var Model = Backbone.Model.extend({
     initialize: function(){
-      var selectable = new Backbone.Picky.Selectable();
+      var selectable = new Backbone.Picky.Selectable(this);
       _.extend(this, selectable);
     }
   });
@@ -11,7 +11,7 @@ describe("single select collection", function(){
     model: Model,
 
     initialize: function(){
-      var singleSelect = new Backbone.Picky.SingleSelect();
+      var singleSelect = new Backbone.Picky.SingleSelect(this);
       _.extend(this, singleSelect);
     }
   });
