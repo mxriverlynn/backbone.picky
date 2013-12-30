@@ -44,7 +44,7 @@ Backbone.Picky = (function (Backbone, _) {
   // Picky.MultiSelect
   // -----------------
   // A mult-select mixin for Backbone.Collection, allowing a collection to
-  // have multiple items selected, including `selectAll` and `selectNone`
+  // have multiple items selected, including `selectAll` and `deselectAll`
   // capabilities.
 
   Picky.MultiSelect = function (collection) {
@@ -83,18 +83,22 @@ Backbone.Picky = (function (Backbone, _) {
     },
 
     // Deselect all models in this collection
-    selectNone: function () {
+    deselectAll: function () {
       if (this.selectedLength === 0) { return; }
       this.each(function (model) { model.deselect(); });
       calculateSelectedLength(this);
     },
 
-    // Toggle select all / none. If some are selected, it
+    selectNone: function () {
+      this.deselectAll();
+    },
+
+      // Toggle select all / none. If some are selected, it
     // will select all. If all are selected, it will select 
     // none. If none are selected, it will select all.
     toggleSelectAll: function () {
       if (this.selectedLength === this.length) {
-        this.selectNone();
+        this.deselectAll();
       } else {
         this.selectAll();
       }
