@@ -27,7 +27,7 @@ Production: [backbone.picky.min.js](https://raw.github.com/derickbailey/backbone
 
 This readme file contains basic usage examples and 
 details on the full API, including methods, 
-attributes and events.
+properties and events.
 
 ### Annotated Source Code
 
@@ -117,7 +117,7 @@ The following methods are included in the `Selectable` object
 
 #### Selectable#select
 
-Select a model, setting the model's `selected` attribute to true and 
+Select a model, setting the model's `selected` property to true and
 triggering a "select" event.
 
 ```js
@@ -132,7 +132,7 @@ myModel.selected; //=> true
 ```
 #### Selectable#deselect
 
-Deselect a model, setting the model's `selected` attribute to false and 
+Deselect a model, setting the model's `selected` property to false and
 triggering a "deselected" event.
 
 ```js
@@ -170,9 +170,9 @@ myModel.toggleSelected(); //=> "I'm selected!"
 myModel.toggleSelected(); //=> "I'm no longer selected!"
 ```
 
-### Selectable Attributes
+### Selectable Properties
 
-The following attributes are manipulated by the Selectable object
+The following properties are manipulated by the Selectable object
 
 #### Selectable#selected
 
@@ -233,7 +233,7 @@ The following methods are provided by the `SingleSelect` object.
 #### SingleSelect#select(model)
 
 Select a model. This method will store the selected model in
-the collection's `selected` attribute, and call the model's `select`
+the collection's `selected` property, and call the model's `select`
 method to ensure the model knows it has been selected.
 
 ```js
@@ -256,7 +256,7 @@ is already selected, the previous model will be deselected.
 #### SingleSelect#deselect(model)
 
 Deselect the currently selected model. This method will remove the 
-model from the collection's `selected` attribute, and call the model's 
+model from the collection's `selected` property, and call the model's
 `deselect` method to ensure the model knows it has been deselected.
 
 ```js
@@ -277,9 +277,9 @@ If the model is not currently selected, this is a no-op. If you try to
 deselect a model that is not the currently selected model, the actual
 selected model will not be deselected.
 
-### SingleSelect Attributes
+### SingleSelect Properties
 
-The following attribute is set by the multi-select automatically
+The following property is set by the multi-select automatically
 
 ### SingleSelect#selected
 
@@ -422,9 +422,9 @@ The following rules are used when toggling:
 * If 1 or more models, but less than all models are selected, select them all
 * If all models are selected, deselect them all
 
-### MultiSelect Attributes
+### MultiSelect Properties
 
-The following attribute is set by the multi-select automatically
+The following property is set by the multi-select automatically
 
 ### MultiSelect#selected
 
