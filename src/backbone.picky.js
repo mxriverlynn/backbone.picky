@@ -8,10 +8,21 @@ Backbone.Picky = (function (Backbone, _) {
   // model within the collection causes the previous model to be
   // deselected.
 
-  Picky.SingleSelect = function(collection){
+  Picky.SingleSelect = function(collection, models){
+    this._pickyCid = _.uniqueId('singleSelect-');
     this.collection = collection;
+
+    _.each(models || [], function (model) {
+      registerCollectionWithModel(model, this);
+      if (model.selected) this.selected = model;
+    }, this);
+
     this.collection.listenTo(this.collection, 'selected', this.select);
     this.collection.listenTo(this.collection, 'deselected', this.deselect);
+
+    this.collection.listenTo(this.collection, 'reset', onResetSingleSelect);
+    this.collection.listenTo(this.collection, 'add', onAdd);
+    this.collection.listenTo(this.collection, 'remove', onRemove);
   };
 
   _.extend(Picky.SingleSelect.prototype, {
@@ -30,13 +41,14 @@ Backbone.Picky = (function (Backbone, _) {
 
     // Deselect a model, resulting in no model
     // being selected
-    deselect: function(model){
+    deselect: function(model, options){
+      options || (options = {});
       if (!this.selected){ return; }
 
       model = model || this.selected;
       if (this.selected !== model){ return; }
 
-      this.selected.deselect();
+      if (!options.skipModelCall) this.selected.deselect();
       this.trigger("deselect:one", this.selected);
       delete this.selected;
     }
@@ -45,16 +57,26 @@ Backbone.Picky = (function (Backbone, _) {
 
   // Picky.MultiSelect
   // -----------------
-  // A mult-select mixin for Backbone.Collection, allowing a collection to
+  // A multi-select mixin for Backbone.Collection, allowing a collection to
   // have multiple items selected, including `selectAll` and `deselectAll`
   // capabilities.
 
-  Picky.MultiSelect = function (collection) {
+  Picky.MultiSelect = function (collection, models) {
+    this._pickyCid = _.uniqueId('multiSelect-');
     this.collection = collection;
     this.selected = {};
+
+    _.each(models || [], function (model) {
+      registerCollectionWithModel(model, this);
+      if (model.selected) this.selected[model.cid] = model;
+    }, this);
+
     this.collection.listenTo(this.collection, 'selected', this.select);
     this.collection.listenTo(this.collection, 'deselected', this.deselect);
 
+    this.collection.listenTo(this.collection, 'reset', onResetMultiSelect);
+    this.collection.listenTo(this.collection, 'add', onAdd);
+    this.collection.listenTo(this.collection, 'remove', onRemove);
   };
 
   _.extend(Picky.MultiSelect.prototype, {
@@ -73,11 +95,12 @@ Backbone.Picky = (function (Backbone, _) {
     // Deselect a specified model, make sure the
     // model knows it has been deselected, and remove
     // the model from the selected list.
-    deselect: function (model) {
+    deselect: function (model, options) {
+      options || (options = {});
       if (!this.selected[model.cid]) { return; }
 
       delete this.selected[model.cid];
-      model.deselect();
+      if (!options.skipModelCall) model.deselect();
       calculateSelectedLength(this);
     },
 
@@ -177,6 +200,54 @@ Backbone.Picky = (function (Backbone, _) {
       return;
     }
   };
+
+  function onAdd (model, collection) {
+    registerCollectionWithModel(model, collection);
+    if (model.selected) collection.select(model);
+  }
+
+  function deselectLocal (model, collection){
+    if (model.selected){
+      if (model._pickyCollections && model._pickyCollections.length == 0) {
+        collection.deselect(model);
+      } else {
+        collection.deselect(model, {skipModelCall: true});
+      }
+    }
+  }
+
+  function onRemove (model, collection) {
+    if (model._pickyCollections) model._pickyCollections = _.without(model._pickyCollections, collection._pickyCid);
+    deselectLocal(model, collection);
+  }
+
+  function onResetSingleSelect (collection, options) {
+    var selected,
+        deselectOnAdd,
+        deselectOnRemove = _.find(options.previousModels, function (model) { return model.selected; });
+
+    if (deselectOnRemove) onRemove(deselectOnRemove, collection);
+
+    selected = collection.filter(function (model) { return model.selected; });
+    deselectOnAdd = _.initial(selected);
+    if (deselectOnAdd.length) _.each(deselectOnAdd, function (model) { model.deselect(); });
+    if (selected.length) collection.select(_.last(selected));
+  }
+
+  function onResetMultiSelect (collection, options) {
+    var select,
+        deselect = _.filter(options.previousModels, function (model) { return model.selected; });
+
+    if (deselect) _.each(deselect, function (model) { onRemove(model, collection); });
+
+    select = collection.filter(function (model) { return model.selected; });
+    if (select.length) _.each(select, function (model) { collection.select(model); });
+  }
+
+  function registerCollectionWithModel(model, collection) {
+    model._pickyCollections || (model._pickyCollections = []);
+    model._pickyCollections.push(collection._pickyCid);
+  }
 
   return Picky;
 })(Backbone, _);
