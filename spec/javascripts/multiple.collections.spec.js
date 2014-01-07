@@ -15,6 +15,7 @@ describe("models shared between multiple collections", function(){
       _.extend(this, singleSelect);
     }
   });
+
   var MultiSelectCollection = Backbone.Collection.extend({
     model: Model,
 
@@ -54,6 +55,27 @@ describe("models shared between multiple collections", function(){
     });
   });
 
+  describe("when selecting a model in a single-select collection, with options.silent enabled", function(){
+    var model, singleCollectionA, singleCollectionB, multiCollectionA;
+
+    beforeEach(function(){
+      model = new Model();
+      singleCollectionA = new SingleSelectCollection([model]);
+      singleCollectionB = new SingleSelectCollection([model]);
+      multiCollectionA  = new MultiSelectCollection([model]);
+
+      singleCollectionA.select(model, {silent: true});
+    });
+
+    it("should be selected in another single-select collection", function(){
+      expect(singleCollectionB.selected).toBe(model);
+    });
+
+    it("should be among the selected models in another multi-select collection", function(){
+      expect(multiCollectionA.selected[model.cid]).not.toBeUndefined();
+    });
+  });
+
   describe("when selecting a model in a multi-select collection", function(){
     var model, singleCollectionA, multiCollectionA, multiCollectionB;
 
@@ -83,6 +105,27 @@ describe("models shared between multiple collections", function(){
     });
   });
 
+  describe("when selecting a model in a multi-select collection, with options.silent enabled", function(){
+    var model, singleCollectionA, multiCollectionA, multiCollectionB;
+
+    beforeEach(function(){
+      model = new Model();
+      singleCollectionA = new SingleSelectCollection([model]);
+      multiCollectionA  = new MultiSelectCollection([model]);
+      multiCollectionB  = new MultiSelectCollection([model]);
+
+      multiCollectionA.select(model, {silent: true});
+    });
+
+    it("should be selected in another single-select collection", function(){
+      expect(singleCollectionA.selected).toBe(model);
+    });
+
+    it("should be among the selected models in another multi-select collection", function(){
+      expect(multiCollectionB.selected[model.cid]).not.toBeUndefined();
+    });
+  });
+
   describe("when selecting a model, which is shared across collections, with its select method", function(){
     var model, singleCollectionA, multiCollectionA;
 
@@ -104,6 +147,26 @@ describe("models shared between multiple collections", function(){
 
     it("should be selected itself", function(){
       expect(model.selected).toBe(true);
+    });
+  });
+
+  describe("when selecting a model, which is shared across collections, with its select method and options.silent enabled", function(){
+    var model, singleCollectionA, multiCollectionA;
+
+    beforeEach(function(){
+      model = new Model();
+      singleCollectionA = new SingleSelectCollection([model]);
+      multiCollectionA  = new MultiSelectCollection([model]);
+
+      model.select({silent: true});
+    });
+
+    it("should be selected in a single-select collection", function(){
+      expect(singleCollectionA.selected).toBe(model);
+    });
+
+    it("should be among the selected models in a multi-select collection", function(){
+      expect(multiCollectionA.selected[model.cid]).not.toBeUndefined();
     });
   });
 
@@ -621,12 +684,15 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should not trigger a selected/select:one event when added to a single-select collection', function () {
+      // reset() is meant to suppress individual notifications. Just like the add event, selection events are silenced.
+      // Whatever needs to be done, should be dealt with in the reset event handler.
       singleCollectionA.reset([model1]);
       expect(model1.trigger).not.toHaveBeenCalledWith("selected", model1);
       expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("select:one", model1);
     });
 
     it('should not trigger a selected/select:some/select:all event when added to a multi-select collection', function () {
+      // For the rationale, see above.
       multiCollectionA.reset([model1]);
       expect(model1.trigger).not.toHaveBeenCalledWith("selected", model1);
       expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:some", multiCollectionA);
@@ -695,12 +761,15 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should not trigger a deselected/deselect:one event when removed from a single-select collection', function () {
+      // reset() is meant to suppress individual notifications. Just like the add event, selection events are silenced.
+      // Whatever needs to be done, should be dealt with in the reset event handler.
       singleCollectionA.reset();
       expect(model1.trigger).not.toHaveBeenCalledWith("deselected", model1);
       expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("deselect:one", model1);
     });
 
     it('should not trigger a deselected/select:none event when removed from a multi-select collection', function () {
+      // For the rationale, see above.
       multiCollectionA.reset();
       expect(model1.trigger).not.toHaveBeenCalledWith("deselected", model1);
       expect(model1.trigger).not.toHaveBeenCalledWith("deselected", model2);
@@ -708,6 +777,7 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should not trigger a deselected/deselect:one event when removed from all collections, single-select collection last', function () {
+      // See above.
       multiCollectionA.reset();
       singleCollectionA.reset();
       expect(model1.trigger).not.toHaveBeenCalledWith("deselected", model1);
@@ -715,6 +785,7 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should not trigger a deselected/select:none event when removed from all collections, multi-select collection last', function () {
+      // See above.
       singleCollectionA.reset();
       multiCollectionA.reset();
       expect(model1.trigger).not.toHaveBeenCalledWith("deselected", model1);

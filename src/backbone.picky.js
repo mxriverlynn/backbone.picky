@@ -17,8 +17,8 @@ Backbone.Picky = (function (Backbone, _) {
       if (model.selected) this.selected = model;
     }, this);
 
-    this.collection.listenTo(this.collection, 'selected', this.select);
-    this.collection.listenTo(this.collection, 'deselected', this.deselect);
+    this.collection.listenTo(this.collection, '_selected', this.select);
+    this.collection.listenTo(this.collection, '_deselected', this.deselect);
 
     this.collection.listenTo(this.collection, 'reset', onResetSingleSelect);
     this.collection.listenTo(this.collection, 'add', onAdd);
@@ -29,14 +29,15 @@ Backbone.Picky = (function (Backbone, _) {
 
     // Select a model, deselecting any previously
     // selected model
-    select: function(model){
+    select: function(model, options){
+      options || (options = {});
       if (model && this.selected === model) { return; }
 
-      this.deselect();
+      this.deselect(undefined, options);
 
       this.selected = model;
-      this.selected.select();
-      this.trigger("select:one", model);
+      this.selected.select(options);
+      if (!options.silent) this.trigger("select:one", model);
     },
 
     // Deselect a model, resulting in no model
@@ -48,8 +49,8 @@ Backbone.Picky = (function (Backbone, _) {
       model = model || this.selected;
       if (this.selected !== model){ return; }
 
-      if (!options.skipModelCall) this.selected.deselect();
-      this.trigger("deselect:one", this.selected);
+      if (!options._skipModelCall) this.selected.deselect(options);
+      if (!options.silent) this.trigger("deselect:one", this.selected);
       delete this.selected;
     }
 
@@ -71,8 +72,8 @@ Backbone.Picky = (function (Backbone, _) {
       if (model.selected) this.selected[model.cid] = model;
     }, this);
 
-    this.collection.listenTo(this.collection, 'selected', this.select);
-    this.collection.listenTo(this.collection, 'deselected', this.deselect);
+    this.collection.listenTo(this.collection, '_selected', this.select);
+    this.collection.listenTo(this.collection, '_deselected', this.deselect);
 
     this.collection.listenTo(this.collection, 'reset', onResetMultiSelect);
     this.collection.listenTo(this.collection, 'add', onAdd);
@@ -84,12 +85,12 @@ Backbone.Picky = (function (Backbone, _) {
     // Select a specified model, make sure the
     // model knows it's selected, and hold on to
     // the selected model.
-    select: function (model) {
+    select: function (model, options) {
       if (this.selected[model.cid]) { return; }
 
       this.selected[model.cid] = model;
-      model.select();
-      calculateSelectedLength(this);
+      model.select(options);
+      calculateSelectedLength(this, options);
     },
 
     // Deselect a specified model, make sure the
@@ -100,31 +101,31 @@ Backbone.Picky = (function (Backbone, _) {
       if (!this.selected[model.cid]) { return; }
 
       delete this.selected[model.cid];
-      if (!options.skipModelCall) model.deselect();
-      calculateSelectedLength(this);
+      if (!options._skipModelCall) model.deselect(options);
+      calculateSelectedLength(this, options);
     },
 
     // Select all models in this collection
-    selectAll: function () {
-      this.each(function (model) { model.select(); });
-      calculateSelectedLength(this);
+    selectAll: function (options) {
+      this.each(function (model) { model.select(options); });
+      calculateSelectedLength(this, options);
     },
 
     // Deselect all models in this collection
-    selectNone: function () {
+    selectNone: function (options) {
       if (this.selectedLength === 0) { return; }
-      this.each(function (model) { model.deselect(); });
-      calculateSelectedLength(this);
+      this.each(function (model) { model.deselect(options); });
+      calculateSelectedLength(this, options);
     },
 
     // Toggle select all / none. If some are selected, it
     // will select all. If all are selected, it will select 
     // none. If none are selected, it will select all.
-    toggleSelectAll: function () {
+    toggleSelectAll: function (options) {
       if (this.selectedLength === this.length) {
-        this.selectNone();
+        this.selectNone(options);
       } else {
-        this.selectAll();
+        this.selectAll(options);
       }
     }
   });
@@ -142,29 +143,33 @@ Backbone.Picky = (function (Backbone, _) {
 
     // Select this model, and tell our
     // collection that we're selected
-    select: function () {
+    select: function (options) {
+      options || (options = {});
       if (this.selected) { return; }
 
       this.selected = true;
-      this.trigger("selected", this);
+      this.trigger("_selected", this);
+      if (!options.silent) this.trigger("selected", this);
     },
 
     // Deselect this model, and tell our
     // collection that we're deselected
-    deselect: function () {
+    deselect: function (options) {
+      options || (options = {});
       if (!this.selected) { return; }
 
       this.selected = false;
-      this.trigger("deselected", this);
+      this.trigger("_deselected", this);
+      if (!options.silent) this.trigger("deselected", this);
     },
 
     // Change selected to the opposite of what
     // it currently is
-    toggleSelected: function () {
+    toggleSelected: function (options) {
       if (this.selected) {
-        this.deselect();
+        this.deselect(options);
       } else {
-        this.select();
+        this.select(options);
       }
     }
   });
@@ -175,8 +180,11 @@ Backbone.Picky = (function (Backbone, _) {
   // Calculate the number of selected items in a collection
   // and update the collection with that length. Trigger events
   // from the collection based on the number of selected items.
-  var calculateSelectedLength = function (collection) {
+  var calculateSelectedLength = function (collection, options) {
+    options || (options = {});
     collection.selectedLength = _.size(collection.selected);
+
+    if (options.silent) return;
 
     var selectedLength = collection.selectedLength;
     var length = collection.length;
@@ -202,42 +210,38 @@ Backbone.Picky = (function (Backbone, _) {
     if (model.selected) collection.select(model);
   }
 
-  function deselectLocal (model, collection){
-    if (model.selected){
+  function onRemove (model, collection, options) {
+    if (model._pickyCollections) model._pickyCollections = _.without(model._pickyCollections, collection._pickyCid);
+    if (model.selected) {
       if (model._pickyCollections && model._pickyCollections.length == 0) {
-        collection.deselect(model);
+        collection.deselect(model, options);
       } else {
-        collection.deselect(model, {skipModelCall: true});
+        collection.deselect(model, _.extend({}, options, {_skipModelCall: true}));
       }
     }
   }
 
-  function onRemove (model, collection) {
-    if (model._pickyCollections) model._pickyCollections = _.without(model._pickyCollections, collection._pickyCid);
-    deselectLocal(model, collection);
-  }
-
   function onResetSingleSelect (collection, options) {
     var selected,
-        deselectOnAdd,
+        excessiveSelections,
         deselectOnRemove = _.find(options.previousModels, function (model) { return model.selected; });
 
-    if (deselectOnRemove) onRemove(deselectOnRemove, collection);
+    if (deselectOnRemove) onRemove(deselectOnRemove, collection, {silent: true});
 
     selected = collection.filter(function (model) { return model.selected; });
-    deselectOnAdd = _.initial(selected);
-    if (deselectOnAdd.length) _.each(deselectOnAdd, function (model) { model.deselect(); });
-    if (selected.length) collection.select(_.last(selected));
+    excessiveSelections = _.initial(selected);
+    if (excessiveSelections.length) _.each(excessiveSelections, function (model) { model.deselect({silent: true}); });
+    if (selected.length) collection.select(_.last(selected), {silent: true});
   }
 
   function onResetMultiSelect (collection, options) {
     var select,
         deselect = _.filter(options.previousModels, function (model) { return model.selected; });
 
-    if (deselect) _.each(deselect, function (model) { onRemove(model, collection); });
+    if (deselect) _.each(deselect, function (model) { onRemove(model, collection, {silent: true}); });
 
     select = collection.filter(function (model) { return model.selected; });
-    if (select.length) _.each(select, function (model) { collection.select(model); });
+    if (select.length) _.each(select, function (model) { collection.select(model, {silent: true}); });
   }
 
   function registerCollectionWithModel(model, collection) {
