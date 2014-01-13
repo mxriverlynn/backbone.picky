@@ -55,9 +55,9 @@ Backbone.Picky = (function (Backbone, _) {
       model = model || this.selected;
       if (this.selected !== model){ return; }
 
-      if (!options._skipModelCall) this.selected.deselect(_.omit(options, "_localSilent"));
-      if (!(options.silent || options._localSilent)) this.trigger("deselect:one", this.selected);
       delete this.selected;
+      if (!options._skipModelCall) model.deselect(_.omit(options, "_localSilent"));
+      if (!(options.silent || options._localSilent)) this.trigger("deselect:one", model);
     },
 
     close: function () {
@@ -105,8 +105,10 @@ Backbone.Picky = (function (Backbone, _) {
       if (this.selected[model.cid]) { return; }
 
       this.selected[model.cid] = model;
+      this.selectedLength = _.size(this.selected);
+
       model.select(_.omit(options, "_localSilent"));
-      calculateSelectedLength(this, options);
+      triggerMultiSelectEvents(this, options);
     },
 
     // Deselect a specified model, make sure the
@@ -117,21 +119,32 @@ Backbone.Picky = (function (Backbone, _) {
       if (!this.selected[model.cid]) { return; }
 
       delete this.selected[model.cid];
+      this.selectedLength = _.size(this.selected);
+
       if (!options._skipModelCall) model.deselect(_.omit(options, "_localSilent"));
-      calculateSelectedLength(this, options);
+      triggerMultiSelectEvents(this, options);
     },
 
     // Select all models in this collection
     selectAll: function (options) {
-      this.each(function (model) { model.select(_.omit(options, "_localSilent")); });
-      calculateSelectedLength(this, options);
+      this.selectedLength = 0;
+      this.each(function (model) {
+        this.selectedLength++;
+        model.select(_.omit(options, "_localSilent"));
+      }, this);
+      triggerMultiSelectEvents(this, options);
     },
 
     // Deselect all models in this collection
     deselectAll: function (options) {
       if (this.selectedLength === 0) { return; }
-      this.each(function (model) { model.deselect(_.omit(options, "_localSilent")); });
-      calculateSelectedLength(this, options);
+      this.each(function (model) {
+        if (model.selected) this.selectedLength--;
+        model.deselect(_.omit(options, "_localSilent"));
+      }, this);
+
+      this.selectedLength = 0;
+      triggerMultiSelectEvents(this, options);
     },
 
     selectNone: function (options) {
@@ -219,13 +232,10 @@ Backbone.Picky = (function (Backbone, _) {
   // Helper Methods
   // --------------
 
-  // Calculate the number of selected items in a collection
-  // and update the collection with that length. Trigger events
-  // from the collection based on the number of selected items.
-  var calculateSelectedLength = function (collection, options) {
+  // Trigger events from a multi-select collection based on the number of
+  // selected items.
+  var triggerMultiSelectEvents = function (collection, options) {
     options || (options = {});
-    collection.selectedLength = _.size(collection.selected);
-
     if (options.silent || options._localSilent) return;
 
     var selectedLength = collection.selectedLength;

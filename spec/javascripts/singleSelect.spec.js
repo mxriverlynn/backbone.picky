@@ -17,14 +17,27 @@ describe("single select collection", function(){
   });
 
   describe("when selecting a model via the model's select", function(){
-    var model, collection;
+    var model, collection, selectedEventState, selectOneEventState;
 
     beforeEach(function(){
+      selectedEventState = { model: {}, collection: {} };
+      selectOneEventState = { model: {}, collection: {} };
+
       model = new Model();
       collection = new Collection([model]);
 
       spyOn(model, "trigger").andCallThrough();
       spyOn(collection, "trigger").andCallThrough();
+
+      model.on('selected', function (model) {
+        selectedEventState.model.selected = model && model.selected;
+        selectedEventState.collection.selected = collection.selected;
+      });
+
+      collection.on('select:one', function (model) {
+        selectOneEventState.model.selected = model && model.selected;
+        selectOneEventState.collection.selected = collection.selected;
+      });
 
       model.select();
     });
@@ -37,8 +50,24 @@ describe("single select collection", function(){
       expect(model.trigger).toHaveBeenCalledWith("selected", model);
     });
 
-    it("should trigger a collection selected event", function(){
+    it("should trigger a collection select:one event", function(){
       expect(collection.trigger).toHaveBeenCalledWith("select:one", model);
+    });
+
+    it('should trigger the model\'s selected event after the model status has been updated', function () {
+      expect(selectedEventState.model.selected).toEqual(true);
+    });
+
+    it('should trigger the model\'s selected event after the collection status has been updated', function () {
+      expect(selectedEventState.collection.selected).toBe(model);
+    });
+
+    it('should trigger the collection\'s select:one event after the model status has been updated', function () {
+      expect(selectOneEventState.model.selected).toEqual(true);
+    });
+
+    it('should trigger the collection\'s select:one event after the collection status has been updated', function () {
+      expect(selectOneEventState.collection.selected).toBe(model);
     });
   });
 
@@ -63,20 +92,33 @@ describe("single select collection", function(){
       expect(model.trigger).not.toHaveBeenCalledWith("selected", model);
     });
 
-    it("should not trigger a collection selected event", function(){
+    it("should not trigger a collection select:one event", function(){
       expect(collection.trigger).not.toHaveBeenCalledWith("select:one", model);
     });
   });
 
   describe("when selecting a model via the collection's select", function(){
-    var model, collection;
+    var model, collection, selectedEventState, selectOneEventState;
 
     beforeEach(function(){
+      selectedEventState = { model: {}, collection: {} };
+      selectOneEventState = { model: {}, collection: {} };
+
       model = new Model();
       collection = new Collection([model]);
 
       spyOn(collection, "trigger").andCallThrough();
       spyOn(model, "select").andCallThrough();
+
+      model.on('selected', function (model) {
+        selectedEventState.model.selected = model && model.selected;
+        selectedEventState.collection.selected = collection.selected;
+      });
+
+      collection.on('select:one', function (model) {
+        selectOneEventState.model.selected = model && model.selected;
+        selectOneEventState.collection.selected = collection.selected;
+      });
 
       collection.select(model);
     });
@@ -85,12 +127,28 @@ describe("single select collection", function(){
       expect(collection.selected).toBe(model);
     });
 
-    it("should trigger a selected event", function(){
+    it("should trigger a select:one event", function(){
       expect(collection.trigger).toHaveBeenCalledWith("select:one", model);
     });
 
     it("should tell the model to select itself", function(){
       expect(model.select).toHaveBeenCalled();
+    });
+
+    it('should trigger the model\'s selected event after the model status has been updated', function () {
+      expect(selectedEventState.model.selected).toEqual(true);
+    });
+
+    it('should trigger the model\'s selected event after the collection status has been updated', function () {
+      expect(selectedEventState.collection.selected).toBe(model);
+    });
+
+    it('should trigger the collection\'s select:one event after the model status has been updated', function () {
+      expect(selectOneEventState.model.selected).toEqual(true);
+    });
+
+    it('should trigger the collection\'s select:one event after the collection status has been updated', function () {
+      expect(selectOneEventState.collection.selected).toBe(model);
     });
   });
 
@@ -111,7 +169,7 @@ describe("single select collection", function(){
       expect(collection.selected).toBe(model);
     });
 
-    it("should not trigger a selected event", function(){
+    it("should not trigger a select:one event", function(){
       expect(collection.trigger).not.toHaveBeenCalledWith("select:one", model);
     });
 
@@ -219,15 +277,79 @@ describe("single select collection", function(){
     });
   });
 
-  describe("when a model is selected and deselecting the model", function(){
-    var model, collection;
+  describe("when a model is selected and deselecting the model through the model's deselect", function(){
+    var model, collection, deselectedEventState, deselectOneEventState;
 
     beforeEach(function(){
+      deselectedEventState = { model: {}, collection: {} };
+      deselectOneEventState = { model: {}, collection: {} };
+
       model = new Model();
       collection = new Collection([model]);
       model.select();
 
       spyOn(collection, "trigger").andCallThrough();
+
+      model.on('deselected', function (model) {
+        deselectedEventState.model.selected = model && model.selected;
+        deselectedEventState.collection.selected = collection.selected;
+      });
+
+      collection.on('deselect:one', function (model) {
+        deselectOneEventState.model.selected = model && model.selected;
+        deselectOneEventState.collection.selected = collection.selected;
+      });
+
+      model.deselect();
+    });
+
+    it("should not hang on to the currently selected model", function(){
+      expect(collection.selected).toBeUndefined();
+    });
+
+    it("should trigger a deselect:one event", function(){
+      expect(collection.trigger).toHaveBeenCalledWith("deselect:one", model);
+    });
+
+    it('should trigger the model\'s deselected event after the model status has been updated', function () {
+      expect(deselectedEventState.model.selected).toEqual(false);
+    });
+
+    it('should trigger the model\'s deselected event after the collection status has been updated', function () {
+      expect(deselectedEventState.collection.selected).toBeUndefined();
+    });
+
+    it('should trigger the collection\'s deselect:one event after the model status has been updated', function () {
+      expect(deselectOneEventState.model.selected).toEqual(false);
+    });
+
+    it('should trigger the collection\'s deselect:one event after the collection status has been updated', function () {
+      expect(deselectOneEventState.collection.selected).toBeUndefined();
+    });
+  });
+
+  describe("when a model is selected and deselecting the model through the collection's deselect", function(){
+    var model, collection, deselectedEventState, deselectOneEventState;
+
+    beforeEach(function(){
+      deselectedEventState = { model: {}, collection: {} };
+      deselectOneEventState = { model: {}, collection: {} };
+
+      model = new Model();
+      collection = new Collection([model]);
+      model.select();
+
+      spyOn(collection, "trigger").andCallThrough();
+
+      model.on('deselected', function (model) {
+        deselectedEventState.model.selected = model && model.selected;
+        deselectedEventState.collection.selected = collection.selected;
+      });
+
+      collection.on('deselect:one', function (model) {
+        deselectOneEventState.model.selected = model && model.selected;
+        deselectOneEventState.collection.selected = collection.selected;
+      });
 
       collection.deselect();
     });
@@ -236,8 +358,24 @@ describe("single select collection", function(){
       expect(collection.selected).toBeUndefined();
     });
 
-    it("should trigger a deselected event", function(){
+    it("should trigger a deselect:one event", function(){
       expect(collection.trigger).toHaveBeenCalledWith("deselect:one", model);
+    });
+
+    it('should trigger the model\'s deselected event after the model status has been updated', function () {
+      expect(deselectedEventState.model.selected).toEqual(false);
+    });
+
+    it('should trigger the model\'s deselected event after the collection status has been updated', function () {
+      expect(deselectedEventState.collection.selected).toBeUndefined();
+    });
+
+    it('should trigger the collection\'s deselect:one event after the model status has been updated', function () {
+      expect(deselectOneEventState.model.selected).toEqual(false);
+    });
+
+    it('should trigger the collection\'s deselect:one event after the collection status has been updated', function () {
+      expect(deselectOneEventState.collection.selected).toBeUndefined();
     });
   });
 
