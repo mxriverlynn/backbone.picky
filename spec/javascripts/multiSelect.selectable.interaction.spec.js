@@ -18,14 +18,29 @@ describe("multi-select selectable interaction", function(){
   describe("select / deselect the model directly", function(){
 
     describe("when 1 out of 2 models in a collection is selected", function(){
-      var m1, m2, collection;
+      var m1, m2, collection, selectedEventState, selectSomeEventState;
 
       beforeEach(function(){
+        selectedEventState = { model: {}, collection: {} };
+        selectSomeEventState = { m1: {}, collection: {} };
+
         m1 = new Model();
         m2 = new Model();
 
         collection = new Collection([m1, m2]);
         spyOn(collection, "trigger").andCallThrough();
+
+        m1.on('selected', function (model) {
+          selectedEventState.model.selected = model.selected;
+          selectedEventState.collection.selected = _.clone(collection.selected);
+          selectedEventState.collection.selectedLength = collection.selectedLength;
+        });
+
+        collection.on('select:some', function () {
+          selectSomeEventState.m1.selected = m1.selected;
+          selectSomeEventState.collection.selected = _.clone(collection.selected);
+          selectSomeEventState.collection.selectedLength = collection.selectedLength;
+        });
 
         m1.select();
       });
@@ -44,6 +59,30 @@ describe("multi-select selectable interaction", function(){
 
       it("should not have the unselected model in the selected list", function(){
         expect(collection.selected[m2.cid]).toBeUndefined();
+      });
+
+      it('should trigger the model\'s selected event after the model status has been updated', function () {
+        expect(selectedEventState.model.selected).toEqual(true);
+      });
+
+      it('should trigger the model\'s selected event after the collection\'s selected models have been updated', function () {
+        expect(selectedEventState.collection.selected[m1.cid]).toEqual(m1);
+      });
+
+      it('should trigger the model\'s selected event after the collection\'s selected length has been updated', function () {
+        expect(selectedEventState.collection.selectedLength).toBe(1);
+      });
+
+      it('should trigger the collection\'s select:some event after the model status has been updated', function () {
+        expect(selectSomeEventState.m1.selected).toEqual(true);
+      });
+
+      it('should trigger the collection\'s select:some event after the collection\'s selected models have been updated', function () {
+        expect(selectSomeEventState.collection.selected[m1.cid]).toBe(m1);
+      });
+
+      it('should trigger the collection\'s select:some event after the collection\'s selected length has been updated', function () {
+        expect(selectSomeEventState.collection.selectedLength).toBe(1);
       });
 
     });
@@ -142,15 +181,31 @@ describe("multi-select selectable interaction", function(){
     });
 
     describe("when a model is selected and then deselected", function(){
-      var m1, collection;
+      var m1, collection, selectedEventState, selectNoneEventState;
 
       beforeEach(function(){
+        selectedEventState = { model: {}, collection: {} };
+        selectNoneEventState = { m1: {}, collection: {} };
+
         m1 = new Model();
 
         collection = new Collection([m1]);
         spyOn(collection, "trigger").andCallThrough();
 
         m1.select();
+
+        m1.on('deselected', function (model) {
+          selectedEventState.model.selected = model && model.selected;
+          selectedEventState.collection.selected = _.clone(collection.selected);
+          selectedEventState.collection.selectedLength = collection.selectedLength;
+        });
+
+        collection.on('select:none', function () {
+          selectNoneEventState.m1.selected = m1.selected;
+          selectNoneEventState.collection.selected = _.clone(collection.selected);
+          selectNoneEventState.collection.selectedLength = collection.selectedLength;
+        });
+
         m1.deselect();
       });
 
@@ -173,6 +228,31 @@ describe("multi-select selectable interaction", function(){
       it("should not have the model in the selected list", function(){
         expect(collection.selected[m1.cid]).toBeUndefined();
       });
+
+      it('should trigger the model\'s deselected event after the model status has been updated', function () {
+        expect(selectedEventState.model.selected).toEqual(false);
+      });
+
+      it('should trigger the model\'s deselected event after the collection\'s selected models have been updated', function () {
+        expect(selectedEventState.collection.selected).toEqual({});
+      });
+
+      it('should trigger the model\'s deselected event after the collection\'s selected length has been updated', function () {
+        expect(selectedEventState.collection.selectedLength).toBe(0);
+      });
+
+      it('should trigger the collection\'s select:none event after the model status has been updated', function () {
+        expect(selectNoneEventState.m1.selected).toEqual(false);
+      });
+
+      it('should trigger the collection\'s select:none event after the collection\'s selected models have been updated', function () {
+        expect(selectNoneEventState.collection.selected).toEqual({});
+      });
+
+      it('should trigger the collection\'s select:none event after the collection\'s selected length has been updated', function () {
+        expect(selectNoneEventState.collection.selectedLength).toBe(0);
+      });
+
     });
 
     describe("when a model is selected and then deselected, with options.silent enabled", function(){
@@ -406,12 +486,27 @@ describe("multi-select selectable interaction", function(){
   describe("select / deselect through the collection", function(){
 
     describe("when selecting a model through the collection's select method", function(){
-      var m1, collection;
+      var m1, collection, selectedEventState, selectAllEventState;
 
       beforeEach(function(){
+        selectedEventState = { model: {}, collection: {} };
+        selectAllEventState = { m1: {}, collection: {} };
+
         m1 = new Model();
         spyOn(m1, "select").andCallThrough();
         collection = new Collection([m1]);
+
+        m1.on('selected', function (model) {
+          selectedEventState.model.selected = model && model.selected;
+          selectedEventState.collection.selected = _.clone(collection.selected);
+          selectedEventState.collection.selectedLength = collection.selectedLength;
+        });
+
+        collection.on('select:all', function () {
+          selectAllEventState.m1.selected = m1.selected;
+          selectAllEventState.collection.selected = _.clone(collection.selected);
+          selectAllEventState.collection.selectedLength = collection.selectedLength;
+        });
 
         collection.select(m1);
       });
@@ -419,17 +514,57 @@ describe("multi-select selectable interaction", function(){
       it("should select the model", function(){
         expect(m1.select).toHaveBeenCalled();
       });
+
+      it('should trigger the model\'s selected event after the model status has been updated', function () {
+        expect(selectedEventState.model.selected).toEqual(true);
+      });
+
+      it('should trigger the model\'s selected event after the collection\'s selected models have been updated', function () {
+        expect(selectedEventState.collection.selected[m1.cid]).toBe(m1);
+      });
+
+      it('should trigger the model\'s selected event after the collection\'s selected length has been updated', function () {
+        expect(selectedEventState.collection.selectedLength).toBe(1);
+      });
+
+      it('should trigger the collection\'s select:all event after the model status has been updated', function () {
+        expect(selectAllEventState.m1.selected).toEqual(true);
+      });
+
+      it('should trigger the collection\'s select:all event after the collection\'s selected models have been updated', function () {
+        expect(selectAllEventState.collection.selected[m1.cid]).toBe(m1);
+      });
+
+      it('should trigger the collection\'s select:all event after the collection\'s selected length has been updated', function () {
+        expect(selectAllEventState.collection.selectedLength).toBe(1);
+      });
+
     });
 
     describe("when deselecting a model through the collection's select method", function(){
-      var m1, collection;
+      var m1, collection, selectedEventState, selectNoneEventState;
 
       beforeEach(function(){
+        selectedEventState = { model: {}, collection: {} };
+        selectNoneEventState = { m1: {}, collection: {} };
+
         m1 = new Model();
         spyOn(m1, "deselect").andCallThrough();
 
         collection = new Collection([m1]);
         m1.select();
+
+        m1.on('deselected', function (model) {
+          selectedEventState.model.selected = model && model.selected;
+          selectedEventState.collection.selected = _.clone(collection.selected);
+          selectedEventState.collection.selectedLength = collection.selectedLength;
+        });
+
+        collection.on('select:none', function () {
+          selectNoneEventState.m1.selected = m1.selected;
+          selectNoneEventState.collection.selected = _.clone(collection.selected);
+          selectNoneEventState.collection.selectedLength = collection.selectedLength;
+        });
 
         collection.deselect(m1);
       });
@@ -437,6 +572,31 @@ describe("multi-select selectable interaction", function(){
       it("should deselect the model", function(){
         expect(m1.deselect).toHaveBeenCalled();
       });
+
+      it('should trigger the model\'s deselected event after the model status has been updated', function () {
+        expect(selectedEventState.model.selected).toEqual(false);
+      });
+
+      it('should trigger the model\'s deselected event after the collection\'s selected models have been updated', function () {
+        expect(selectedEventState.collection.selected).toEqual({});
+      });
+
+      it('should trigger the model\'s deselected event after the collection\'s selected length has been updated', function () {
+        expect(selectedEventState.collection.selectedLength).toBe(0);
+      });
+
+      it('should trigger the collection\'s select:none event after the model status has been updated', function () {
+        expect(selectNoneEventState.m1.selected).toEqual(false);
+      });
+
+      it('should trigger the collection\'s select:none event after the collection\'s selected models have been updated', function () {
+        expect(selectNoneEventState.collection.selected).toEqual({});
+      });
+
+      it('should trigger the collection\'s select:none event after the collection\'s selected length has been updated', function () {
+        expect(selectNoneEventState.collection.selectedLength).toBe(0);
+      });
+
     });
 
     describe("when 1 out of 2 models in a collection is selected, and selecting the last one via the collection's select", function(){

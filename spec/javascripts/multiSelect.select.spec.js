@@ -16,14 +16,30 @@ describe("multi-select collection selecting", function(){
   });
   
   describe("when no models are selected, and selecting all", function(){
-    var m1, m2, collection;
+    var m1, m2, collection, selectedEventState, selectAllEventState;
 
     beforeEach(function(){
+      selectedEventState = { model: {}, collection: {} };
+      selectAllEventState = { m1: {}, m2: {}, collection: {} };
+
       m1 = new Model();
       m2 = new Model();
 
       collection = new Collection([m1, m2]);
       spyOn(collection, "trigger").andCallThrough();
+
+      m1.on('selected', function (model) {
+        selectedEventState.model.selected = model && model.selected;
+        selectedEventState.collection.selected = _.clone(collection.selected);
+        selectedEventState.collection.selectedLength = collection.selectedLength;
+      });
+
+      collection.on('select:all', function () {
+        selectAllEventState.m1.selected = m1.selected;
+        selectAllEventState.m2.selected = m2.selected;
+        selectAllEventState.collection.selected = _.clone(collection.selected);
+        selectAllEventState.collection.selectedLength = collection.selectedLength;
+      });
 
       collection.selectAll();
     });
@@ -43,6 +59,40 @@ describe("multi-select collection selecting", function(){
     it("should have the second selected model in the selected list", function(){
       expect(collection.selected[m2.cid]).not.toBeUndefined();
     });
+
+    it('should trigger a model\'s selected event after the model status has been updated', function () {
+      expect(selectedEventState.model.selected).toEqual(true);
+    });
+
+    it('should trigger a model\'s selected event after the collection\'s selected models have been updated with that model', function () {
+      // m2 doesn't necessarily have to be part of collection.selected at this
+      // time. The point is that events are fired when model and collection
+      // states are consistent. When m1 fires the 'selected' event, only m1 must
+      // be part of the collection.
+      expect(selectedEventState.collection.selected[m1.cid]).toBe(m1);
+    });
+
+    it('should trigger a model\'s selected event after the collection\'s selected length has been updated', function () {
+      // collection.selectedLength could be 1 or 2 at this time. Again, all we
+      // are asking for is consistency - see comment above.
+      expect(selectedEventState.collection.selectedLength).toBeGreaterThan(0);
+      expect(selectedEventState.collection.selectedLength).toEqual(_.size(selectedEventState.collection.selected));
+    });
+
+    it('should trigger the collection\'s select:all event after the model status has been updated', function () {
+      expect(selectAllEventState.m1.selected).toEqual(true);
+      expect(selectAllEventState.m2.selected).toEqual(true);
+    });
+
+    it('should trigger the collection\'s select:all event after the collection\'s selected models have been updated', function () {
+      expect(selectAllEventState.collection.selected[m1.cid]).toBe(m1);
+      expect(selectAllEventState.collection.selected[m2.cid]).toBe(m2);
+    });
+
+    it('should trigger the collection\'s select:all event after the collection\'s selected length has been updated', function () {
+      expect(selectAllEventState.collection.selectedLength).toBe(2);
+    });
+
   });
 
   describe("when no models are selected, and selecting all, with options.silent enabled", function(){
