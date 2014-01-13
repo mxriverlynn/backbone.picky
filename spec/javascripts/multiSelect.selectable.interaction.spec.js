@@ -48,6 +48,37 @@ describe("multi-select selectable interaction", function(){
 
     });
 
+    describe("when 1 out of 2 models in a collection is selected, with options.silent enabled", function(){
+      var m1, m2, collection;
+
+      beforeEach(function(){
+        m1 = new Model();
+        m2 = new Model();
+
+        collection = new Collection([m1, m2]);
+        spyOn(collection, "trigger").andCallThrough();
+
+        m1.select({silent: true});
+      });
+
+      it("should not trigger 'some' selected event", function(){
+        expect(collection.trigger).not.toHaveBeenCalledWith("select:some", collection);
+      });
+
+      it("should have a selected count of 1", function(){
+        expect(collection.selectedLength).toBe(1);
+      });
+
+      it("should have the selected model in the selected list", function(){
+        expect(collection.selected[m1.cid]).toBe(m1);
+      });
+
+      it("should not have the unselected model in the selected list", function(){
+        expect(collection.selected[m2.cid]).toBeUndefined();
+      });
+
+    });
+
     describe("when 2 out of 2 models in a collection are selected", function(){
       var m1, m2, collection;
 
@@ -64,6 +95,37 @@ describe("multi-select selectable interaction", function(){
 
       it("should trigger 'all' selected event", function(){
         expect(collection.trigger).toHaveBeenCalledWith("select:all", collection);
+      });
+
+      it("should have a selected count of 2", function(){
+        expect(collection.selectedLength).toBe(2);
+      });
+
+      it("should have the first selected model in the selected list", function(){
+        expect(collection.selected[m1.cid]).toBe(m1);
+      });
+
+      it("should have the second selected model in the selected list", function(){
+        expect(collection.selected[m2.cid]).toBe(m2);
+      });
+    });
+
+    describe("when 2 out of 2 models in a collection are selected, with options.silent enabled", function(){
+      var m1, m2, collection;
+
+      beforeEach(function(){
+        m1 = new Model();
+        m2 = new Model();
+
+        collection = new Collection([m1, m2]);
+        spyOn(collection, "trigger").andCallThrough();
+
+        m1.select({silent: true});
+        m2.select({silent: true});
+      });
+
+      it("should not trigger 'all' selected event", function(){
+        expect(collection.trigger).not.toHaveBeenCalledWith("select:all", collection);
       });
 
       it("should have a selected count of 2", function(){
@@ -113,6 +175,40 @@ describe("multi-select selectable interaction", function(){
       });
     });
 
+    describe("when a model is selected and then deselected, with options.silent enabled", function(){
+      var m1, collection;
+
+      beforeEach(function(){
+        m1 = new Model();
+
+        collection = new Collection([m1]);
+        spyOn(collection, "trigger").andCallThrough();
+
+        m1.select({silent: true});
+        m1.deselect({silent: true});
+      });
+
+      it("should not trigger 'none' selected event", function(){
+        expect(collection.trigger).not.toHaveBeenCalledWith("select:none", collection);
+      });
+
+      it("should not trigger 'selected' event with the selected model", function(){
+        expect(collection.trigger).not.toHaveBeenCalledWith("selected", m1);
+      });
+
+      it("should not trigger 'deselected' event with the deselected model", function(){
+        expect(collection.trigger).not.toHaveBeenCalledWith("deselected", m1);
+      });
+
+      it("should have a selected count of 0", function(){
+        expect(collection.selectedLength).toBe(0);
+      });
+
+      it("should not have the model in the selected list", function(){
+        expect(collection.selected[m1.cid]).toBeUndefined();
+      });
+    });
+
     describe("when 1 out of 2 models in a collection is selected, and selecting the last one via the model's select", function(){
       var m1, m2, collection;
 
@@ -130,6 +226,39 @@ describe("multi-select selectable interaction", function(){
 
       it("should trigger 'all' selected event", function(){
         expect(collection.trigger).toHaveBeenCalledWith("select:all", collection);
+      });
+
+      it("should have a selected count of 2", function(){
+        expect(collection.selectedLength).toBe(2);
+      });
+
+      it("should have the first selected model in the selected list", function(){
+        expect(collection.selected[m1.cid]).toBe(m1);
+      });
+
+      it("should have the second selected model in the selected list", function(){
+        expect(collection.selected[m2.cid]).toBe(m2);
+      });
+
+    });
+
+    describe("when 1 out of 2 models in a collection is selected, and selecting the last one via the model's select, with options.silent enabled", function(){
+      var m1, m2, collection;
+
+      beforeEach(function(){
+        m1 = new Model();
+        m2 = new Model();
+
+        collection = new Collection([m1, m2]);
+        m1.select();
+
+        spyOn(collection, "trigger").andCallThrough();
+
+        m2.select({silent: true});
+      });
+
+      it("should not trigger 'all' selected event", function(){
+        expect(collection.trigger).not.toHaveBeenCalledWith("select:all", collection);
       });
 
       it("should have a selected count of 2", function(){
@@ -180,6 +309,40 @@ describe("multi-select selectable interaction", function(){
 
     });
 
+    describe("when all models are selected and deselecting one via the model's deselect, with options.silent enabled", function(){
+      var m1, m2, collection;
+
+      beforeEach(function(){
+        m1 = new Model();
+        m2 = new Model();
+
+        collection = new Collection([m1, m2]);
+        m1.select();
+        m2.select();
+
+        spyOn(collection, "trigger").andCallThrough();
+
+        m1.deselect({silent: true});
+      });
+
+      it("should not trigger 'some' selected event", function(){
+        expect(collection.trigger).not.toHaveBeenCalledWith("select:some", collection);
+      });
+
+      it("should have a selected count of 1", function(){
+        expect(collection.selectedLength).toBe(1);
+      });
+
+      it("should not have the first selected model in the selected list", function(){
+        expect(collection.selected[m1.cid]).toBeUndefined();
+      });
+
+      it("should have the second selected model in the selected list", function(){
+        expect(collection.selected[m2.cid]).toBe(m2);
+      });
+
+    });
+
     describe("when 1 out of 2 models in a collection is selected, and deselecting the last one via the model's deselect", function(){
       var m1, m2, collection;
 
@@ -197,6 +360,35 @@ describe("multi-select selectable interaction", function(){
 
       it("should trigger 'none' selected event", function(){
         expect(collection.trigger).toHaveBeenCalledWith("select:none", collection);
+      });
+
+      it("should have a selected count of 0", function(){
+        expect(collection.selectedLength).toBe(0);
+      });
+
+      it("should not have any models in the selected list", function(){
+        var size = _.size(collection.selected);
+        expect(size).toBe(0);
+      });
+    });
+
+    describe("when 1 out of 2 models in a collection is selected, and deselecting the last one via the model's deselect, with options.silent enabled", function(){
+      var m1, m2, collection;
+
+      beforeEach(function(){
+        m1 = new Model();
+        m2 = new Model();
+
+        collection = new Collection([m1, m2]);
+        m1.select();
+
+        spyOn(collection, "trigger").andCallThrough();
+
+        m1.deselect({silent: true});
+      });
+
+      it("should not trigger 'none' selected event", function(){
+        expect(collection.trigger).not.toHaveBeenCalledWith("select:none", collection);
       });
 
       it("should have a selected count of 0", function(){
@@ -280,6 +472,39 @@ describe("multi-select selectable interaction", function(){
 
     });
 
+    describe("when 1 out of 2 models in a collection is selected, and selecting the last one via the collection's select, with options.silent enabled", function(){
+      var m1, m2, collection;
+
+      beforeEach(function(){
+        m1 = new Model();
+        m2 = new Model();
+
+        collection = new Collection([m1, m2]);
+        collection.select(m1);
+
+        spyOn(collection, "trigger").andCallThrough();
+
+        collection.select(m2, {silent: true});
+      });
+
+      it("should not trigger 'all' selected event", function(){
+        expect(collection.trigger).not.toHaveBeenCalledWith("select:all", collection);
+      });
+
+      it("should have a selected count of 2", function(){
+        expect(collection.selectedLength).toBe(2);
+      });
+
+      it("should have the first selected model in the selected list", function(){
+        expect(collection.selected[m1.cid]).toBe(m1);
+      });
+
+      it("should have the second selected model in the selected list", function(){
+        expect(collection.selected[m2.cid]).toBe(m2);
+      });
+
+    });
+
     describe("when all models are selected and deselecting one via the collection's deselect", function(){
       var m1, m2, collection;
 
@@ -314,6 +539,40 @@ describe("multi-select selectable interaction", function(){
 
     });
 
+    describe("when all models are selected and deselecting one via the collection's deselect, with options.silent enabled", function(){
+      var m1, m2, collection;
+
+      beforeEach(function(){
+        m1 = new Model();
+        m2 = new Model();
+
+        collection = new Collection([m1, m2]);
+        collection.select(m1);
+        collection.select(m2);
+
+        spyOn(collection, "trigger").andCallThrough();
+
+        collection.deselect(m1, {silent: true});
+      });
+
+      it("should not trigger 'some' selected event", function(){
+        expect(collection.trigger).not.toHaveBeenCalledWith("select:some", collection);
+      });
+
+      it("should have a selected count of 1", function(){
+        expect(collection.selectedLength).toBe(1);
+      });
+
+      it("should not have the first selected model in the selected list", function(){
+        expect(collection.selected[m1.cid]).toBeUndefined();
+      });
+
+      it("should have the second selected model in the selected list", function(){
+        expect(collection.selected[m2.cid]).toBe(m2);
+      });
+
+    });
+
     describe("when 1 out of 2 models in a collection is selected, and deselecting the last one via the collection's deselect", function(){
       var m1, m2, collection;
 
@@ -331,6 +590,35 @@ describe("multi-select selectable interaction", function(){
 
       it("should trigger 'none' selected event", function(){
         expect(collection.trigger).toHaveBeenCalledWith("select:none", collection);
+      });
+
+      it("should have a selected count of 0", function(){
+        expect(collection.selectedLength).toBe(0);
+      });
+
+      it("should not have any models in the selected list", function(){
+        var size = _.size(collection.selected);
+        expect(size).toBe(0);
+      });
+    });
+
+    describe("when 1 out of 2 models in a collection is selected, and deselecting the last one via the collection's deselect, with options.silent enabled", function(){
+      var m1, m2, collection;
+
+      beforeEach(function(){
+        m1 = new Model();
+        m2 = new Model();
+
+        collection = new Collection([m1, m2]);
+        collection.select(m1);
+
+        spyOn(collection, "trigger").andCallThrough();
+
+        collection.deselect(m1, {silent: true});
+      });
+
+      it("should not trigger 'none' selected event", function(){
+        expect(collection.trigger).not.toHaveBeenCalledWith("select:none", collection);
       });
 
       it("should have a selected count of 0", function(){
