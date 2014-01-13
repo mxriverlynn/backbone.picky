@@ -25,6 +25,25 @@ describe("selectable model", function(){
     });
   });
 
+  describe("when selecting a model, with options.silent enabled", function(){
+    var model;
+
+    beforeEach(function(){
+      model = new Model();
+      spyOn(model, "trigger").andCallThrough();
+
+      model.select({silent: true});
+    });
+
+    it("should be selected", function(){
+      expect(model.selected).toBe(true);
+    });
+
+    it("should not notify of selection", function(){
+      expect(model.trigger).not.toHaveBeenCalledWith("selected", model);
+    });
+  });
+
   describe("when selecting a model that is already selected", function(){
     var model;
 
@@ -62,6 +81,26 @@ describe("selectable model", function(){
 
     it("should notify of deselection", function(){
       expect(model.trigger).toHaveBeenCalledWith("deselected", model);
+    });
+  });
+
+  describe("when deselecting a model that has been selected, with options.silent enabled", function(){
+    var model;
+
+    beforeEach(function(){
+      model = new Model();
+      model.select();
+
+      spyOn(model, "trigger").andCallThrough();
+      model.deselect({silent: true});
+    });
+
+    it("should not be selected", function(){
+      expect(model.selected).toBe(false);
+    });
+
+    it("should not notify of deselection", function(){
+      expect(model.trigger).not.toHaveBeenCalledWith("deselected", model);
     });
   });
 

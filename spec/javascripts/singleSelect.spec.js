@@ -42,6 +42,32 @@ describe("single select collection", function(){
     });
   });
 
+  describe("when selecting a model via the model's select, with options.silent enabled", function(){
+    var model, collection;
+
+    beforeEach(function(){
+      model = new Model();
+      collection = new Collection([model]);
+
+      spyOn(model, "trigger").andCallThrough();
+      spyOn(collection, "trigger").andCallThrough();
+
+      model.select({silent: true});
+    });
+
+    it("should hang on to the currently selected model", function(){
+      expect(collection.selected).toBe(model);
+    });
+
+    it("should not trigger a selected event", function(){
+      expect(model.trigger).not.toHaveBeenCalledWith("selected", model);
+    });
+
+    it("should not trigger a collection selected event", function(){
+      expect(collection.trigger).not.toHaveBeenCalledWith("select:one", model);
+    });
+  });
+
   describe("when selecting a model via the collection's select", function(){
     var model, collection;
 
@@ -61,6 +87,32 @@ describe("single select collection", function(){
 
     it("should trigger a selected event", function(){
       expect(collection.trigger).toHaveBeenCalledWith("select:one", model);
+    });
+
+    it("should tell the model to select itself", function(){
+      expect(model.select).toHaveBeenCalled();
+    });
+  });
+
+  describe("when selecting a model via the collection's select, with options.silent enabled", function(){
+    var model, collection;
+
+    beforeEach(function(){
+      model = new Model();
+      collection = new Collection([model]);
+
+      spyOn(collection, "trigger").andCallThrough();
+      spyOn(model, "select").andCallThrough();
+
+      collection.select(model, {silent: true});
+    });
+
+    it("should hang on to the currently selected model", function(){
+      expect(collection.selected).toBe(model);
+    });
+
+    it("should not trigger a selected event", function(){
+      expect(collection.trigger).not.toHaveBeenCalledWith("select:one", model);
     });
 
     it("should tell the model to select itself", function(){
@@ -119,6 +171,38 @@ describe("single select collection", function(){
     });
   });
 
+  describe("when a model is already selected and selecting a different model, with options.silent enabled", function(){
+    var m1, m2, collection;
+
+    beforeEach(function(){
+      m1 = new Model();
+      m2 = new Model();
+      collection = new Collection([m1, m2]);
+      m1.select();
+
+      spyOn(collection, "trigger").andCallThrough();
+      spyOn(m1, "deselect").andCallThrough();
+
+      m2.select({silent: true});
+    });
+
+    it("should hang on to the currently selected model", function(){
+      expect(collection.selected).toBe(m2);
+    });
+
+    it("should not trigger a selected event", function(){
+      expect(collection.trigger).not.toHaveBeenCalledWith("select:one", m2);
+    });
+
+    it("should deselect the first model", function(){
+      expect(m1.deselect).toHaveBeenCalled();
+    });
+
+    it("should not fire a deselect event for the first model", function(){
+      expect(collection.trigger).not.toHaveBeenCalledWith("deselect:one", m1);
+    });
+  });
+
   describe("when no model is selected and deselecting", function(){
     var collection;
 
@@ -154,6 +238,28 @@ describe("single select collection", function(){
 
     it("should trigger a deselected event", function(){
       expect(collection.trigger).toHaveBeenCalledWith("deselect:one", model);
+    });
+  });
+
+  describe("when a model is selected and deselecting the model, with options.silent enabled", function(){
+    var model, collection;
+
+    beforeEach(function(){
+      model = new Model();
+      collection = new Collection([model]);
+      model.select();
+
+      spyOn(collection, "trigger").andCallThrough();
+
+      collection.deselect(undefined, {silent: true});
+    });
+
+    it("should not hang on to the currently selected model", function(){
+      expect(collection.selected).toBeUndefined();
+    });
+
+    it("should not trigger a deselected event", function(){
+      expect(collection.trigger).not.toHaveBeenCalledWith("deselect:one", model);
     });
   });
 
@@ -227,6 +333,86 @@ describe("single select collection", function(){
     it("should not trigger a deselected event for the non-selected model", function(){
       expect(collection.trigger).not.toHaveBeenCalledWith("deselect:one", m2);
     });
+  });
+
+  describe('Checking for memory leaks', function () {
+
+    describe('when a collection is replaced by another one and is not referenced by a variable any more, with model sharing disabled', function () {
+      var logger, LoggedCollection, m1, m2, collection;
+
+      beforeEach(function () {
+        logger = new Logger();
+
+        LoggedCollection = Collection.extend({
+          initialize: function(models){
+            this.on("select:one", function (model) {
+              logger.log( "select:one event: Model " + model.cid + " selected in collection " + this._pickyCid );
+            });
+            this.on("deselect:one", function (model) {
+              logger.log( "deselect:one event: Model " + model.cid + " deselected in collection " + this._pickyCid );
+            });
+
+            Collection.prototype.initialize.call(this, models);
+          }
+        });
+
+        m1 = new Model();
+        m2 = new Model();
+      });
+
+      it('should no longer respond to model events', function () {
+        // With only variable holding a collection, only one 'select:*' event
+        // should be logged.
+        collection = new LoggedCollection([m1, m2]);
+        collection = new LoggedCollection([m1, m2]);
+
+        m2.select();
+        expect(logger.entries.length).toBe(1);
+      });
+    });
+    describe('when a collection is replaced by another one and is not referenced by a variable any more, with model sharing enabled', function () {
+      var logger, Collection, LoggedCollection, m1, m2, collection;
+
+      beforeEach(function () {
+        logger = new Logger();
+        Collection = Backbone.Collection.extend({
+          model: Model,
+
+          initialize: function(models){
+            var singleSelect = new Backbone.Picky.SingleSelect(this, models);
+            _.extend(this, singleSelect);
+          }
+        });
+
+        LoggedCollection = Collection.extend({
+          initialize: function(models){
+            this.on("select:one", function (model) {
+              logger.log( "select:one event: Model " + model.cid + " selected in collection " + this._pickyCid );
+            });
+            this.on("deselect:one", function (model) {
+              logger.log( "deselect:one event: Model " + model.cid + " deselected in collection " + this._pickyCid );
+            });
+
+            Collection.prototype.initialize.call(this, models);
+          }
+        });
+
+        m1 = new Model();
+        m2 = new Model();
+      });
+
+      it('should no longer respond to model events after calling close on it', function () {
+        // With only variable holding a collection, only one 'select:*' event
+        // should be logged.
+        collection = new LoggedCollection([m1, m2]);
+        collection.close();
+        collection = new LoggedCollection([m1, m2]);
+
+        m2.select();
+        expect(logger.entries.length).toBe(1);
+      });
+    });
+
   });
 
 });
