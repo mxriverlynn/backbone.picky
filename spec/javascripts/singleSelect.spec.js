@@ -501,6 +501,8 @@ describe("single select collection", function(){
       it('should no longer respond to model events', function () {
         // With only variable holding a collection, only one 'select:*' event
         // should be logged.
+
+        //noinspection JSUnusedAssignment
         collection = new LoggedCollection([m1, m2]);
         collection = new LoggedCollection([m1, m2]);
 

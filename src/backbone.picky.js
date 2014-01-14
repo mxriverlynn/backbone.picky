@@ -61,6 +61,7 @@ Backbone.Picky = (function (Backbone, _) {
     },
 
     close: function () {
+      unregisterCollectionWithModels(this);
       this.stopListening();
     }
 
@@ -163,6 +164,7 @@ Backbone.Picky = (function (Backbone, _) {
     },
 
     close: function () {
+      unregisterCollectionWithModels(this);
       this.stopListening();
     }
   });
@@ -299,6 +301,12 @@ Backbone.Picky = (function (Backbone, _) {
   function registerCollectionWithModel(model, collection) {
     model._pickyCollections || (model._pickyCollections = []);
     model._pickyCollections.push(collection._pickyCid);
+  }
+
+  function unregisterCollectionWithModels (collection) {
+    collection.each(function (model) {
+      onRemove(model, collection, {_localSilent: true});
+    });
   }
 
   return Picky;
