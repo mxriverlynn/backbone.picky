@@ -1057,6 +1057,40 @@ describe("models shared between multiple collections", function(){
       expect(model1.selected).toBe(false);
     });
 
+    it("should no longer be selected if removed from all collections, even if it had been part of a collection which had simply been closed and all references to it removed (single-select collection, closed first)", function(){
+      singleCollectionA.close();
+      singleCollectionA = undefined;
+
+      multiCollectionA.remove(model1);
+      expect(model1.selected).toBe(false);
+    });
+
+    it("should no longer be selected if removed from all collections, even if it had been part of a collection which had simply been closed and all references to it removed (multi-select collection, closed first)", function(){
+      multiCollectionA.close();
+      multiCollectionA = undefined;
+
+      singleCollectionA.remove(model1);
+      expect(model1.selected).toBe(false);
+    });
+
+    it("should no longer be selected if removed from all collections, even if it had been part of a collection which had simply been closed and all references to it removed (single-select collection, closed last)", function(){
+      multiCollectionA.remove(model1);
+
+      singleCollectionA.close();
+      singleCollectionA = undefined;
+
+      expect(model1.selected).toBe(false);
+    });
+
+    it("should no longer be selected if removed from all collections, even if it had been part of a collection which had simply been closed and all references to it removed (multi-select collection, closed last)", function(){
+      singleCollectionA.remove(model1);
+
+      multiCollectionA.close();
+      multiCollectionA = undefined;
+
+      expect(model1.selected).toBe(false);
+    });
+
     it("should remain selected in those collections it has not been removed from (removed from single-select)", function(){
       singleCollectionA.remove(model1);
       expect(multiCollectionA.selected[model1.cid]).not.toBeUndefined();

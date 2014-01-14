@@ -123,4 +123,43 @@ describe("selectable model", function(){
     });
   });
 
+  describe("when toggling the selected status of a model that is selected", function(){
+    var model;
+
+    beforeEach(function(){
+      model = new Model();
+      model.select();
+
+      spyOn(model, "trigger").andCallThrough();
+      model.toggleSelected();
+    });
+
+    it("should not be selected", function(){
+      expect(model.selected).toBe(false);
+    });
+
+    it("should notify of deselection", function(){
+      expect(model.trigger).toHaveBeenCalledWith("deselected", model);
+    });
+  });
+
+  describe("when toggling the selected status of a model that is not selected", function(){
+    var model;
+
+    beforeEach(function(){
+      model = new Model();
+
+      spyOn(model, "trigger").andCallThrough();
+      model.toggleSelected();
+    });
+
+    it("should be selected", function(){
+      expect(model.selected).toBe(true);
+    });
+
+    it("should notify of selection", function(){
+      expect(model.trigger).toHaveBeenCalledWith("selected", model);
+    });
+  });
+
 });
