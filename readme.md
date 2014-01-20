@@ -200,6 +200,11 @@ as the first parameter.
 Triggers when a model is deselected. Provides the selected model
 as the first parameter.
 
+#### "reselected"
+
+Triggers when a model, which is already selected, is selected again. Provides
+the re-selected model as the first parameter.
+
 ## Picky.SingleSelect
 
 Creates single-select capabilities for a `Backbone.Collection`, allowing
@@ -340,7 +345,12 @@ Triggered when a model has been deselected. Provides the deselected model
 as the first parameter.
 
 This fires whether `deselect` has been called explicitly, or the
-selection is being replace through another call to `select`.
+selection is being replaced through another call to `select`.
+
+#### "reselect:one"
+
+Triggered when a model, which is already selected, is selected again. Provides
+the selected model as the first parameter.
 
 ## Picky.MultiSelect
 
@@ -521,16 +531,26 @@ the `silent` option, as in `myCol.select(myModel, {silent: true})`.
 
 #### "select:all"
 
-Triggered when all models have been selected
+Triggered when all models have been selected.
 
 #### "select:none"
 
-Triggered when all models have been deselected
+Triggered when all models have been deselected.
 
 #### "select:some"
 
 Triggered when at least 1 model is selected, but less than all models have
-been selected
+been selected.
+
+#### "reselect:any"
+
+Triggered when at least one model, which is already selected, is selected again.
+Provides an array of the re-selected models as the first parameter.
+
+In contrast to the other events, this event fires even if there isn't any change
+in the resulting selection at all. Note that there is no separate reselect:all
+event; the re-selection of all items in the collection is also covered by
+`reselect:any`.
 
 ## Sharing models among collections
 
@@ -625,6 +645,7 @@ see all of the specs for Backbone.Picky
 
 ### pre v0.3.0
 
+* New events capture when models are re-selected: `reselected` (model), `reselect:one` (single-select collection), `reselect:any` (multi-select collection)
 * Multi-select events no longer fire when `selectAll`, `deselectAll` actions are a no-op (change in spec)
 * Added support for sharing models among collections
 * Added a `silent` option

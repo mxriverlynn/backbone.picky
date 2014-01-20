@@ -36,14 +36,27 @@ Backbone.Picky = (function (Backbone, _) {
     // Select a model, deselecting any previously
     // selected model
     select: function(model, options){
+      var reselected = model && this.selected === model ? model : undefined;
+
       options || (options = {});
-      if (model && this.selected === model) { return; }
+      options._processedBy || (options._processedBy = []);
+      if (options._processedBy[this._pickyCid]) { return; }
 
-      this.deselect(undefined, _.omit(options, "_localSilent"));
+      if (!reselected) {
+        this.deselect(undefined, _.omit(options, "_silentLocally"));
+        this.selected = model;
+      }
+      options._processedBy[this._pickyCid] = this;
 
-      this.selected = model;
-      this.selected.select(_.omit(options, "_localSilent"));
-      if (!(options.silent || options._localSilent)) this.trigger("select:one", model);
+      if (!options._processedBy[this.selected.cid]) this.selected.select(_.omit(options, "_silentLocally"));
+
+      if (!(options.silent || options._silentLocally)) {
+        if (reselected) {
+          if (!options._silentReselect) this.trigger("reselect:one", model);
+        } else {
+          this.trigger("select:one", model);
+        }
+      }
     },
 
     // Deselect a model, resulting in no model
@@ -56,8 +69,8 @@ Backbone.Picky = (function (Backbone, _) {
       if (this.selected !== model){ return; }
 
       delete this.selected;
-      if (!options._skipModelCall) model.deselect(_.omit(options, "_localSilent"));
-      if (!(options.silent || options._localSilent)) this.trigger("deselect:one", model);
+      if (!options._skipModelCall) model.deselect(_.omit(options, "_silentLocally"));
+      if (!(options.silent || options._silentLocally)) this.trigger("deselect:one", model);
     },
 
     close: function () {
@@ -103,15 +116,22 @@ Backbone.Picky = (function (Backbone, _) {
     // model knows it's selected, and hold on to
     // the selected model.
     select: function (model, options) {
-      var prevSelectedCids = _.keys(this.selected);
+      var prevSelectedCids = _.keys(this.selected),
+          reselected = this.selected[model.cid] ? [ model ] : [];
 
-      if (this.selected[model.cid]) { return; }
+      options || (options = {});
+      options._processedBy || (options._processedBy = []);
 
-      this.selected[model.cid] = model;
-      this.selectedLength = _.size(this.selected);
+      if (reselected.length && options._processedBy[this._pickyCid]) { return; }
 
-      model.select(_.omit(options, "_localSilent"));
-      triggerMultiSelectEvents(this, prevSelectedCids, options);
+      if (!reselected.length) {
+        this.selected[model.cid] = model;
+        this.selectedLength = _.size(this.selected);
+      }
+      options._processedBy[this._pickyCid] = this;
+
+      if (!options._processedBy[model.cid]) model.select(_.omit(options, "_silentLocally"));
+      triggerMultiSelectEvents(this, prevSelectedCids, options, reselected);
     },
 
     // Deselect a specified model, make sure the
@@ -126,20 +146,27 @@ Backbone.Picky = (function (Backbone, _) {
       delete this.selected[model.cid];
       this.selectedLength = _.size(this.selected);
 
-      if (!options._skipModelCall) model.deselect(_.omit(options, "_localSilent"));
+      if (!options._skipModelCall) model.deselect(_.omit(options, "_silentLocally"));
       triggerMultiSelectEvents(this, prevSelectedCids, options);
     },
 
     // Select all models in this collection
     selectAll: function (options) {
-      var prevSelectedCids = _.keys(this.selected);
+      var prevSelectedCids = _.keys(this.selected),
+          reselected = [];
+
+      options || (options = {});
+      options._processedBy || (options._processedBy = []);
 
       this.selectedLength = 0;
       this.each(function (model) {
         this.selectedLength++;
-        this.select(model, _.extend({}, options, {_localSilent: true}));
+        if (this.selected[model.cid]) reselected.push(model);
+        this.select(model, _.extend({}, options, {_silentLocally: true}));
       }, this);
-      triggerMultiSelectEvents(this, prevSelectedCids, options);
+      options._processedBy[this._pickyCid] = this;
+
+      triggerMultiSelectEvents(this, prevSelectedCids, options, reselected);
     },
 
     // Deselect all models in this collection
@@ -151,7 +178,7 @@ Backbone.Picky = (function (Backbone, _) {
 
       this.each(function (model) {
         if (model.selected) this.selectedLength--;
-        this.deselect(model, _.extend({}, options, {_localSilent: true}));
+        this.deselect(model, _.extend({}, options, {_silentLocally: true}));
       }, this);
 
       this.selectedLength = 0;
@@ -193,21 +220,32 @@ Backbone.Picky = (function (Backbone, _) {
     // Select this model, and tell our
     // collection that we're selected
     select: function (options) {
+      var reselected = this.selected;
+
       options || (options = {});
-      if (this.selected) { return; }
+      options._processedBy || (options._processedBy = []);
+
+      if (options._processedBy[this.cid]) { return; }
 
       this.selected = true;
+      options._processedBy[this.cid] = this;
 
       if (this._pickyCollections) {
         // Model-sharing mode: notify collections with an event
-        this.trigger("_selected", this, _.omit(options, "_localSilent"));
+        this.trigger("_selected", this, _.omit(options, "_silentLocally"));
       } else if (this.collection) {
         // Single collection only: no event listeners set up in collection, call
         // it directly
-        this.collection.select(this, _.omit(options, "_localSilent"));
+        if (!options._processedBy[this.collection._pickyCid]) this.collection.select(this, _.omit(options, "_silentLocally"));
       }
 
-      if (!(options.silent || options._localSilent)) this.trigger("selected", this);
+      if (!(options.silent || options._silentLocally)) {
+        if (reselected) {
+          if (!options._silentReselect) this.trigger("reselected", this);
+        } else {
+          this.trigger("selected", this);
+        }
+      }
     },
 
     // Deselect this model, and tell our
@@ -220,14 +258,14 @@ Backbone.Picky = (function (Backbone, _) {
 
       if (this._pickyCollections) {
         // Model-sharing mode: notify collections with an event
-        this.trigger("_deselected", this, _.omit(options, "_localSilent"));
+        this.trigger("_deselected", this, _.omit(options, "_silentLocally"));
       } else if (this.collection) {
         // Single collection only: no event listeners set up in collection, call
         // it directly
-        this.collection.deselect(this, _.omit(options, "_localSilent"));
+        this.collection.deselect(this, _.omit(options, "_silentLocally"));
       }
 
-      if (!(options.silent || options._localSilent)) this.trigger("deselected", this);
+      if (!(options.silent || options._silentLocally)) this.trigger("deselected", this);
     },
 
     // Change selected to the opposite of what
@@ -246,13 +284,17 @@ Backbone.Picky = (function (Backbone, _) {
 
   // Trigger events from a multi-select collection based on the number of
   // selected items.
-  var triggerMultiSelectEvents = function (collection, prevSelectedCids, options) {
+  var triggerMultiSelectEvents = function (collection, prevSelectedCids, options, reselected) {
     options || (options = {});
-    if (options.silent || options._localSilent) return;
+    if (options.silent || options._silentLocally) return;
 
     var selectedLength = collection.selectedLength,
         length = collection.length,
         unchanged = (selectedLength === prevSelectedCids.length && _.intersection(_.keys(collection.selected), prevSelectedCids).length === selectedLength);
+
+    if (reselected && reselected.length && !options._silentReselect) {
+      collection.trigger("reselect:any", reselected);
+    }
 
     if (unchanged) return;
 
@@ -274,7 +316,7 @@ Backbone.Picky = (function (Backbone, _) {
 
   function onAdd (model, collection) {
     registerCollectionWithModel(model, collection);
-    if (model.selected) collection.select(model);
+    if (model.selected) collection.select(model, {_silentReselect: true});
   }
 
   function onRemove (model, collection, options) {
@@ -293,7 +335,7 @@ Backbone.Picky = (function (Backbone, _) {
         excessiveSelections,
         deselectOnRemove = _.find(options.previousModels, function (model) { return model.selected; });
 
-    if (deselectOnRemove) onRemove(deselectOnRemove, collection, {_localSilent: true});
+    if (deselectOnRemove) onRemove(deselectOnRemove, collection, {_silentLocally: true});
 
     selected = collection.filter(function (model) { return model.selected; });
     excessiveSelections = _.initial(selected);
@@ -305,7 +347,7 @@ Backbone.Picky = (function (Backbone, _) {
     var select,
         deselect = _.filter(options.previousModels, function (model) { return model.selected; });
 
-    if (deselect) _.each(deselect, function (model) { onRemove(model, collection, {_localSilent: true}); });
+    if (deselect) _.each(deselect, function (model) { onRemove(model, collection, {_silentLocally: true}); });
 
     select = collection.filter(function (model) { return model.selected; });
     if (select.length) _.each(select, function (model) { collection.select(model, {silent: true}); });
@@ -318,7 +360,7 @@ Backbone.Picky = (function (Backbone, _) {
 
   function unregisterCollectionWithModels (collection) {
     collection.each(function (model) {
-      onRemove(model, collection, {_localSilent: true});
+      onRemove(model, collection, {_silentLocally: true});
     });
   }
 
