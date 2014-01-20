@@ -623,6 +623,15 @@ see all of the specs for Backbone.Picky
 
 ## Release Notes
 
+### pre v0.3.0
+
+* Added support for sharing models among collections
+* Added a `silent` option
+* Improved events, now firing when model and collection are in a consistent state (issue #18)
+* Added `deselectAll`, while keeping `selectNone` around as an alias
+* More comprehensive testing
+* Added config file for the Karma test runner
+
 ### v0.2.0
 
 * Renamed `SingleSelect` events from "select" and "deselect" to "select:one" and "deselect:one"
