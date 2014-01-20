@@ -625,6 +625,7 @@ see all of the specs for Backbone.Picky
 
 ### pre v0.3.0
 
+* Multi-select events no longer fire when `selectAll`, `deselectAll` actions are a no-op (change in spec)
 * Added support for sharing models among collections
 * Added a `silent` option
 * Improved events, now firing when model and collection are in a consistent state (issue #18)

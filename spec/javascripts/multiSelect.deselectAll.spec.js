@@ -28,9 +28,11 @@ describe("multi-select collection: deselectAll", function(){
       collection.deselectAll();
     });
     
-    it("should trigger a select:none event", function(){
-      // todo This is doesn't make sense and is inconsistent with the behaviour elsewhere: an event triggered by a no-op
-      expect(collection.trigger).toHaveBeenCalledWith("select:none", collection);
+    it("should not trigger a select:none event", function(){
+      // NB This is a change in the spec. Up to version 0.2.0, it _did_ trigger
+      // a select:none event. But an event triggered by a no-op didn't make
+      // sense and was inconsistent with the behaviour elsewhere.
+      expect(collection.trigger).not.toHaveBeenCalledWith("select:none", collection);
     });
 
     it("should have a selected count of 0", function(){

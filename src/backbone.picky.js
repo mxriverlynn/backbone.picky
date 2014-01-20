@@ -9,7 +9,7 @@ Backbone.Picky = (function (Backbone, _) {
   // deselected.
 
   Picky.SingleSelect = function(collection, models){
-    this._pickyCid = _.uniqueId('singleSelect-');
+    this._pickyCid = _.uniqueId('singleSelect');
     this.collection = collection;
 
     if (arguments.length > 1) {
@@ -74,7 +74,7 @@ Backbone.Picky = (function (Backbone, _) {
   // capabilities.
 
   Picky.MultiSelect = function (collection, models) {
-    this._pickyCid = _.uniqueId('multiSelect-');
+    this._pickyCid = _.uniqueId('multiSelect');
     this.collection = collection;
     this.selected = {};
 
@@ -103,19 +103,23 @@ Backbone.Picky = (function (Backbone, _) {
     // model knows it's selected, and hold on to
     // the selected model.
     select: function (model, options) {
+      var prevSelectedCids = _.keys(this.selected);
+
       if (this.selected[model.cid]) { return; }
 
       this.selected[model.cid] = model;
       this.selectedLength = _.size(this.selected);
 
       model.select(_.omit(options, "_localSilent"));
-      triggerMultiSelectEvents(this, options);
+      triggerMultiSelectEvents(this, prevSelectedCids, options);
     },
 
     // Deselect a specified model, make sure the
     // model knows it has been deselected, and remove
     // the model from the selected list.
     deselect: function (model, options) {
+      var prevSelectedCids = _.keys(this.selected);
+
       options || (options = {});
       if (!this.selected[model.cid]) { return; }
 
@@ -123,29 +127,35 @@ Backbone.Picky = (function (Backbone, _) {
       this.selectedLength = _.size(this.selected);
 
       if (!options._skipModelCall) model.deselect(_.omit(options, "_localSilent"));
-      triggerMultiSelectEvents(this, options);
+      triggerMultiSelectEvents(this, prevSelectedCids, options);
     },
 
     // Select all models in this collection
     selectAll: function (options) {
+      var prevSelectedCids = _.keys(this.selected);
+
       this.selectedLength = 0;
       this.each(function (model) {
         this.selectedLength++;
-        model.select(_.omit(options, "_localSilent"));
+        this.select(model, _.extend({}, options, {_localSilent: true}));
       }, this);
-      triggerMultiSelectEvents(this, options);
+      triggerMultiSelectEvents(this, prevSelectedCids, options);
     },
 
     // Deselect all models in this collection
     deselectAll: function (options) {
+      var prevSelectedCids;
+
       if (this.selectedLength === 0) { return; }
+      prevSelectedCids = _.keys(this.selected);
+
       this.each(function (model) {
         if (model.selected) this.selectedLength--;
-        model.deselect(_.omit(options, "_localSilent"));
+        this.deselect(model, _.extend({}, options, {_localSilent: true}));
       }, this);
 
       this.selectedLength = 0;
-      triggerMultiSelectEvents(this, options);
+      triggerMultiSelectEvents(this, prevSelectedCids, options);
     },
 
     selectNone: function (options) {
@@ -236,12 +246,15 @@ Backbone.Picky = (function (Backbone, _) {
 
   // Trigger events from a multi-select collection based on the number of
   // selected items.
-  var triggerMultiSelectEvents = function (collection, options) {
+  var triggerMultiSelectEvents = function (collection, prevSelectedCids, options) {
     options || (options = {});
     if (options.silent || options._localSilent) return;
 
-    var selectedLength = collection.selectedLength;
-    var length = collection.length;
+    var selectedLength = collection.selectedLength,
+        length = collection.length,
+        unchanged = (selectedLength === prevSelectedCids.length && _.intersection(_.keys(collection.selected), prevSelectedCids).length === selectedLength);
+
+    if (unchanged) return;
 
     if (selectedLength === length) {
       collection.trigger("select:all", collection);
