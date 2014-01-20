@@ -1,4 +1,4 @@
-describe("multi-select collection deselecting", function(){
+describe("multi-select collection: deselectAll", function(){
   var Model = Backbone.Model.extend({
     initialize: function(){
       var selectable = new Backbone.Picky.Selectable(this);
@@ -28,7 +28,8 @@ describe("multi-select collection deselecting", function(){
       collection.deselectAll();
     });
     
-    it("should trigger 'none' selected event", function(){
+    it("should trigger a select:none event", function(){
+      // todo This is doesn't make sense and is inconsistent with the behaviour elsewhere: an event triggered by a no-op
       expect(collection.trigger).toHaveBeenCalledWith("select:none", collection);
     });
 
@@ -55,7 +56,7 @@ describe("multi-select collection deselecting", function(){
       collection.deselectAll({silent: true});
     });
 
-    it("should not trigger 'none' selected event", function(){
+    it("should not trigger a select:none event", function(){
       expect(collection.trigger).not.toHaveBeenCalledWith("select:none", collection);
     });
 
@@ -83,8 +84,12 @@ describe("multi-select collection deselecting", function(){
       collection.deselectAll();
     });
     
-    it("should trigger 'none' selected event", function(){
+    it("should trigger a select:none event", function(){
       expect(collection.trigger).toHaveBeenCalledWith("select:none", collection);
+    });
+
+    it("should not trigger a reselect:any event", function(){
+      expect(collection.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
     });
 
     it("should have a selected count of 0", function(){
@@ -111,7 +116,7 @@ describe("multi-select collection deselecting", function(){
       collection.deselectAll({silent: true});
     });
 
-    it("should not trigger 'none' selected event", function(){
+    it("should not trigger a select:none event", function(){
       expect(collection.trigger).not.toHaveBeenCalledWith("select:none", collection);
     });
 
@@ -139,8 +144,12 @@ describe("multi-select collection deselecting", function(){
       collection.selectNone();
     });
 
-    it("should trigger 'none' selected event", function(){
+    it("should trigger a select:none event", function(){
       expect(collection.trigger).toHaveBeenCalledWith("select:none", collection);
+    });
+
+    it("should not trigger a reselect:any event", function(){
+      expect(collection.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
     });
 
     it("should have a selected count of 0", function(){
@@ -185,8 +194,12 @@ describe("multi-select collection deselecting", function(){
       collection.deselectAll();
     });
     
-    it("should trigger 'none' selected event", function(){
+    it("should trigger a select:none event", function(){
       expect(collection.trigger).toHaveBeenCalledWith("select:none", collection);
+    });
+
+    it("should not trigger a reselect:any event", function(){
+      expect(collection.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
     });
 
     it("should have a selected count of 0", function(){
@@ -247,8 +260,12 @@ describe("multi-select collection deselecting", function(){
       collection.selectNone();
     });
     
-    it("should trigger 'none' selected event", function(){
+    it("should trigger a select:none event", function(){
       expect(collection.trigger).toHaveBeenCalledWith("select:none", collection);
+    });
+
+    it("should not trigger a reselect:any event", function(){
+      expect(collection.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
     });
 
     it("should have a selected count of 0", function(){
@@ -276,7 +293,7 @@ describe("multi-select collection deselecting", function(){
       collection.deselectAll({silent: true});
     });
 
-    it("should not trigger 'none' selected event", function(){
+    it("should not trigger a select:none event", function(){
       expect(collection.trigger).not.toHaveBeenCalledWith("select:none", collection);
     });
 

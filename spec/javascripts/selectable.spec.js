@@ -23,6 +23,10 @@ describe("selectable model", function(){
     it("should notify of selection", function(){
       expect(model.trigger).toHaveBeenCalledWith("selected", model);
     });
+
+    it("should not trigger a reselected event", function(){
+      expect(model.trigger).not.toHaveBeenCalledWith("reselected", model);
+    });
   });
 
   describe("when selecting a model, with options.silent enabled", function(){
@@ -61,6 +65,34 @@ describe("selectable model", function(){
 
     it("should not notify of selection", function(){
       expect(model.trigger).not.toHaveBeenCalledWith("selected", model);
+    });
+
+    it("should trigger a reselected event", function(){
+      expect(model.trigger).toHaveBeenCalledWith("reselected", model);
+    });
+  });
+
+  describe("when selecting a model that is already selected, with options.silent enabled", function(){
+    var model;
+
+    beforeEach(function(){
+      model = new Model();
+      model.select();
+
+      spyOn(model, "trigger").andCallThrough();
+      model.select({silent: true});
+    });
+
+    it("should still be selected", function(){
+      expect(model.selected).toBe(true);
+    });
+
+    it("should not notify of selection", function(){
+      expect(model.trigger).not.toHaveBeenCalledWith("selected", model);
+    });
+
+    it("should not trigger a reselected event", function(){
+      expect(model.trigger).not.toHaveBeenCalledWith("reselected", model);
     });
   });
 
@@ -120,6 +152,10 @@ describe("selectable model", function(){
 
     it("should not notify of deselection", function(){
       expect(model.trigger).not.toHaveBeenCalledWith("deselected", model);
+    });
+
+    it("should not trigger a reselected event", function(){
+      expect(model.trigger).not.toHaveBeenCalledWith("reselected", model);
     });
   });
 

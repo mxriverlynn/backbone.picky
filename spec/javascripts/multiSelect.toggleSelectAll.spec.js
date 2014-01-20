@@ -1,4 +1,4 @@
-describe("multi-select collection toggle", function(){
+describe("multi-select collection: toggleSelectAll", function(){
   var Model = Backbone.Model.extend({
     initialize: function(){
       var selectable = new Backbone.Picky.Selectable(this);
@@ -28,7 +28,7 @@ describe("multi-select collection toggle", function(){
       collection.toggleSelectAll();
     });
     
-    it("should trigger 'all' selected event", function(){
+    it("should trigger a select:all event", function(){
       expect(collection.trigger).toHaveBeenCalledWith("select:all", collection);
     });
 
@@ -55,7 +55,7 @@ describe("multi-select collection toggle", function(){
       collection.toggleSelectAll({silent: true});
     });
 
-    it("should not trigger 'all' selected event", function(){
+    it("should not trigger a select:all event", function(){
       expect(collection.trigger).not.toHaveBeenCalledWith("select:all", collection);
     });
 
@@ -84,7 +84,7 @@ describe("multi-select collection toggle", function(){
       collection.toggleSelectAll();
     });
     
-    it("should trigger 'all' selected event", function(){
+    it("should trigger a select:all event", function(){
       expect(collection.trigger).toHaveBeenCalledWith("select:all", collection);
     });
 
@@ -114,7 +114,7 @@ describe("multi-select collection toggle", function(){
       collection.toggleSelectAll();
     });
     
-    it("should trigger 'none' selected event", function(){
+    it("should trigger a select:none event", function(){
       expect(collection.trigger).toHaveBeenCalledWith("select:none", collection);
     });
 
@@ -144,7 +144,7 @@ describe("multi-select collection toggle", function(){
       collection.toggleSelectAll({silent: true});
     });
 
-    it("should not trigger 'none' selected event", function(){
+    it("should not trigger a select:none event", function(){
       expect(collection.trigger).not.toHaveBeenCalledWith("select:none", collection);
     });
 

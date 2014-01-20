@@ -1,4 +1,4 @@
-describe("multi-select collection selecting", function(){
+describe("multi-select collection: selectAll", function(){
   var Model = Backbone.Model.extend({
     initialize: function(){
       var selectable = new Backbone.Picky.Selectable(this);
@@ -46,6 +46,10 @@ describe("multi-select collection selecting", function(){
     
     it("should trigger 'all' selected event", function(){
       expect(collection.trigger).toHaveBeenCalledWith("select:all", collection);
+    });
+
+    it("should not trigger a reselect:any event", function(){
+      expect(collection.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
     });
 
     it("should have a selected count of 2", function(){
@@ -126,9 +130,12 @@ describe("multi-select collection selecting", function(){
   });
 
   describe("when 1 model is selected, and selecting all", function(){
-    var m1, m2, collection;
+    var m1, m2, collection, reselectedEventState, reselectAnyEventState;
 
     beforeEach(function(){
+      reselectedEventState = { model: {}, collection: {} };
+      reselectAnyEventState = { m1: {}, m2: {}, collection: {} };
+
       m1 = new Model();
       m2 = new Model();
 
@@ -136,11 +143,28 @@ describe("multi-select collection selecting", function(){
       m1.select();
 
       spyOn(collection, "trigger").andCallThrough();
+      m1.on('reselected', function (model) {
+        reselectedEventState.model.selected = model && model.selected;
+        reselectedEventState.collection.selected = _.clone(collection.selected);
+        reselectedEventState.collection.selectedLength = collection.selectedLength;
+      });
+
+      collection.on('reselect:any', function () {
+        reselectAnyEventState.m1.selected = m1.selected;
+        reselectAnyEventState.m2.selected = m2.selected;
+        reselectAnyEventState.collection.selected = _.clone(collection.selected);
+        reselectAnyEventState.collection.selectedLength = collection.selectedLength;
+      });
+
       collection.selectAll();
     });
     
     it("should trigger 'all' selected event", function(){
       expect(collection.trigger).toHaveBeenCalledWith("select:all", collection);
+    });
+
+    it("should trigger a reselect:any event, with an array containing the previously selected model as a parameter", function(){
+      expect(collection.trigger).toHaveBeenCalledWith("reselect:any", [m1]);
     });
 
     it("should have a selected count of 2", function(){
@@ -154,6 +178,30 @@ describe("multi-select collection selecting", function(){
     it("should have the second selected model in the selected list", function(){
       expect(collection.selected[m2.cid]).not.toBeUndefined();
     });
+
+    it('should trigger a model\'s reselected event when the collection\'s selected length is consistent with its selected models', function () {
+      // m2 doesn't necessarily have to be part of collection.selected at this
+      // time. The point is that events are fired when model and collection
+      // states are consistent. When m1 fires the 'reselected' event, only m1
+      // must be part of the collection.
+      expect(reselectedEventState.collection.selectedLength).toBeGreaterThan(0);
+      expect(reselectedEventState.collection.selectedLength).toEqual(_.size(reselectedEventState.collection.selected));
+    });
+
+    it('should trigger the collection\'s reselect:any event after the model status has been updated', function () {
+      expect(reselectAnyEventState.m1.selected).toEqual(true);
+      expect(reselectAnyEventState.m2.selected).toEqual(true);
+    });
+
+    it('should trigger the collection\'s reselect:any event after the collection\'s selected models have been updated', function () {
+      expect(reselectAnyEventState.collection.selected[m1.cid]).toBe(m1);
+      expect(reselectAnyEventState.collection.selected[m2.cid]).toBe(m2);
+    });
+
+    it('should trigger the collection\'s reselect:any event after the collection\'s selected length has been updated', function () {
+      expect(reselectAnyEventState.collection.selectedLength).toBe(2);
+    });
+
   });
 
   describe("when 1 model is selected, and selecting all, with options.silent enabled", function(){
@@ -172,6 +220,10 @@ describe("multi-select collection selecting", function(){
 
     it("should not trigger an 'all' selected event", function(){
       expect(collection.trigger).not.toHaveBeenCalledWith("select:all", collection);
+    });
+
+    it("should not trigger a reselect:any event", function(){
+      expect(collection.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
     });
 
     it("should have a selected count of 2", function(){
@@ -202,8 +254,13 @@ describe("multi-select collection selecting", function(){
       collection.selectAll();
     });
     
-    it("should trigger 'all' selected event", function(){
+    it("should trigger a select:all event", function(){
+      // todo This is doesn't make sense and is inconsistent with the behaviour elsewhere: an event triggered by a no-op
       expect(collection.trigger).toHaveBeenCalledWith("select:all", collection);
+    });
+
+    it("should trigger a reselect:any event, with an array containing all models as a parameter", function(){
+      expect(collection.trigger).toHaveBeenCalledWith("reselect:any", [m1, m2]);
     });
 
     it("should have a selected count of 2", function(){
@@ -234,8 +291,12 @@ describe("multi-select collection selecting", function(){
       collection.selectAll({silent: true});
     });
 
-    it("should trigger 'all' selected event", function(){
+    it("should not trigger a select:all event", function(){
       expect(collection.trigger).not.toHaveBeenCalledWith("select:all", collection);
+    });
+
+    it("should not trigger a reselect:any event", function(){
+      expect(collection.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
     });
 
     it("should have a selected count of 2", function(){
