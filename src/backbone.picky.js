@@ -51,11 +51,13 @@ Backbone.Picky = (function (Backbone, _) {
       if (!options._processedBy[this.selected.cid]) this.selected.select(_.omit(options, "_silentLocally"));
 
       if (!(options.silent || options._silentLocally)) {
+
         if (reselected) {
-          if (!options._silentReselect) this.trigger("reselect:one", model);
+          if (!options._silentReselect) this.trigger("reselect:one", model, stripInternalOptions(options));
         } else {
-          this.trigger("select:one", model);
+          this.trigger("select:one", model, stripInternalOptions(options));
         }
+
       }
     },
 
@@ -70,7 +72,7 @@ Backbone.Picky = (function (Backbone, _) {
 
       delete this.selected;
       if (!options._skipModelCall) model.deselect(_.omit(options, "_silentLocally"));
-      if (!(options.silent || options._silentLocally)) this.trigger("deselect:one", model);
+      if (!(options.silent || options._silentLocally)) this.trigger("deselect:one", model, stripInternalOptions(options));
     },
 
     close: function () {
@@ -241,9 +243,9 @@ Backbone.Picky = (function (Backbone, _) {
 
       if (!(options.silent || options._silentLocally)) {
         if (reselected) {
-          if (!options._silentReselect) this.trigger("reselected", this);
+          if (!options._silentReselect) this.trigger("reselected", this, stripInternalOptions(options));
         } else {
-          this.trigger("selected", this);
+          this.trigger("selected", this, stripInternalOptions(options));
         }
       }
     },
@@ -265,7 +267,7 @@ Backbone.Picky = (function (Backbone, _) {
         this.collection.deselect(this, _.omit(options, "_silentLocally"));
       }
 
-      if (!(options.silent || options._silentLocally)) this.trigger("deselected", this);
+      if (!(options.silent || options._silentLocally)) this.trigger("deselected", this, stripInternalOptions(options));
     },
 
     // Change selected to the opposite of what
@@ -293,23 +295,23 @@ Backbone.Picky = (function (Backbone, _) {
         unchanged = (selectedLength === prevSelectedCids.length && _.intersection(_.keys(collection.selected), prevSelectedCids).length === selectedLength);
 
     if (reselected && reselected.length && !options._silentReselect) {
-      collection.trigger("reselect:any", reselected);
+      collection.trigger("reselect:any", reselected, stripInternalOptions(options));
     }
 
     if (unchanged) return;
 
     if (selectedLength === length) {
-      collection.trigger("select:all", collection);
+      collection.trigger("select:all", collection, stripInternalOptions(options));
       return;
     }
 
     if (selectedLength === 0) {
-      collection.trigger("select:none", collection);
+      collection.trigger("select:none", collection, stripInternalOptions(options));
       return;
     }
 
     if (selectedLength > 0 && selectedLength < length) {
-      collection.trigger("select:some", collection);
+      collection.trigger("select:some", collection, stripInternalOptions(options));
       return;
     }
   };
@@ -362,6 +364,10 @@ Backbone.Picky = (function (Backbone, _) {
     collection.each(function (model) {
       onRemove(model, collection, {_silentLocally: true});
     });
+  }
+
+  function stripInternalOptions (options) {
+    return _.omit(options, "_silentLocally", "_silentReselect", "_skipModelCall", "_processedBy");
   }
 
   return Picky;

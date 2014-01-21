@@ -60,37 +60,36 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should trigger a selected event on the model', function () {
-      expect(model.trigger).toHaveBeenCalledWith("selected", model);
+      expect(model.trigger).toHaveBeenCalledWithInitial("selected", model);
     });
 
     it('should trigger a select:one event on the originating collection', function () {
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("select:one", model);
+      expect(singleCollectionA.trigger).toHaveBeenCalledWithInitial("select:one", model);
     });
 
     it('should trigger a select:one event on another single-select collection', function () {
-      expect(singleCollectionB.trigger).toHaveBeenCalledWith("select:one", model);
+      expect(singleCollectionB.trigger).toHaveBeenCalledWithInitial("select:one", model);
     });
 
     it('should trigger a select:some or selected:all event on another multi-select collection', function () {
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:all", multiCollectionA);
+      expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("select:all", multiCollectionA);
     });
 
     it('should not trigger a reselected event on the model', function () {
-      expect(model.trigger).not.toHaveBeenCalledWith("reselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("reselected", model);
     });
 
     it("should not trigger a reselect:one event on the originating collection", function(){
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("reselect:one", model);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model);
     });
 
     it("should not trigger a reselect:one event on another single-select collection", function(){
-      expect(singleCollectionB.trigger).not.toHaveBeenCalledWith("reselect:one", model);
+      expect(singleCollectionB.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model);
     });
 
     it("should not trigger a reselect:any event on another multi-select collection", function(){
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
     });
-
   });
 
   describe("when selecting a model in a single-select collection, with options.silent enabled", function(){
@@ -119,20 +118,20 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should not trigger a selected event on the model', function () {
-      expect(model.trigger).not.toHaveBeenCalledWith("selected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("selected", model);
     });
 
     it('should not trigger a select:one event on the originating collection', function () {
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("select:one", model);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:one", model);
     });
 
     it('should not trigger a select:one event on another single-select collection', function () {
-      expect(singleCollectionB.trigger).not.toHaveBeenCalledWith("select:one", model);
+      expect(singleCollectionB.trigger).not.toHaveBeenCalledWithInitial("select:one", model);
     });
 
     it('should not trigger a select:some or selected:all event on another multi-select collection', function () {
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:some", multiCollectionA);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:all", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:some", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:all", multiCollectionA);
     });
   });
 
@@ -170,37 +169,36 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should trigger a selected event on the model', function () {
-      expect(model.trigger).toHaveBeenCalledWith("selected", model);
+      expect(model.trigger).toHaveBeenCalledWithInitial("selected", model);
     });
 
     it('should trigger a select:some or selected:all event on the originating collection', function () {
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:all", multiCollectionA);
+      expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("select:all", multiCollectionA);
     });
 
     it('should trigger a select:one event on another single-select collection', function () {
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("select:one", model);
+      expect(singleCollectionA.trigger).toHaveBeenCalledWithInitial("select:one", model);
     });
 
     it('should trigger a select:some or selected:all event on another multi-select collection', function () {
-      expect(multiCollectionB.trigger).toHaveBeenCalledWith("select:all", multiCollectionB);
+      expect(multiCollectionB.trigger).toHaveBeenCalledWithInitial("select:all", multiCollectionB);
     });
 
     it('should not trigger a reselected event on the model', function () {
-      expect(model.trigger).not.toHaveBeenCalledWith("reselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("reselected", model);
     });
 
     it("should not trigger a reselect:any event on the originating collection", function(){
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
     });
 
     it("should not trigger a reselect:one event on another single-select collection", function(){
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("reselect:one", model);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model);
     });
 
     it("should not trigger a reselect:any event on another multi-select collection", function(){
-      expect(multiCollectionB.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+      expect(multiCollectionB.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
     });
-
   });
 
   describe("when selecting a model in a multi-select collection, with options.silent enabled", function(){
@@ -229,21 +227,21 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should not trigger a selected event on the model', function () {
-      expect(model.trigger).not.toHaveBeenCalledWith("selected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("selected", model);
     });
 
     it('should not trigger a select:some or selected:all event on the originating collection', function () {
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:some", multiCollectionA);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:all", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:some", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:all", multiCollectionA);
     });
 
     it('should not trigger a select:one event on another single-select collection', function () {
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("select:one", model);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:one", model);
     });
 
     it('should not trigger a select:some or selected:all event on another multi-select collection', function () {
-      expect(multiCollectionB.trigger).not.toHaveBeenCalledWith("select:some", multiCollectionB);
-      expect(multiCollectionB.trigger).not.toHaveBeenCalledWith("select:all", multiCollectionB);
+      expect(multiCollectionB.trigger).not.toHaveBeenCalledWithInitial("select:some", multiCollectionB);
+      expect(multiCollectionB.trigger).not.toHaveBeenCalledWithInitial("select:all", multiCollectionB);
     });
   });
 
@@ -275,29 +273,28 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should trigger a selected event on the model', function () {
-      expect(model.trigger).toHaveBeenCalledWith("selected", model);
+      expect(model.trigger).toHaveBeenCalledWithInitial("selected", model);
     });
 
     it('should trigger a select:one event on the single-select collection', function () {
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("select:one", model);
+      expect(singleCollectionA.trigger).toHaveBeenCalledWithInitial("select:one", model);
     });
 
     it('should trigger a select:some or selected:all event on the multi-select collection', function () {
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:all", multiCollectionA);
+      expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("select:all", multiCollectionA);
     });
 
     it('should not trigger a reselected event on the model', function () {
-      expect(model.trigger).not.toHaveBeenCalledWith("reselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("reselected", model);
     });
 
     it("should not trigger a reselect:one event on the single-select collection", function(){
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("reselect:one", model);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model);
     });
 
     it("should not trigger a reselect:any event on the multi-select collection", function(){
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
     });
-
   });
 
   describe("when selecting a model, which is shared across collections, with its select method and options.silent enabled", function(){
@@ -324,16 +321,16 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should not trigger a selected event on the model', function () {
-      expect(model.trigger).not.toHaveBeenCalledWith("selected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("selected", model);
     });
 
     it('should not trigger a select:one event on the single-select collection', function () {
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("select:one", model);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:one", model);
     });
 
     it('should not trigger a select:some or selected:all event on the multi-select collection', function () {
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:some", multiCollectionA);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:all", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:some", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:all", multiCollectionA);
     });
   });
 
@@ -364,38 +361,37 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should not trigger a selected event on the model', function () {
-      expect(model1.trigger).not.toHaveBeenCalledWith("selected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("selected", model1);
     });
 
     it('should not trigger a select:one event on the originating collection', function () {
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("select:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:one", model1);
     });
 
     it('should not trigger a select:one event on another single-select collection', function () {
-      expect(singleCollectionB.trigger).not.toHaveBeenCalledWith("select:one", model1);
+      expect(singleCollectionB.trigger).not.toHaveBeenCalledWithInitial("select:one", model1);
     });
 
     it('should not trigger a select:some or selected:all event on another multi-select collection', function () {
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:some", multiCollectionA);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:all", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:some", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:all", multiCollectionA);
     });
 
     it('should trigger a reselected event on the model', function () {
-      expect(model1.trigger).toHaveBeenCalledWith("reselected", model1);
+      expect(model1.trigger).toHaveBeenCalledWithInitial("reselected", model1);
     });
 
     it("should trigger a reselect:one event on the originating collection", function(){
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("reselect:one", model1);
+      expect(singleCollectionA.trigger).toHaveBeenCalledWithInitial("reselect:one", model1);
     });
 
     it("should trigger a reselect:one event on another single-select collection", function(){
-      expect(singleCollectionB.trigger).toHaveBeenCalledWith("reselect:one", model1);
+      expect(singleCollectionB.trigger).toHaveBeenCalledWithInitial("reselect:one", model1);
     });
 
     it("should trigger a reselect:any event on another multi-select collection, with an array containing the model as second parameter", function(){
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("reselect:any", [model1]);
+      expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("reselect:any", [model1]);
     });
-
   });
 
   describe("when re-selecting a model in a single-select collection, with options.silent enabled", function(){
@@ -419,38 +415,37 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should not trigger a selected event on the model', function () {
-      expect(model1.trigger).not.toHaveBeenCalledWith("selected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("selected", model1);
     });
 
     it('should not trigger a select:one event on the originating collection', function () {
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("select:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:one", model1);
     });
 
     it('should not trigger a select:one event on another single-select collection', function () {
-      expect(singleCollectionB.trigger).not.toHaveBeenCalledWith("select:one", model1);
+      expect(singleCollectionB.trigger).not.toHaveBeenCalledWithInitial("select:one", model1);
     });
 
     it('should not trigger a select:some or selected:all event on another multi-select collection', function () {
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:some", multiCollectionA);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:all", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:some", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:all", multiCollectionA);
     });
 
     it('should not trigger a reselected event on the model', function () {
-      expect(model1.trigger).not.toHaveBeenCalledWith("reselected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("reselected", model1);
     });
 
     it("should not trigger a reselect:one event on the originating collection", function(){
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("reselect:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model1);
     });
 
     it("should not trigger a reselect:one event on another single-select collection", function(){
-      expect(singleCollectionB.trigger).not.toHaveBeenCalledWith("reselect:one", model1);
+      expect(singleCollectionB.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model1);
     });
 
     it("should not trigger a reselect:any event on another multi-select collection", function(){
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
     });
-
   });
 
   describe("when re-selecting a model in a multi-select collection", function(){
@@ -474,39 +469,38 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should not trigger a selected event on the model', function () {
-      expect(model1.trigger).not.toHaveBeenCalledWith("selected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("selected", model1);
     });
 
     it('should not trigger a select:some or selected:all event on the originating collection', function () {
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:some", multiCollectionA);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:all", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:some", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:all", multiCollectionA);
     });
 
     it('should not trigger a select:one event on another single-select collection', function () {
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("select:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:one", model1);
     });
 
     it('should not trigger a select:some or selected:all event on another multi-select collection', function () {
-      expect(multiCollectionB.trigger).not.toHaveBeenCalledWith("select:some", multiCollectionB);
-      expect(multiCollectionB.trigger).not.toHaveBeenCalledWith("select:all", multiCollectionB);
+      expect(multiCollectionB.trigger).not.toHaveBeenCalledWithInitial("select:some", multiCollectionB);
+      expect(multiCollectionB.trigger).not.toHaveBeenCalledWithInitial("select:all", multiCollectionB);
     });
 
     it('should trigger a reselected event on the model', function () {
-      expect(model1.trigger).toHaveBeenCalledWith("reselected", model1);
+      expect(model1.trigger).toHaveBeenCalledWithInitial("reselected", model1);
     });
 
     it("should trigger a reselect:any event on the originating collection, with an array containing the model as second parameter", function(){
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("reselect:any", [model1]);
+      expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("reselect:any", [model1]);
     });
 
     it("should trigger a reselect:one event on another single-select collection", function(){
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("reselect:one", model1);
+      expect(singleCollectionA.trigger).toHaveBeenCalledWithInitial("reselect:one", model1);
     });
 
     it("should trigger a reselect:any event on another multi-select collection, with an array containing the model as second parameter", function(){
-      expect(multiCollectionB.trigger).toHaveBeenCalledWith("reselect:any", [model1]);
+      expect(multiCollectionB.trigger).toHaveBeenCalledWithInitial("reselect:any", [model1]);
     });
-
   });
 
   describe("when re-selecting a model in a multi-select collection, with options.silent enabled", function(){
@@ -530,39 +524,38 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should not trigger a selected event on the model', function () {
-      expect(model1.trigger).not.toHaveBeenCalledWith("selected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("selected", model1);
     });
 
     it('should not trigger a select:some or selected:all event on the originating collection', function () {
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:some", multiCollectionA);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:all", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:some", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:all", multiCollectionA);
     });
 
     it('should not trigger a select:one event on another single-select collection', function () {
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("select:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:one", model1);
     });
 
     it('should not trigger a select:some or selected:all event on another multi-select collection', function () {
-      expect(multiCollectionB.trigger).not.toHaveBeenCalledWith("select:some", multiCollectionB);
-      expect(multiCollectionB.trigger).not.toHaveBeenCalledWith("select:all", multiCollectionB);
+      expect(multiCollectionB.trigger).not.toHaveBeenCalledWithInitial("select:some", multiCollectionB);
+      expect(multiCollectionB.trigger).not.toHaveBeenCalledWithInitial("select:all", multiCollectionB);
     });
 
     it('should not trigger a reselected event on the model', function () {
-      expect(model1.trigger).not.toHaveBeenCalledWith("reselected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("reselected", model1);
     });
 
     it("should not trigger a reselect:any event on the originating collection", function(){
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
     });
 
     it("should not trigger a reselect:one event on another single-select collection", function(){
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("reselect:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model1);
     });
 
     it("should not trigger a reselect:any event on another multi-select collection", function(){
-      expect(multiCollectionB.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+      expect(multiCollectionB.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
     });
-
   });
 
   describe("when re-selecting a model, which is shared across collections, with its select method", function(){
@@ -596,30 +589,29 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should not trigger a selected event on the model', function () {
-      expect(model1.trigger).not.toHaveBeenCalledWith("selected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("selected", model1);
     });
 
     it('should not trigger a select:one event on the single-select collection', function () {
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("select:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:one", model1);
     });
 
     it('should not trigger a select:some or selected:all event on the multi-select collection', function () {
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:some", multiCollectionA);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:all", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:some", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:all", multiCollectionA);
     });
 
     it('should trigger a reselected event on the model', function () {
-      expect(model1.trigger).toHaveBeenCalledWith("reselected", model1);
+      expect(model1.trigger).toHaveBeenCalledWithInitial("reselected", model1);
     });
 
     it("should trigger a reselect:one event on the single-select collection", function(){
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("reselect:one", model1);
+      expect(singleCollectionA.trigger).toHaveBeenCalledWithInitial("reselect:one", model1);
     });
 
     it("should trigger a reselect:any event on the multi-select collection, with an array containing the model as second parameter", function(){
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("reselect:any", [model1]);
+      expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("reselect:any", [model1]);
     });
-
   });
 
   describe("when selecting a model, which is shared across collections and has already been selected, with its select method and options.silent enabled", function(){
@@ -641,30 +633,29 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should not trigger a selected event on the model', function () {
-      expect(model1.trigger).not.toHaveBeenCalledWith("selected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("selected", model1);
     });
 
     it('should not trigger a select:one event on the single-select collection', function () {
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("select:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:one", model1);
     });
 
     it('should not trigger a select:some or selected:all event on the multi-select collection', function () {
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:some", multiCollectionA);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:all", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:some", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:all", multiCollectionA);
     });
 
     it('should not trigger a reselected event on the model', function () {
-      expect(model1.trigger).not.toHaveBeenCalledWith("reselected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("reselected", model1);
     });
 
     it("should not trigger a reselect:one event on the single-select collection", function(){
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("reselect:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model1);
     });
 
     it("should not trigger a reselect:any event on the multi-select collection", function(){
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
     });
-
   });
 
   describe("when creating additional collections with a model that is already selected", function(){
@@ -742,11 +733,11 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should not trigger a selected event on the model', function () {
-      expect(model.trigger).not.toHaveBeenCalledWith("selected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("selected", model);
     });
 
     it('should not trigger a select:one event on the originating collection', function () {
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("select:one", model);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:one", model);
     });
 
     it('should not trigger a select:one, select:some or select:all events on a collections it is added to', function () {
@@ -766,17 +757,16 @@ describe("models shared between multiple collections", function(){
       // registering the model status in the new collection does not belong into
       // that category. It does not reflect the action of a user reaffirming a
       // selection.
-      expect(model.trigger).not.toHaveBeenCalledWith("reselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("reselected", model);
     });
 
     it("should not trigger a reselect:one event on the originating collection", function(){
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("reselect:one", model);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model);
     });
 
     it("should not trigger a reselect:one or reselect:any event on a collection it is added to", function(){
       expect(reselectLogger.entries.length).toEqual(0);
     });
-
   });
 
   describe("when a model is already selected and a different model is selected in a single-select collection", function(){
@@ -826,49 +816,48 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should trigger a selected event on the selected model', function () {
-      expect(model2.trigger).toHaveBeenCalledWith("selected", model2);
+      expect(model2.trigger).toHaveBeenCalledWithInitial("selected", model2);
     });
 
     it('should trigger a deselected event on the first model', function () {
-      expect(model1.trigger).toHaveBeenCalledWith("deselected", model1);
+      expect(model1.trigger).toHaveBeenCalledWithInitial("deselected", model1);
     });
 
     it('should trigger a deselect:one event on the originating collection', function () {
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("deselect:one", model1);
+      expect(singleCollectionA.trigger).toHaveBeenCalledWithInitial("deselect:one", model1);
     });
 
     it('should trigger a select:one event on the originating collection', function () {
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("select:one", model2);
+      expect(singleCollectionA.trigger).toHaveBeenCalledWithInitial("select:one", model2);
     });
 
     it('should trigger a deselect:one event on another single-select collection', function () {
-      expect(singleCollectionB.trigger).toHaveBeenCalledWith("deselect:one", model1);
+      expect(singleCollectionB.trigger).toHaveBeenCalledWithInitial("deselect:one", model1);
     });
 
     it('should trigger a select:one event on another single-select collection', function () {
-      expect(singleCollectionB.trigger).toHaveBeenCalledWith("select:one", model2);
+      expect(singleCollectionB.trigger).toHaveBeenCalledWithInitial("select:one", model2);
     });
 
     it('should trigger a select:some event on another multi-select collection', function () {
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:some", multiCollectionA);
+      expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("select:some", multiCollectionA);
     });
 
     it('should not trigger a reselected event on the selected model', function () {
-      expect(model2.trigger).not.toHaveBeenCalledWith("reselected", model2);
+      expect(model2.trigger).not.toHaveBeenCalledWithInitial("reselected", model2);
     });
 
     it("should not trigger a reselect:one event on the originating collection", function(){
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("reselect:one", model2);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model2);
     });
 
     it("should not trigger a reselect:one event on another single-select collection", function(){
-      expect(singleCollectionB.trigger).not.toHaveBeenCalledWith("reselect:one", model2);
+      expect(singleCollectionB.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model2);
     });
 
     it("should not trigger a reselect:any event on another multi-select collection", function(){
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
     });
-
   });
 
   describe("when a model is already selected and a different model is selected with its select method", function(){
@@ -903,33 +892,32 @@ describe("models shared between multiple collections", function(){
      });
 
       it('should not trigger a selected event on the first model', function () {
-        expect(model1.trigger).not.toHaveBeenCalledWith("selected", model1);
+        expect(model1.trigger).not.toHaveBeenCalledWithInitial("selected", model1);
       });
 
       it('should not trigger a deselected event on the first model', function () {
-        expect(model1.trigger).not.toHaveBeenCalledWith("deselected", model1);
+        expect(model1.trigger).not.toHaveBeenCalledWithInitial("deselected", model1);
       });
 
       it('should trigger a selected event on the second model', function () {
-        expect(model2.trigger).toHaveBeenCalledWith("selected", model2);
+        expect(model2.trigger).toHaveBeenCalledWithInitial("selected", model2);
       });
 
       it('should trigger a select:some or selected:all event on a multi-select collection', function () {
-        expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:all", multiCollectionA);
+        expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("select:all", multiCollectionA);
       });
 
       it('should not trigger a reselected event on the first model', function () {
-        expect(model1.trigger).not.toHaveBeenCalledWith("reselected", model1);
+        expect(model1.trigger).not.toHaveBeenCalledWithInitial("reselected", model1);
       });
 
       it('should not trigger a reselected event on the second model', function () {
-        expect(model2.trigger).not.toHaveBeenCalledWith("reselected", model2);
+        expect(model2.trigger).not.toHaveBeenCalledWithInitial("reselected", model2);
       });
 
       it("should not trigger a reselect:any event on a multi-select collection", function(){
-        expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+        expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
       });
-
     });
 
     describe("when both models are shared, with at least one single-select collection among the collections", function() {
@@ -971,45 +959,44 @@ describe("models shared between multiple collections", function(){
       });
 
       it('should not trigger a selected event on the first model', function () {
-        expect(model1.trigger).not.toHaveBeenCalledWith("selected", model1);
+        expect(model1.trigger).not.toHaveBeenCalledWithInitial("selected", model1);
       });
 
       it('should trigger a deselected event on the first model', function () {
-        expect(model1.trigger).toHaveBeenCalledWith("deselected", model1);
+        expect(model1.trigger).toHaveBeenCalledWithInitial("deselected", model1);
       });
 
       it('should trigger a selected event on the second model', function () {
-        expect(model2.trigger).toHaveBeenCalledWith("selected", model2);
+        expect(model2.trigger).toHaveBeenCalledWithInitial("selected", model2);
       });
 
       it('should trigger a deselect:one event on the single-select collection', function () {
-        expect(singleCollectionA.trigger).toHaveBeenCalledWith("deselect:one", model1);
+        expect(singleCollectionA.trigger).toHaveBeenCalledWithInitial("deselect:one", model1);
       });
 
       it('should trigger a select:one event on the single-select collection', function () {
-        expect(singleCollectionA.trigger).toHaveBeenCalledWith("select:one", model2);
+        expect(singleCollectionA.trigger).toHaveBeenCalledWithInitial("select:one", model2);
       });
 
       it('should trigger a select:some event on the multi-select collection', function () {
-        expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:some", multiCollectionA);
+        expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("select:some", multiCollectionA);
       });
 
       it('should not trigger a reselected event on the first model', function () {
-        expect(model1.trigger).not.toHaveBeenCalledWith("reselected", model1);
+        expect(model1.trigger).not.toHaveBeenCalledWithInitial("reselected", model1);
       });
 
       it('should not trigger a reselected event on the second model', function () {
-        expect(model2.trigger).not.toHaveBeenCalledWith("reselected", model2);
+        expect(model2.trigger).not.toHaveBeenCalledWithInitial("reselected", model2);
       });
 
      it("should not trigger a reselect:one event on the single-select collection", function(){
-        expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("reselect:one", model2);
+        expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model2);
       });
 
       it("should not trigger a reselect:any event on the multi-select collection", function(){
-        expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+        expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
       });
-
     });
 
     describe("when the first model is shared with at least one single-select collection, but not the second", function() {
@@ -1053,45 +1040,44 @@ describe("models shared between multiple collections", function(){
       });
 
       it('should not trigger a selected event on the first model', function () {
-        expect(model1.trigger).not.toHaveBeenCalledWith("selected", model1);
+        expect(model1.trigger).not.toHaveBeenCalledWithInitial("selected", model1);
       });
 
       it('should not trigger a deselected event on the first model', function () {
-        expect(model1.trigger).not.toHaveBeenCalledWith("deselected", model1);
+        expect(model1.trigger).not.toHaveBeenCalledWithInitial("deselected", model1);
       });
 
       it('should trigger a selected event on the second model', function () {
-        expect(model2.trigger).toHaveBeenCalledWith("selected", model2);
+        expect(model2.trigger).toHaveBeenCalledWithInitial("selected", model2);
       });
 
       it('should not trigger a deselect:one event on the single-select collection', function () {
-        expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("deselect:one", model1);
+        expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("deselect:one", model1);
       });
 
       it('should not trigger a select:one event on the single-select collection', function () {
-        expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("select:one", model2);
+        expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:one", model2);
       });
 
       it('should trigger a select:some or select:all event on the multi-select collection', function () {
-        expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:all", multiCollectionA);
+        expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("select:all", multiCollectionA);
       });
 
       it('should not trigger a reselected event on the first model', function () {
-        expect(model1.trigger).not.toHaveBeenCalledWith("reselected", model1);
+        expect(model1.trigger).not.toHaveBeenCalledWithInitial("reselected", model1);
       });
 
       it('should not trigger a reselected event on the second model', function () {
-        expect(model2.trigger).not.toHaveBeenCalledWith("reselected", model2);
+        expect(model2.trigger).not.toHaveBeenCalledWithInitial("reselected", model2);
       });
 
       it("should not trigger a reselect:one event on the single-select collection", function(){
-        expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("reselect:one", model2);
+        expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model2);
       });
 
       it("should not trigger a reselect:any event on the multi-select collection", function(){
-        expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+        expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
       });
-
     });
 
     describe("when the second model is shared with at least one single-select collection, but not the first", function() {
@@ -1136,42 +1122,42 @@ describe("models shared between multiple collections", function(){
       });
 
       it('should not trigger a selected event on the first model', function () {
-        expect(model1.trigger).not.toHaveBeenCalledWith("selected", model1);
+        expect(model1.trigger).not.toHaveBeenCalledWithInitial("selected", model1);
       });
 
       it('should not trigger a deselected event on the first model', function () {
-        expect(model1.trigger).not.toHaveBeenCalledWith("deselected", model1);
+        expect(model1.trigger).not.toHaveBeenCalledWithInitial("deselected", model1);
       });
 
       it('should trigger a selected event on the second model', function () {
-        expect(model2.trigger).toHaveBeenCalledWith("selected", model2);
+        expect(model2.trigger).toHaveBeenCalledWithInitial("selected", model2);
       });
 
       it('should trigger a select:one event on the single-select collection', function () {
-        expect(singleCollectionA.trigger).toHaveBeenCalledWith("select:one", model2);
+        expect(singleCollectionA.trigger).toHaveBeenCalledWithInitial("select:one", model2);
       });
 
       it('should trigger a select:some or select:all event on the multi-select collection', function () {
-        expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:all", multiCollectionA);
+        expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("select:all", multiCollectionA);
       });
 
       it('should not trigger a reselected event on the first model', function () {
-        expect(model1.trigger).not.toHaveBeenCalledWith("reselected", model1);
+        expect(model1.trigger).not.toHaveBeenCalledWithInitial("reselected", model1);
       });
 
       it('should not trigger a reselected event on the second model', function () {
-        expect(model2.trigger).not.toHaveBeenCalledWith("reselected", model2);
+        expect(model2.trigger).not.toHaveBeenCalledWithInitial("reselected", model2);
       });
 
       it("should not trigger a reselect:one event on the single-select collection", function(){
-        expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("reselect:one", model2);
+        expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model2);
       });
 
       it("should not trigger a reselect:any event on the multi-select collection", function(){
-        expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+        expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
       });
-
     });
+
   });
 
   describe("when a model is selected and deselect is called in a single-select collection", function(){
@@ -1217,23 +1203,23 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should trigger a deselected event on the model', function () {
-      expect(model1.trigger).toHaveBeenCalledWith("deselected", model1);
+      expect(model1.trigger).toHaveBeenCalledWithInitial("deselected", model1);
     });
 
     it('should not trigger a selected event on another selected model in a multi-select collection', function () {
-      expect(model2.trigger).not.toHaveBeenCalledWith("deselected", model2);
+      expect(model2.trigger).not.toHaveBeenCalledWithInitial("deselected", model2);
     });
 
     it('should trigger a deselect:one event on the originating collection', function () {
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("deselect:one", model1);
+      expect(singleCollectionA.trigger).toHaveBeenCalledWithInitial("deselect:one", model1);
     });
 
     it('should trigger a deselect:one event on another single-select collection', function () {
-      expect(singleCollectionB.trigger).toHaveBeenCalledWith("deselect:one", model1);
+      expect(singleCollectionB.trigger).toHaveBeenCalledWithInitial("deselect:one", model1);
     });
 
     it('should trigger a select:some or selected:none event on another multi-select collection', function () {
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:some", multiCollectionA);
+      expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("select:some", multiCollectionA);
     });
   });
 
@@ -1285,23 +1271,23 @@ describe("models shared between multiple collections", function(){
     });
 
     it('should trigger a deselected event on the model', function () {
-      expect(model1.trigger).toHaveBeenCalledWith("deselected", model1);
+      expect(model1.trigger).toHaveBeenCalledWithInitial("deselected", model1);
     });
 
     it('should not trigger a deselected event on another selected model in a multi-select collection', function () {
-      expect(model2.trigger).not.toHaveBeenCalledWith("deselected", model2);
+      expect(model2.trigger).not.toHaveBeenCalledWithInitial("deselected", model2);
     });
 
      it('should trigger a select:some or select:none event on the originating collection', function () {
-       expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:some", multiCollectionA);
+       expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("select:some", multiCollectionA);
     });
 
     it('should trigger a deselect:one event on a single-select collection sharing the model', function () {
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("deselect:one", model1);
+      expect(singleCollectionA.trigger).toHaveBeenCalledWithInitial("deselect:one", model1);
     });
 
     it('should trigger a select:some or selected:none event on another multi-select collection', function () {
-      expect(multiCollectionB.trigger).toHaveBeenCalledWith("select:some", multiCollectionB);
+      expect(multiCollectionB.trigger).toHaveBeenCalledWithInitial("select:some", multiCollectionB);
     });
   });
 
@@ -1363,7 +1349,7 @@ describe("models shared between multiple collections", function(){
 
     it('should not trigger a selected event on the model when added to a single-select collection', function () {
       singleCollectionA.add(model2);
-      expect(model2.trigger).not.toHaveBeenCalledWith("selected", model2);
+      expect(model2.trigger).not.toHaveBeenCalledWithInitial("selected", model2);
     });
 
     it('should not trigger a reselected event on the model when added to a single-select collection', function () {
@@ -1372,59 +1358,59 @@ describe("models shared between multiple collections", function(){
       // that category. It does not reflect the action of a user reaffirming a
       // selection.
       singleCollectionA.add(model2);
-      expect(model2.trigger).not.toHaveBeenCalledWith("reselected", model2);
+      expect(model2.trigger).not.toHaveBeenCalledWithInitial("reselected", model2);
     });
 
     it('should not trigger a selected event on the model when added to a multi-select collection', function () {
       multiCollectionA.add(model4);
-      expect(model4.trigger).not.toHaveBeenCalledWith("selected", model4);
+      expect(model4.trigger).not.toHaveBeenCalledWithInitial("selected", model4);
     });
 
     it('should not trigger a reselected event on the model when added to a multi-select collection', function () {
       // See the comment above for the rationale.
       multiCollectionA.add(model4);
-      expect(model4.trigger).not.toHaveBeenCalledWith("reselected", model4);
+      expect(model4.trigger).not.toHaveBeenCalledWithInitial("reselected", model4);
     });
 
     it('should trigger a deselected event on the previously selected model when added to a single-select collection', function () {
       singleCollectionA.add(model2);
-      expect(model1.trigger).toHaveBeenCalledWith("deselected", model1);
+      expect(model1.trigger).toHaveBeenCalledWithInitial("deselected", model1);
     });
 
     it('should not trigger a deselected event on a previously selected model when added to a multi-select collection, as long as old and new models are not shared with a single-select collection', function () {
       // ... in which case only one of them can remain selected, of course. See test below.
       multiCollectionA.add(model4);
-      expect(model1.trigger).not.toHaveBeenCalledWith("deselected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("deselected", model1);
     });
 
     it('should trigger a select:one event when added to a single-select collection', function () {
       singleCollectionA.add(model2);
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("select:one", model2);
+      expect(singleCollectionA.trigger).toHaveBeenCalledWithInitial("select:one", model2);
     });
 
     it('should trigger a deselect:one event when added to a single-select collection', function () {
       singleCollectionA.add(model2);
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("deselect:one", model1);
+      expect(singleCollectionA.trigger).toHaveBeenCalledWithInitial("deselect:one", model1);
     });
 
     it('should not trigger a reselect:one event when added to a single-select collection', function () {
       singleCollectionA.add(model2);
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("reselect:one", model2);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model2);
     });
 
     it('should trigger a select:some/select:all event when added to a multi-select collection', function () {
       multiCollectionA.add(model4);
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:all", multiCollectionA);
+      expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("select:all", multiCollectionA);
     });
 
     it('should not trigger a reselect:any event when added to a multi-select collection', function () {
       multiCollectionA.add(model4);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
     });
 
     it('should trigger a select:some or select:none event when the addition is inducing a deselection in another multi-select collection', function () {
       singleCollectionA.add(model2);
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:some", multiCollectionA);
+      expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("select:some", multiCollectionA);
     });
 
     it('should not trigger a select:all, select:some or select:none event when the addition does not deselect a model in another multi-select collection', function () {
@@ -1434,23 +1420,22 @@ describe("models shared between multiple collections", function(){
 
       singleCollectionB.add(model2);
 
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:none", multiCollectionA);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:some", multiCollectionA);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:all", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:none", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:some", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:all", multiCollectionA);
     });
 
     it('should not trigger a reselect:one event on another single-select collection holding the model', function () {
       singleCollectionB = new SingleSelectCollection();
       singleCollectionB.add(model1);
 
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("reselect:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model1);
     });
 
     it('should not trigger a reselect:any event on another multi-select collection holding the model', function () {
       singleCollectionA.add(model2);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
     });
-
   });
 
   describe("when a selected model is removed", function(){
@@ -1550,47 +1535,47 @@ describe("models shared between multiple collections", function(){
 
     it('should not trigger a deselected event on the model when it is still part of another collection (removed from single-select)', function () {
       singleCollectionA.remove(model1);
-      expect(model1.trigger).not.toHaveBeenCalledWith("deselected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("deselected", model1);
     });
 
     it('should not trigger a deselected event on the model when it is still part of another collection (removed from multi-select)', function () {
       multiCollectionA.remove(model1);
-      expect(model1.trigger).not.toHaveBeenCalledWith("deselected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("deselected", model1);
     });
 
     it('should trigger a deselected event on the model when removed from all collections (single-select collection last)', function () {
       multiCollectionA.remove(model1);
       singleCollectionA.remove(model1);
-      expect(model1.trigger).toHaveBeenCalledWith("deselected", model1);
+      expect(model1.trigger).toHaveBeenCalledWithInitial("deselected", model1);
     });
 
     it('should trigger a deselected event on the model when removed from all collections (multi-select collection last)', function () {
       singleCollectionA.remove(model1);
       multiCollectionA.remove(model1);
-      expect(model1.trigger).toHaveBeenCalledWith("deselected", model1);
+      expect(model1.trigger).toHaveBeenCalledWithInitial("deselected", model1);
     });
 
     it('should trigger a deselect:one event on a single-select collection it is removed from', function () {
       singleCollectionA.remove(model1);
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("deselect:one", model1);
+      expect(singleCollectionA.trigger).toHaveBeenCalledWithInitial("deselect:one", model1);
     });
 
     it('should trigger a select:some or select:none event on a multi-select collection it is removed from', function () {
       multiCollectionA.remove(model1);
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:none", multiCollectionA);
+      expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("select:none", multiCollectionA);
     });
 
     it('should not trigger a deselect:one or select:one event on a single-select collection it remains part of', function () {
       multiCollectionA.remove(model1);
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("deselect:one", model1);
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("select:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("deselect:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:one", model1);
     });
 
     it('should not trigger a select:none, select:some or select:all event on a multi-select collection it remains part of', function () {
       singleCollectionA.remove(model1);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:none", multiCollectionA);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:some", multiCollectionA);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:all", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:none", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:some", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:all", multiCollectionA);
     });
   });
 
@@ -1677,12 +1662,12 @@ describe("models shared between multiple collections", function(){
 
     it('should not trigger a selected event on the model (added to a single-select collection)', function () {
       singleCollectionA.reset([model1]);
-      expect(model1.trigger).not.toHaveBeenCalledWith("selected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("selected", model1);
     });
 
     it('should not trigger a selected event on the model (added to a multi-select collection)', function () {
       multiCollectionA.reset([model1]);
-      expect(model1.trigger).not.toHaveBeenCalledWith("selected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("selected", model1);
     });
 
     it('should not trigger a reselected event on the model (added to a single-select collection)', function () {
@@ -1691,72 +1676,72 @@ describe("models shared between multiple collections", function(){
       // is not present here. See comments in the 'add' tests for more on the
       // rationale.
       singleCollectionA.reset([model1]);
-      expect(model1.trigger).not.toHaveBeenCalledWith("reselected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("reselected", model1);
     });
 
     it('should not trigger a reselected event on the model (added to a multi-select collection)', function () {
       multiCollectionA.reset([model1]);
-      expect(model1.trigger).not.toHaveBeenCalledWith("reselected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("reselected", model1);
     });
 
     it('should not trigger a select:one event when added to a single-select collection', function () {
       // reset() is meant to suppress individual notifications. Just like the add event, selection events are silenced.
       // Whatever needs to be done, should be dealt with in the reset event handler.
       singleCollectionA.reset([model1]);
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("select:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:one", model1);
     });
 
     it('should not trigger a reselect:one event when added to a single-select collection', function () {
       singleCollectionA.reset([model1]);
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("select:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:one", model1);
     });
 
     it('should not trigger a select:some or select:all event when added to a multi-select collection', function () {
       // For the rationale, see above.
       multiCollectionA.reset([model1]);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:some", multiCollectionA);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:all", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:some", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:all", multiCollectionA);
     });
 
     it('should not trigger a reselect:any event when added to a multi-select collection', function () {
       // For the rationale, see above.
       multiCollectionA.reset([model1]);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
     });
 
     it('should trigger a deselected event on a different model when the reset is inducing a deselection in another multi-select collection', function () {
       singleCollectionA.reset([model1, model2]);
-      expect(model1.trigger).toHaveBeenCalledWith("deselected", model1);
+      expect(model1.trigger).toHaveBeenCalledWithInitial("deselected", model1);
     });
 
     it('should not trigger a deselect:one event when added to a singe-select collection, even if multiple models with selected status are added, and all but the last one are deselected', function () {
       singleCollectionA.reset([model1, model2]);
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("deselect:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("deselect:one", model1);
     });
 
     it('should not trigger a reselect:one event when added to a singe-select collection, even if multiple models with selected status are added, and all but the last one are deselected', function () {
       singleCollectionA.reset([model1, model2]);
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("reselect:one", model2);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model2);
     });
 
     it('should trigger a select:some or select:none event when the reset is inducing a deselection in another multi-select collection', function () {
       singleCollectionA.reset([model1, model2]);
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:some", multiCollectionA);
+      expect(multiCollectionA.trigger).toHaveBeenCalledWithInitial("select:some", multiCollectionA);
     });
 
     it('should not trigger a reselect:one event on another single-select collection holding the model', function () {
       singleCollectionA.reset([model3]);
-      expect(singleCollectionB.trigger).not.toHaveBeenCalledWith("reselect:one", model3);
+      expect(singleCollectionB.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model3);
     });
 
     it('should not trigger a reselect:any event on another multi-select collection holding the model', function () {
       singleCollectionA.reset([model1]);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
     });
 
     it('should not trigger a reselect:any event on another multi-select collection, even when the reset is inducing a change (a deselection) there', function () {
       singleCollectionA.reset([model1, model2]);
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("reselect:any", jasmine.any(Array));
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("reselect:any");
     });
 
     it("should remain selected itself", function(){
@@ -1816,51 +1801,283 @@ describe("models shared between multiple collections", function(){
 
     it('should not trigger a deselected event on the model when it is still part of another collection (removed from single-select)', function () {
       singleCollectionA.reset();
-      expect(model1.trigger).not.toHaveBeenCalledWith("deselected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("deselected", model1);
     });
 
     it('should not trigger a deselected event on the model when it is still part of another collection (removed from multi-select)', function () {
       multiCollectionA.reset();
-      expect(model1.trigger).not.toHaveBeenCalledWith("deselected", model1);
+      expect(model1.trigger).not.toHaveBeenCalledWithInitial("deselected", model1);
     });
 
     it('should trigger a deselected event on the model when removed from all collections (single-select collection last)', function () {
       multiCollectionA.reset();
       singleCollectionA.reset();
-      expect(model1.trigger).toHaveBeenCalledWith("deselected", model1);
+      expect(model1.trigger).toHaveBeenCalledWithInitial("deselected", model1);
     });
 
     it('should trigger a deselected event on the model when removed from all collections (multi-select collection last)', function () {
       singleCollectionA.reset();
       multiCollectionA.reset();
-      expect(model1.trigger).toHaveBeenCalledWith("deselected", model1);
+      expect(model1.trigger).toHaveBeenCalledWithInitial("deselected", model1);
     });
 
     it('should not trigger a deselect:one event when removed from a single-select collection', function () {
       // reset() is meant to suppress individual notifications. Just like the add event, selection events are silenced.
       // Whatever needs to be done, should be dealt with in the reset event handler.
       singleCollectionA.reset();
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("deselect:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("deselect:one", model1);
     });
 
     it('should not trigger a select:none event when removed from a multi-select collection', function () {
       // For the rationale, see above.
       multiCollectionA.reset();
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:none", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:none", multiCollectionA);
     });
 
     it('should not trigger a deselect:one event when removed from all collections, single-select collection last', function () {
       // See above.
       multiCollectionA.reset();
       singleCollectionA.reset();
-      expect(singleCollectionA.trigger).not.toHaveBeenCalledWith("deselect:one", model1);
+      expect(singleCollectionA.trigger).not.toHaveBeenCalledWithInitial("deselect:one", model1);
     });
 
     it('should not trigger a select:none event when removed from all collections, multi-select collection last', function () {
       // See above.
       singleCollectionA.reset();
       multiCollectionA.reset();
-      expect(multiCollectionA.trigger).not.toHaveBeenCalledWith("select:none", multiCollectionA);
+      expect(multiCollectionA.trigger).not.toHaveBeenCalledWithInitial("select:none", multiCollectionA);
+    });
+  });
+
+  describe("when selecting a model in a single-select collection with a custom option", function(){
+    var model, singleCollectionA, singleCollectionB, multiCollectionA;
+
+    beforeEach(function(){
+      model = new Model();
+      singleCollectionA = new SingleSelectCollection([model]);
+      singleCollectionB = new SingleSelectCollection([model]);
+      multiCollectionA  = new MultiSelectCollection([model]);
+
+      spyOn(model, "trigger").andCallThrough();
+      spyOn(singleCollectionA, "trigger").andCallThrough();
+      spyOn(singleCollectionB, "trigger").andCallThrough();
+      spyOn(multiCollectionA, "trigger").andCallThrough();
+
+      singleCollectionA.select(model, {foo: "bar"});
+    });
+
+    it('should trigger a selected event on the model and pass the options object along as the last parameter', function () {
+      expect(model.trigger).toHaveBeenCalledWith("selected", model, {foo: "bar"});
+    });
+
+    it('should trigger a select:one event on the originating collection and pass the options object along as the last parameter', function () {
+      expect(singleCollectionA.trigger).toHaveBeenCalledWith("select:one", model, {foo: "bar"});
+    });
+
+    it('should trigger a select:one event on another single-select collection and pass the options object along as the last parameter', function () {
+      expect(singleCollectionB.trigger).toHaveBeenCalledWith("select:one", model, {foo: "bar"});
+    });
+
+    it('should trigger a select:some or selected:all event on another multi-select collection and pass the options object along as the last parameter', function () {
+      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:all", multiCollectionA, {foo: "bar"});
+    });
+  });
+
+  describe("when re-selecting a model in a single-select collection with a custom option", function(){
+    var model, singleCollectionA, singleCollectionB, multiCollectionA;
+
+    beforeEach(function(){
+      model = new Model();
+      singleCollectionA = new SingleSelectCollection([model]);
+      singleCollectionB = new SingleSelectCollection([model]);
+      multiCollectionA  = new MultiSelectCollection([model]);
+
+      model.select();
+
+      spyOn(model, "trigger").andCallThrough();
+      spyOn(singleCollectionA, "trigger").andCallThrough();
+      spyOn(singleCollectionB, "trigger").andCallThrough();
+      spyOn(multiCollectionA, "trigger").andCallThrough();
+
+      singleCollectionA.select(model, {foo: "bar"});
+    });
+
+     it('should trigger a reselected event on the model and pass the options object along as the last parameter', function () {
+      expect(model.trigger).toHaveBeenCalledWith("reselected", model, {foo: "bar"});
+    });
+
+    it("should trigger a reselect:one event on the originating collection and pass the options object along as the last parameter", function(){
+      expect(singleCollectionA.trigger).toHaveBeenCalledWith("reselect:one", model, {foo: "bar"});
+    });
+
+    it("should trigger a reselect:one event on another single-select collection and pass the options object along as the last parameter", function(){
+      expect(singleCollectionB.trigger).toHaveBeenCalledWith("reselect:one", model, {foo: "bar"});
+    });
+
+    it("should trigger a reselect:any event on another multi-select collection and pass the options object along as the last parameter", function(){
+      expect(multiCollectionA.trigger).toHaveBeenCalledWith("reselect:any", [model], {foo: "bar"});
+    });
+  });
+
+  describe("when a model is already selected and a different model is selected in a single-select collection with a custom option", function(){
+    var model1, model2, singleCollectionA, singleCollectionB, multiCollectionA;
+
+    beforeEach(function(){
+      model1 = new Model();
+      model2 = new Model();
+
+      singleCollectionA = new SingleSelectCollection([model1, model2]);
+      singleCollectionB = new SingleSelectCollection([model1, model2]);
+      multiCollectionA  = new MultiSelectCollection([model1, model2]);
+
+      model1.select();
+
+      spyOn(model1, "trigger").andCallThrough();
+      spyOn(model2, "trigger").andCallThrough();
+      spyOn(singleCollectionA, "trigger").andCallThrough();
+      spyOn(singleCollectionB, "trigger").andCallThrough();
+      spyOn(multiCollectionA, "trigger").andCallThrough();
+
+      singleCollectionA.select(model2, {foo: "bar"});
+    });
+
+    it('should trigger a selected event on the selected model and pass the options object along as the last parameter', function () {
+      expect(model2.trigger).toHaveBeenCalledWith("selected", model2, {foo: "bar"});
+    });
+
+    it('should trigger a deselected event on the first model and pass the options object along as the last parameter', function () {
+      expect(model1.trigger).toHaveBeenCalledWith("deselected", model1, {foo: "bar"});
+    });
+
+    it('should trigger a deselect:one event on the originating collection and pass the options object along as the last parameter', function () {
+      expect(singleCollectionA.trigger).toHaveBeenCalledWith("deselect:one", model1, {foo: "bar"});
+    });
+
+    it('should trigger a select:one event on the originating collection and pass the options object along as the last parameter', function () {
+      expect(singleCollectionA.trigger).toHaveBeenCalledWith("select:one", model2, {foo: "bar"});
+    });
+
+    it('should trigger a deselect:one event on another single-select collection and pass the options object along as the last parameter', function () {
+      expect(singleCollectionB.trigger).toHaveBeenCalledWith("deselect:one", model1, {foo: "bar"});
+    });
+
+    it('should trigger a select:one event on another single-select collection and pass the options object along as the last parameter', function () {
+      expect(singleCollectionB.trigger).toHaveBeenCalledWith("select:one", model2, {foo: "bar"});
+    });
+
+    it('should trigger a select:some event on another multi-select collection and pass the options object along as the last parameter', function () {
+      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:some", multiCollectionA, {foo: "bar"});
+    });
+  });
+
+  describe("when selecting a model in a multi-select collection with a custom option", function(){
+    var model, singleCollectionA, multiCollectionA, multiCollectionB;
+
+    beforeEach(function(){
+      model = new Model();
+      singleCollectionA = new SingleSelectCollection([model]);
+      multiCollectionA  = new MultiSelectCollection([model]);
+      multiCollectionB  = new MultiSelectCollection([model]);
+
+      spyOn(model, "trigger").andCallThrough();
+      spyOn(singleCollectionA, "trigger").andCallThrough();
+      spyOn(multiCollectionA, "trigger").andCallThrough();
+      spyOn(multiCollectionB, "trigger").andCallThrough();
+
+      multiCollectionA.select(model, {foo: "bar"});
+    });
+
+    it('should trigger a selected event on the model and pass the options object along as the last parameter', function () {
+      expect(model.trigger).toHaveBeenCalledWith("selected", model, {foo: "bar"});
+    });
+
+    it('should trigger a select:some or selected:all event on the originating collection and pass the options object along as the last parameter', function () {
+      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:all", multiCollectionA, {foo: "bar"});
+    });
+
+    it('should trigger a select:one event on another single-select collection and pass the options object along as the last parameter', function () {
+      expect(singleCollectionA.trigger).toHaveBeenCalledWith("select:one", model, {foo: "bar"});
+    });
+
+    it('should trigger a select:some or selected:all event on another multi-select collection and pass the options object along as the last parameter', function () {
+      expect(multiCollectionB.trigger).toHaveBeenCalledWith("select:all", multiCollectionB, {foo: "bar"});
+    });
+  });
+
+  describe("when re-selecting a model in a multi-select collection with a custom option", function(){
+    var model1, model2, singleCollectionA, multiCollectionA, multiCollectionB;
+
+    beforeEach(function(){
+      model1 = new Model();
+      model2 = new Model();
+      singleCollectionA = new SingleSelectCollection([model1, model2]);
+      multiCollectionA  = new MultiSelectCollection([model1, model2]);
+      multiCollectionB  = new MultiSelectCollection([model1, model2]);
+
+      multiCollectionA.select(model1);
+
+      spyOn(model1, "trigger").andCallThrough();
+      spyOn(singleCollectionA, "trigger").andCallThrough();
+      spyOn(multiCollectionA, "trigger").andCallThrough();
+      spyOn(multiCollectionB, "trigger").andCallThrough();
+
+      multiCollectionA.select(model1, {foo: "bar"});
+    });
+
+    it('should trigger a reselected event on the model and pass the options object along as the last parameter', function () {
+      expect(model1.trigger).toHaveBeenCalledWith("reselected", model1, {foo: "bar"});
+    });
+
+    it("should trigger a reselect:any event on the originating collection and pass the options object along as the last parameter", function(){
+      expect(multiCollectionA.trigger).toHaveBeenCalledWith("reselect:any", [model1], {foo: "bar"});
+    });
+
+    it("should trigger a reselect:one event on another single-select collection and pass the options object along as the last parameter", function(){
+      expect(singleCollectionA.trigger).toHaveBeenCalledWith("reselect:one", model1, {foo: "bar"});
+    });
+
+    it("should trigger a reselect:any event on another multi-select collection and pass the options object along as the last parameter", function(){
+      expect(multiCollectionB.trigger).toHaveBeenCalledWith("reselect:any", [model1], {foo: "bar"});
+    });
+  });
+
+  describe("when a selected model is deselected in a multi-select collection with a custom option", function(){
+    var model1, model2, singleCollectionA, singleCollectionB, multiCollectionA, multiCollectionB;
+
+    beforeEach(function(){
+      model1 = new Model();
+      model2 = new Model();
+      singleCollectionA = new SingleSelectCollection([model1]);
+      singleCollectionB = new SingleSelectCollection([model2]);
+      multiCollectionA  = new MultiSelectCollection([model1, model2]);
+      multiCollectionB  = new MultiSelectCollection([model1, model2]);
+
+      multiCollectionA.select(model2);
+      multiCollectionA.select(model1);
+
+      spyOn(model1, "trigger").andCallThrough();
+      spyOn(model2, "trigger").andCallThrough();
+      spyOn(singleCollectionA, "trigger").andCallThrough();
+      spyOn(multiCollectionA, "trigger").andCallThrough();
+      spyOn(multiCollectionB, "trigger").andCallThrough();
+
+      multiCollectionA.deselect(model1, {foo: "bar"});
+    });
+
+    it('should trigger a deselected event on the model and pass the options object along as the last parameter', function () {
+      expect(model1.trigger).toHaveBeenCalledWith("deselected", model1, {foo: "bar"});
+    });
+
+    it('should trigger a select:some or select:none event on the originating collection and pass the options object along as the last parameter', function () {
+      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:some", multiCollectionA, {foo: "bar"});
+    });
+
+    it('should trigger a deselect:one event on a single-select collection sharing the model and pass the options object along as the last parameter', function () {
+      expect(singleCollectionA.trigger).toHaveBeenCalledWith("deselect:one", model1, {foo: "bar"});
+    });
+
+    it('should trigger a select:some or selected:none event on another multi-select collection and pass the options object along as the last parameter', function () {
+      expect(multiCollectionB.trigger).toHaveBeenCalledWith("select:some", multiCollectionB, {foo: "bar"});
     });
   });
 

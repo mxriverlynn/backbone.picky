@@ -47,15 +47,15 @@ describe("single-select collection", function(){
     });
 
     it("should trigger a selected event", function(){
-      expect(model.trigger).toHaveBeenCalledWith("selected", model);
+      expect(model.trigger).toHaveBeenCalledWithInitial("selected", model);
     });
 
    it("should not trigger a reselected event", function(){
-      expect(model.trigger).not.toHaveBeenCalledWith("reselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("reselected", model);
     });
 
     it("should trigger a collection select:one event", function(){
-      expect(collection.trigger).toHaveBeenCalledWith("select:one", model);
+      expect(collection.trigger).toHaveBeenCalledWithInitial("select:one", model);
     });
 
     it('should trigger the model\'s selected event after the model status has been updated', function () {
@@ -75,7 +75,7 @@ describe("single-select collection", function(){
     });
 
     it("should not trigger a collection reselect:one event", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWith("reselect:one", model);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model);
     });
   });
 
@@ -97,11 +97,11 @@ describe("single-select collection", function(){
     });
 
     it("should not trigger a selected event", function(){
-      expect(model.trigger).not.toHaveBeenCalledWith("selected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("selected", model);
     });
 
     it("should not trigger a collection select:one event", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWith("select:one", model);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("select:one", model);
     });
   });
 
@@ -137,15 +137,15 @@ describe("single-select collection", function(){
     });
 
     it("should not trigger a reselected event", function(){
-      expect(model.trigger).not.toHaveBeenCalledWith("reselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("reselected", model);
     });
 
     it("should trigger a select:one event", function(){
-      expect(collection.trigger).toHaveBeenCalledWith("select:one", model);
+      expect(collection.trigger).toHaveBeenCalledWithInitial("select:one", model);
     });
 
     it("should not trigger a reselect:one event", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWith("reselect:one", model);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model);
     });
 
     it("should tell the model to select itself", function(){
@@ -187,7 +187,7 @@ describe("single-select collection", function(){
     });
 
     it("should not trigger a select:one event", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWith("select:one", model);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("select:one", model);
     });
 
     it("should tell the model to select itself", function(){
@@ -211,15 +211,15 @@ describe("single-select collection", function(){
     });
 
     it("should not trigger a select:one event", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWith("select:one", model);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("select:one", model);
     });
 
     it("should trigger a reselected event", function(){
-      expect(model.trigger).toHaveBeenCalledWith("reselected", model);
+      expect(model.trigger).toHaveBeenCalledWithInitial("reselected", model);
     });
 
     it("should trigger a reselect:one event", function(){
-      expect(collection.trigger).toHaveBeenCalledWith("reselect:one", model);
+      expect(collection.trigger).toHaveBeenCalledWithInitial("reselect:one", model);
     });
   });
 
@@ -239,11 +239,11 @@ describe("single-select collection", function(){
     });
 
     it("should not trigger a reselected event", function(){
-      expect(model.trigger).not.toHaveBeenCalledWith("reselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("reselected", model);
     });
 
     it("should not trigger a reselect:one event", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWith("reselect:one", model);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("reselect:one", model);
     });
   });
 
@@ -267,11 +267,11 @@ describe("single-select collection", function(){
     });
 
     it("should trigger a select:one event", function(){
-      expect(collection.trigger).toHaveBeenCalledWith("select:one", m2);
+      expect(collection.trigger).toHaveBeenCalledWithInitial("select:one", m2);
     });
 
     it("should not trigger a reselect:one event", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWith("reselect:one", m2);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("reselect:one");
     });
 
     it("should deselect the first model", function(){
@@ -279,7 +279,7 @@ describe("single-select collection", function(){
     });
 
     it("should fire a deselect:one event for the first model", function(){
-      expect(collection.trigger).toHaveBeenCalledWith("deselect:one", m1);
+      expect(collection.trigger).toHaveBeenCalledWithInitial("deselect:one", m1);
     });
   });
 
@@ -303,7 +303,7 @@ describe("single-select collection", function(){
     });
 
     it("should not trigger a select:one event", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWith("select:one", m2);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("select:one");
     });
 
     it("should deselect the first model", function(){
@@ -311,7 +311,7 @@ describe("single-select collection", function(){
     });
 
     it("should not fire a deselect:one event for the first model", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWith("deselect:one", m1);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("deselect:one");
     });
   });
 
@@ -368,7 +368,7 @@ describe("single-select collection", function(){
     });
 
     it("should trigger a deselect:one event", function(){
-      expect(collection.trigger).toHaveBeenCalledWith("deselect:one", model);
+      expect(collection.trigger).toHaveBeenCalledWithInitial("deselect:one", model);
     });
 
     it('should trigger the model\'s deselected event after the model status has been updated', function () {
@@ -419,7 +419,7 @@ describe("single-select collection", function(){
     });
 
     it("should trigger a deselect:one event", function(){
-      expect(collection.trigger).toHaveBeenCalledWith("deselect:one", model);
+      expect(collection.trigger).toHaveBeenCalledWithInitial("deselect:one", model);
     });
 
     it('should trigger the model\'s deselected event after the model status has been updated', function () {
@@ -458,11 +458,11 @@ describe("single-select collection", function(){
     });
 
     it("should not trigger a deselected event on the model", function(){
-      expect(model.trigger).not.toHaveBeenCalledWith("deselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("deselected", model);
     });
 
     it("should not trigger a deselect:one event", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWith("deselect:one", model);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("deselect:one", model);
     });
   });
 
@@ -494,11 +494,11 @@ describe("single-select collection", function(){
     });
 
     it("should not trigger a deselect:one event for the selected model", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWith("deselect:one", m1);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("deselect:one");
     });
 
     it("should not trigger a deselect:one event for the non-selected model", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWith("deselect:one", m2);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("deselect:one");
     });
   });
 
@@ -530,11 +530,213 @@ describe("single-select collection", function(){
     });
 
     it("should not trigger a deselect:one event for the selected model", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWith("deselect:one", m1);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("deselect:one");
     });
 
     it("should not trigger a deselect:one event for the non-selected model", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWith("deselect:one", m2);
+      expect(collection.trigger).not.toHaveBeenCalledWith("deselect:one");
+    });
+  });
+
+  describe("when selecting a model via the model's select, with a custom option", function(){
+    var model, collection;
+
+    beforeEach(function(){
+      model = new Model();
+      collection = new Collection([model]);
+
+      spyOn(model, "trigger").andCallThrough();
+      spyOn(collection, "trigger").andCallThrough();
+
+      model.select({foo: "bar"});
+    });
+
+     it("should trigger a selected event and pass the options object along as the last parameter", function(){
+      expect(model.trigger).toHaveBeenCalledWith("selected", model, {foo: "bar"});
+    });
+
+    it("should trigger a collection select:one event and pass the options object along as the last parameter", function(){
+      expect(collection.trigger).toHaveBeenCalledWith("select:one", model, {foo: "bar"});
+    });
+  });
+
+  describe("when selecting a model via the collection's select, with a custom option", function(){
+    var model, collection;
+
+    beforeEach(function(){
+      model = new Model();
+      collection = new Collection([model]);
+
+      spyOn(model, "trigger").andCallThrough();
+      spyOn(collection, "trigger").andCallThrough();
+
+      collection.select(model, {foo: "bar"});
+    });
+
+     it("should trigger a selected event and pass the options object along as the last parameter", function(){
+      expect(model.trigger).toHaveBeenCalledWith("selected", model, {foo: "bar"});
+    });
+
+    it("should trigger a collection select:one event and pass the options object along as the last parameter", function(){
+      expect(collection.trigger).toHaveBeenCalledWith("select:one", model, {foo: "bar"});
+    });
+  });
+
+  describe("when re-selecting a model via the model's select, with a custom option", function(){
+    var model, collection;
+
+    beforeEach(function(){
+      model = new Model();
+      collection = new Collection([model]);
+      model.select();
+
+      spyOn(model, "trigger").andCallThrough();
+      spyOn(collection, "trigger").andCallThrough();
+
+      model.select({foo: "bar"});
+    });
+
+     it("should trigger a reselected event and pass the options object along as the last parameter", function(){
+      expect(model.trigger).toHaveBeenCalledWith("reselected", model, {foo: "bar"});
+    });
+
+    it("should trigger a collection reselect:one event and pass the options object along as the last parameter", function(){
+      expect(collection.trigger).toHaveBeenCalledWith("reselect:one", model, {foo: "bar"});
+    });
+  });
+
+  describe("when re-selecting a model via the collection's select, with a custom option", function(){
+    var model, collection;
+
+    beforeEach(function(){
+      model = new Model();
+      collection = new Collection([model]);
+      model.select();
+
+      spyOn(model, "trigger").andCallThrough();
+      spyOn(collection, "trigger").andCallThrough();
+
+      collection.select(model, {foo: "bar"});
+    });
+
+     it("should trigger a reselected event and pass the options object along as the last parameter", function(){
+      expect(model.trigger).toHaveBeenCalledWith("reselected", model, {foo: "bar"});
+    });
+
+    it("should trigger a collection reselect:one event and pass the options object along as the last parameter", function(){
+      expect(collection.trigger).toHaveBeenCalledWith("reselect:one", model, {foo: "bar"});
+    });
+  });
+
+  describe("when a model is already selected and selecting a different model via the model's select, with a custom option", function(){
+    var m1, m2, collection;
+
+    beforeEach(function(){
+      m1 = new Model();
+      m2 = new Model();
+      collection = new Collection([m1, m2]);
+      m1.select();
+
+      spyOn(m1, "trigger").andCallThrough();
+      spyOn(m2, "trigger").andCallThrough();
+      spyOn(collection, "trigger").andCallThrough();
+
+      m2.select({foo: "bar"});
+    });
+
+    it("should trigger a deselected event on the first model and pass the options object along as the last parameter", function(){
+      expect(m1.trigger).toHaveBeenCalledWith("deselected", m1, {foo: "bar"});
+    });
+
+    it("should trigger a selected event on the second model and pass the options object along as the last parameter", function(){
+      expect(m2.trigger).toHaveBeenCalledWith("selected", m2, {foo: "bar"});
+    });
+
+    it("should trigger a select:one event and pass the options object along as the last parameter", function(){
+      expect(collection.trigger).toHaveBeenCalledWith("select:one", m2, {foo: "bar"});
+    });
+
+    it("should fire a deselect:one event for the first model and pass the options object along as the last parameter", function(){
+      expect(collection.trigger).toHaveBeenCalledWith("deselect:one", m1, {foo: "bar"});
+    });
+  });
+
+  describe("when a model is already selected and selecting a different model via the collection's select, with a custom option", function(){
+    var m1, m2, collection;
+
+    beforeEach(function(){
+      m1 = new Model();
+      m2 = new Model();
+      collection = new Collection([m1, m2]);
+      m1.select();
+
+      spyOn(m1, "trigger").andCallThrough();
+      spyOn(m2, "trigger").andCallThrough();
+      spyOn(collection, "trigger").andCallThrough();
+
+      collection.select(m2, {foo: "bar"});
+    });
+
+    it("should trigger a deselected event on the first model and pass the options object along as the last parameter", function(){
+      expect(m1.trigger).toHaveBeenCalledWith("deselected", m1, {foo: "bar"});
+    });
+
+    it("should trigger a selected event on the second model and pass the options object along as the last parameter", function(){
+      expect(m2.trigger).toHaveBeenCalledWith("selected", m2, {foo: "bar"});
+    });
+
+    it("should trigger a select:one event and pass the options object along as the last parameter", function(){
+      expect(collection.trigger).toHaveBeenCalledWith("select:one", m2, {foo: "bar"});
+    });
+
+    it("should fire a deselect:one event for the first model and pass the options object along as the last parameter", function(){
+      expect(collection.trigger).toHaveBeenCalledWith("deselect:one", m1, {foo: "bar"});
+    });
+  });
+
+  describe("when deselecting a model via the model's deselect, with a custom option", function(){
+    var model, collection;
+
+    beforeEach(function(){
+      model = new Model();
+      collection = new Collection([model]);
+      model.select();
+
+      spyOn(model, "trigger").andCallThrough();
+      spyOn(collection, "trigger").andCallThrough();
+
+      model.deselect({foo: "bar"});
+    });
+
+     it("should trigger a deselected event and pass the options object along as the last parameter", function(){
+      expect(model.trigger).toHaveBeenCalledWith("deselected", model, {foo: "bar"});
+    });
+
+    it("should trigger a collection deselect:one event and pass the options object along as the last parameter", function(){
+      expect(collection.trigger).toHaveBeenCalledWith("deselect:one", model, {foo: "bar"});
+    });
+  });
+
+  describe("when deselecting a model via the collection's select, with a custom option", function(){
+    var model, collection;
+
+    beforeEach(function(){
+      model = new Model();
+      collection = new Collection([model]);
+      model.select();
+
+      spyOn(model, "trigger").andCallThrough();
+      spyOn(collection, "trigger").andCallThrough();
+
+      collection.deselect(model, {foo: "bar"});
+    });
+
+     it("should trigger a deselected event and pass the options object along as the last parameter", function(){
+      expect(model.trigger).toHaveBeenCalledWith("deselected", model, {foo: "bar"});
+    });
+
+    it("should trigger a collection deselect:one event and pass the options object along as the last parameter", function(){
+      expect(collection.trigger).toHaveBeenCalledWith("deselect:one", model, {foo: "bar"});
     });
   });
 
@@ -575,6 +777,7 @@ describe("single-select collection", function(){
         expect(logger.entries.length).toBe(1);
       });
     });
+
     describe('when a collection is replaced by another one and is not referenced by a variable any more, with model sharing enabled', function () {
       var logger, Collection, LoggedCollection, m1, m2, collection;
 

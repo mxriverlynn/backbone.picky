@@ -190,6 +190,9 @@ The events listed below are are triggered from Selectable models. Events can be
 prevented from firing when Backbone.Picky methods are called with the `silent`
 option, as in `myModel.select({silent: true})`.
 
+Custom options can be used when invoking any method. See the section on custom
+options, below.
+
 #### "selected"
 
 Triggers when a model is selected. Provides the selected model
@@ -333,6 +336,9 @@ myCol.selected; //=> model
 The events listed below are triggered by the SingleSelect based on changes in
 selection. Events can be prevented from firing when Backbone.Picky methods are
 called with the `silent` option, as in `myCol.select(myModel, {silent: true})`.
+
+Custom options can be used when invoking any method. See the section on custom
+options, below.
 
 #### "select:one"
 
@@ -529,6 +535,9 @@ The events below are triggered by the MultiSelect based on changes in selection.
 Events can be prevented from firing when Backbone.Picky methods are called with
 the `silent` option, as in `myCol.select(myModel, {silent: true})`.
 
+Custom options can be used when invoking any method. See the section on custom
+options, below.
+
 #### "select:all"
 
 Triggered when all models have been selected.
@@ -601,20 +610,44 @@ sharing work.
 
   So don't just replace a collection like this:
 
-    var myCol = new MySelectableCollection([myModel]);
-    // ... do stuff
-    myCol = new MySelectableCollection([myModel]);
+        var myCol = new MySelectableCollection([myModel]);
+        // ... do stuff
+        myCol = new MySelectableCollection([myModel]);
 
   Instead, call `close()` before you let an obsolete collection fade away into
   oblivion:
 
-    var myCol = new MySelectableCollection([myModel]);
-    // ... do stuff
-    myCol.close();
-    myCol = new MySelectableCollection([myModel]);
+        var myCol = new MySelectableCollection([myModel]);
+        // ... do stuff
+        myCol.close();
+        myCol = new MySelectableCollection([myModel]);
 
   Note that you don't need to call `close()` if you use Backbone.Picky in
   "single-collection mode", without sharing models among collections.
+
+## Custom options
+
+With custom options, you can send additional information to event handlers. Just
+pass an arbitrary, custom option (or a whole bunch of them) to any method. The
+option doesn't affect the operation of Backbone.Picky, but it is passed on to
+the event handlers as the last argument.
+
+```js
+myCol = new SingleCollection([myModel]);
+myCol.on("select:one", function (model, options) {
+  if (options) console.log("Selected while foo=" + options.foo);
+});
+
+myCol.select(myModel, {foo: "bar"});    // prints "Selected while foo=bar"
+```
+
+Options get passed around to all event handlers which are running. In the
+example above, the event handler is set up for the collection. But it will also
+pick up an option passed to the `select` method of the model, for instance.
+
+```js
+myModel.select({foo: "baz"});    // prints "Selected while foo=baz"
+```
 
 ## Building Backbone.Picky
 
@@ -645,6 +678,7 @@ see all of the specs for Backbone.Picky
 
 ### pre v0.3.0
 
+* Options - including arbitrary, custom ones - are passed on to event handlers
 * New events capture when models are re-selected: `reselected` (model), `reselect:one` (single-select collection), `reselect:any` (multi-select collection)
 * Multi-select events no longer fire when `selectAll`, `deselectAll` actions are a no-op (change in spec)
 * Added support for sharing models among collections

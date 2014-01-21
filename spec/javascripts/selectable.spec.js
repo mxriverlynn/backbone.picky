@@ -21,11 +21,11 @@ describe("selectable model", function(){
     });
 
     it("should notify of selection", function(){
-      expect(model.trigger).toHaveBeenCalledWith("selected", model);
+      expect(model.trigger).toHaveBeenCalledWithInitial("selected", model);
     });
 
     it("should not trigger a reselected event", function(){
-      expect(model.trigger).not.toHaveBeenCalledWith("reselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("reselected", model);
     });
   });
 
@@ -44,7 +44,7 @@ describe("selectable model", function(){
     });
 
     it("should not notify of selection", function(){
-      expect(model.trigger).not.toHaveBeenCalledWith("selected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("selected", model);
     });
   });
 
@@ -64,11 +64,11 @@ describe("selectable model", function(){
     });
 
     it("should not notify of selection", function(){
-      expect(model.trigger).not.toHaveBeenCalledWith("selected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("selected", model);
     });
 
     it("should trigger a reselected event", function(){
-      expect(model.trigger).toHaveBeenCalledWith("reselected", model);
+      expect(model.trigger).toHaveBeenCalledWithInitial("reselected", model);
     });
   });
 
@@ -88,11 +88,11 @@ describe("selectable model", function(){
     });
 
     it("should not notify of selection", function(){
-      expect(model.trigger).not.toHaveBeenCalledWith("selected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("selected", model);
     });
 
     it("should not trigger a reselected event", function(){
-      expect(model.trigger).not.toHaveBeenCalledWith("reselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("reselected", model);
     });
   });
 
@@ -112,7 +112,7 @@ describe("selectable model", function(){
     });
 
     it("should notify of deselection", function(){
-      expect(model.trigger).toHaveBeenCalledWith("deselected", model);
+      expect(model.trigger).toHaveBeenCalledWithInitial("deselected", model);
     });
   });
 
@@ -132,7 +132,7 @@ describe("selectable model", function(){
     });
 
     it("should not notify of deselection", function(){
-      expect(model.trigger).not.toHaveBeenCalledWith("deselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("deselected", model);
     });
   });
 
@@ -151,11 +151,11 @@ describe("selectable model", function(){
     });
 
     it("should not notify of deselection", function(){
-      expect(model.trigger).not.toHaveBeenCalledWith("deselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("deselected", model);
     });
 
     it("should not trigger a reselected event", function(){
-      expect(model.trigger).not.toHaveBeenCalledWith("reselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("reselected", model);
     });
   });
 
@@ -175,7 +175,7 @@ describe("selectable model", function(){
     });
 
     it("should notify of deselection", function(){
-      expect(model.trigger).toHaveBeenCalledWith("deselected", model);
+      expect(model.trigger).toHaveBeenCalledWithInitial("deselected", model);
     });
   });
 
@@ -194,7 +194,85 @@ describe("selectable model", function(){
     });
 
     it("should notify of selection", function(){
-      expect(model.trigger).toHaveBeenCalledWith("selected", model);
+      expect(model.trigger).toHaveBeenCalledWithInitial("selected", model);
+    });
+  });
+
+  describe("when selecting a model with a custom option", function(){
+    var model;
+
+    beforeEach(function(){
+      model = new Model();
+      spyOn(model, "trigger").andCallThrough();
+
+      model.select({foo: "bar"});
+    });
+
+    it("should trigger a selected event and pass the the options object along as the last parameter", function(){
+      expect(model.trigger).toHaveBeenCalledWith("selected", model, {foo: "bar"});
+    });
+  });
+
+  describe("when re-selecting a model with a custom option", function(){
+    var model;
+
+    beforeEach(function(){
+      model = new Model();
+      model.select();
+
+      spyOn(model, "trigger").andCallThrough();
+      model.select({foo: "bar"});
+    });
+
+    it("should trigger a reselected event and pass the the options object along as the last parameter", function(){
+      expect(model.trigger).toHaveBeenCalledWith("reselected", model, {foo: "bar"});
+    });
+  });
+
+  describe("when deselecting a model with a custom option", function(){
+    var model;
+
+    beforeEach(function(){
+      model = new Model();
+      model.select();
+
+      spyOn(model, "trigger").andCallThrough();
+      model.deselect({foo: "bar"});
+    });
+
+    it("should trigger a deselected event and pass the the options object along as the last parameter", function(){
+      expect(model.trigger).toHaveBeenCalledWith("deselected", model, {foo: "bar"});
+    });
+  });
+
+  describe("when toggling the selected status of a model that is selected, with a custom option", function(){
+    var model;
+
+    beforeEach(function(){
+      model = new Model();
+      model.select();
+
+      spyOn(model, "trigger").andCallThrough();
+      model.toggleSelected({foo: "bar"});
+    });
+
+    it("should trigger a deselected event and pass the the options object along as the last parameter", function(){
+      expect(model.trigger).toHaveBeenCalledWith("deselected", model, {foo: "bar"});
+    });
+  });
+
+  describe("when toggling the selected status of a model that is not selected, with a custom option", function(){
+    var model;
+
+    beforeEach(function(){
+      model = new Model();
+
+      spyOn(model, "trigger").andCallThrough();
+      model.toggleSelected({foo: "bar"});
+    });
+
+    it("should trigger a selected event and pass the the options object along as the last parameter", function(){
+      expect(model.trigger).toHaveBeenCalledWith("selected", model, {foo: "bar"});
     });
   });
 
