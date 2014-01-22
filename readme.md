@@ -129,7 +129,8 @@ myModel.selected; //=> true
 ```
 
 The `select` method can be called with the `{silent: true}` option to prevent
-selection-related events from firing. See the events section below.
+selection-related events from firing. See the [events section](#selectable-events)
+below.
 
 #### Selectable#deselect([options])
 
@@ -190,23 +191,30 @@ The events listed below are are triggered from Selectable models. Events can be
 prevented from firing when Backbone.Picky methods are called with the `silent`
 option, as in `myModel.select({silent: true})`.
 
-Custom options can be used when invoking any method. See the section on custom
-options, below.
+Event handlers with standard names are invoked automatically. Standard names are
+`onSelect`, `onDeselect`, and `onReselect`. If these methods exist on the model,
+they are run without having to be wired up with the event manually.
+
+Custom options can be used when invoking any method. See the [section on custom
+options](#custom-options), below.
 
 #### "selected"
 
-Triggers when a model is selected. Provides the selected model
-as the first parameter.
+Triggers when a model has been selected. Provides the selected model as the
+first parameter. Runs the `onSelect` event handler if the method exists on the
+model.
 
 #### "deselected"
 
-Triggers when a model is deselected. Provides the selected model
-as the first parameter.
+Triggers when a model has been deselected. Provides the selected model as the
+first parameter. Runs the `onDeselect` event handler if the method exists on the
+model.
 
 #### "reselected"
 
 Triggers when a model, which is already selected, is selected again. Provides
-the re-selected model as the first parameter.
+the re-selected model as the first parameter. Runs the `onReselect` event
+handler if the method exists on the model.
 
 ## Picky.SingleSelect
 
@@ -256,7 +264,8 @@ SingleCollection = Backbone.Collection.extend({
 });
 ```
 
-See the section on model sharing, below, for more.
+See the [section on model sharing](#sharing-models-among-collections), below,
+for more.
 
 ### SingleSelect Methods
 
@@ -337,26 +346,33 @@ The events listed below are triggered by the SingleSelect based on changes in
 selection. Events can be prevented from firing when Backbone.Picky methods are
 called with the `silent` option, as in `myCol.select(myModel, {silent: true})`.
 
-Custom options can be used when invoking any method. See the section on custom
-options, below.
+Event handlers with standard names are invoked automatically. Standard names are
+`onSelect`, `onDeselect`, and `onReselect`. If these methods exist on the
+collection, they are run without having to be wired up with the event manually.
+
+Custom options can be used when invoking any method. See the [section on custom
+options](#custom-options), below.
 
 #### "select:one"
 
-Triggered when a model has been selected. Provides the selected model
-as the first parameter.
+Triggered when a model has been selected. Provides the selected model as the
+first parameter. Runs the `onSelect` event handler if the method exists on the
+collection.
 
 #### "deselect:one"
 
-Triggered when a model has been deselected. Provides the deselected model
-as the first parameter.
+Triggered when a model has been deselected. Provides the deselected model as the
+first parameter. Runs the `onDeselect` event handler if the method exists on the
+collection.
 
-This fires whether `deselect` has been called explicitly, or the
+The event fires when `deselect` has been called explicitly, and also when the
 selection is being replaced through another call to `select`.
 
 #### "reselect:one"
 
 Triggered when a model, which is already selected, is selected again. Provides
-the selected model as the first parameter.
+the selected model as the first parameter. Runs the `onReselect` event handler
+if the method exists on the collection.
 
 ## Picky.MultiSelect
 
@@ -406,7 +422,8 @@ MultiCollection = Backbone.Collection.extend({
 });
 ```
 
-See the section on model sharing, below, for more.
+See the [section on model sharing](#sharing-models-among-collections), below,
+for more.
 
 ### MultiSelect Methods
 
@@ -535,26 +552,37 @@ The events below are triggered by the MultiSelect based on changes in selection.
 Events can be prevented from firing when Backbone.Picky methods are called with
 the `silent` option, as in `myCol.select(myModel, {silent: true})`.
 
-Custom options can be used when invoking any method. See the section on custom
-options, below.
+Event handlers with standard names are invoked automatically. Standard names are
+`onSelectNone`, `onSelectSome`, `onSelectAll` and `onReselect`. If these methods
+exist on the collection, they are run without having to be wired up with the
+event manually.
+
+Custom options can be used when invoking any method. See the [section on custom
+options](#custom-options), below.
 
 #### "select:all"
 
-Triggered when all models have been selected.
+Triggered when all models have been selected. Provides the collection as the
+first parameter. Runs the `onSelectAll` event handler if the method exists on
+the collection.
 
 #### "select:none"
 
-Triggered when all models have been deselected.
+Triggered when all models have been deselected. Provides the collection as the
+first parameter. Runs the `onSelectNone` event handler if the method exists on
+the collection.
 
 #### "select:some"
 
 Triggered when at least 1 model is selected, but less than all models have
-been selected.
+been selected. Provides the collection as the first parameter. Runs the
+`onSelectSome` event handler if the method exists on the collection.
 
 #### "reselect:any"
 
 Triggered when at least one model, which is already selected, is selected again.
-Provides an array of the re-selected models as the first parameter.
+Provides an array of the re-selected models as the first parameter. Runs the
+`onReselect` event handler if the method exists on the collection.
 
 In contrast to the other events, this event fires even if there isn't any change
 in the resulting selection at all. Note that there is no separate reselect:all
@@ -678,6 +706,7 @@ see all of the specs for Backbone.Picky
 
 ### pre v0.3.0
 
+* Event handlers with standard names are invoked automatically if they exist (`onSelect`, `onDeselect`, `onReselect`, `onSelectNone`, `onSelectSome`, `onSelectAll`)
 * Options - including arbitrary, custom ones - are passed on to event handlers
 * New events capture when models are re-selected: `reselected` (model), `reselect:one` (single-select collection), `reselect:any` (multi-select collection)
 * Multi-select events no longer fire when `selectAll`, `deselectAll` actions are a no-op (change in spec)

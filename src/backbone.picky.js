@@ -11,6 +11,7 @@ Backbone.Picky = (function (Backbone, _) {
   Picky.SingleSelect = function(collection, models){
     this._pickyCid = _.uniqueId('singleSelect');
     this.collection = collection;
+    this.trigger = trigger(collection);
 
     if (arguments.length > 1) {
 
@@ -92,6 +93,7 @@ Backbone.Picky = (function (Backbone, _) {
     this._pickyCid = _.uniqueId('multiSelect');
     this.collection = collection;
     this.selected = {};
+    this.trigger = trigger(collection);
 
     if (arguments.length > 1) {
 
@@ -215,6 +217,7 @@ Backbone.Picky = (function (Backbone, _) {
 
   Picky.Selectable = function (model) {
     this.model = model;
+    this.trigger = trigger(model);
   };
 
   _.extend(Picky.Selectable.prototype, {
@@ -355,7 +358,7 @@ Backbone.Picky = (function (Backbone, _) {
     if (select.length) _.each(select, function (model) { collection.select(model, {silent: true}); });
   }
 
-  function registerCollectionWithModel(model, collection) {
+  function registerCollectionWithModel (model, collection) {
     model._pickyCollections || (model._pickyCollections = []);
     model._pickyCollections.push(collection._pickyCid);
   }
@@ -368,6 +371,59 @@ Backbone.Picky = (function (Backbone, _) {
 
   function stripInternalOptions (options) {
     return _.omit(options, "_silentLocally", "_silentReselect", "_skipModelCall", "_processedBy");
+  }
+
+  // Creates a new trigger method which calls the predefined event handlers
+  // (onDeselect etc) as well as triggering the event.
+  //
+  // Adapted from Marionette.triggerMethod.
+  function trigger (context) {
+
+    // Take the event section ("section1:section2:section3")
+    // and turn it into an uppercase name
+    //noinspection JSUnusedLocalSymbols
+    function getEventName (match, prefix, eventName) {
+      return eventName.toUpperCase();
+    }
+
+    // Unifies event names for the method call:
+    // - (re, de)selected   => (re, de)select
+    // - (re, de)select:one => (re, de)select
+    // - reselect:any       => reselect
+    function unifyEventNames (eventName) {
+      if (eventName.slice(-2) === "ed" ) {
+        eventName = eventName.slice(0, -2);
+      } else if (eventName.slice(-4) === ":one" || eventName.slice(-4) === ":any") {
+        eventName = eventName.slice(0, -4);
+      }
+
+      return eventName;
+    }
+
+    var origTrigger = context.trigger,
+
+    // Split the event name on the ":"
+        splitter = /(^|:)(\w)/gi;
+
+    // Return an augmented trigger method implementation, in order to replace
+    // the original trigger method
+    return function (event, eventArgs) {
+      // get the method name from the event name
+      var unifiedEvent = unifyEventNames(event),
+          methodName = 'on' + unifiedEvent.replace(splitter, getEventName),
+          method = this[methodName];
+
+      // call the onMethodName if it exists
+      if (_.isFunction(method)) {
+        // pass all trigger arguments, except the event name
+        method.apply(this, _.tail(arguments));
+      }
+
+      // trigger the event
+      origTrigger.apply(this, arguments);
+      return this;
+
+    };
   }
 
   return Picky;

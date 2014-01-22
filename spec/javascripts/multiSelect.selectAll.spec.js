@@ -324,153 +324,67 @@ describe("multi-select collection: selectAll", function(){
     });
   });
 
-  describe("when 1 model is selected, and selecting all with a custom option", function(){
-    var m1, m2, collection;
+  describe('custom options', function () {
 
-    beforeEach(function(){
-      m1 = new Model();
-      m2 = new Model();
+    describe("when 1 model is selected, and selecting all with a custom option", function(){
+      var m1, m2, collection;
 
-      collection = new Collection([m1, m2]);
-      m1.select();
-
-      spyOn(m1, "trigger").andCallThrough();
-      spyOn(m2, "trigger").andCallThrough();
-      spyOn(collection, "trigger").andCallThrough();
-
-      collection.selectAll({foo: "bar"});
-    });
-
-    it("should trigger a reselected event on the first model and pass the options object along as the last parameter", function(){
-      expect(m1.trigger).toHaveBeenCalledWith("reselected", m1, {foo: "bar"});
-    });
-
-    it("should trigger a selected event on the second model and pass the options object along as the last parameter", function(){
-      expect(m2.trigger).toHaveBeenCalledWith("selected", m2, {foo: "bar"});
-    });
-
-    it("should trigger a select:all event and pass the options object along as the last parameter", function(){
-      expect(collection.trigger).toHaveBeenCalledWith("select:all", collection, {foo: "bar"});
-    });
-
-    it("should trigger a reselect:any event and pass the options object along as the last parameter", function(){
-      expect(collection.trigger).toHaveBeenCalledWith("reselect:any", [m1], {foo: "bar"});
-    });
-  });
-
-  describe("when no models are selected, and selecting all with a custom option", function(){
-    var m1, m2, collection;
-
-    beforeEach(function(){
-      m1 = new Model();
-      m2 = new Model();
-
-      collection = new Collection([m1, m2]);
-      spyOn(m1, "trigger").andCallThrough();
-      spyOn(m2, "trigger").andCallThrough();
-      spyOn(collection, "trigger").andCallThrough();
-
-      collection.selectAll({foo: "bar"});
-    });
-
-    it("should trigger a selected event on the first model and pass the options object along as the last parameter", function(){
-      expect(m1.trigger).toHaveBeenCalledWith("selected", m1, {foo: "bar"});
-    });
-
-    it("should trigger a selected event on the second model and pass the options object along as the last parameter", function(){
-      expect(m2.trigger).toHaveBeenCalledWith("selected", m2, {foo: "bar"});
-    });
-
-    it("should trigger a select:all event and pass the options object along as the last parameter", function(){
-      expect(collection.trigger).toHaveBeenCalledWith("select:all", collection, {foo: "bar"});
-    });
-  });
-
-  describe('Checking for memory leaks', function () {
-
-    describe('when a collection is replaced by another one and is not referenced by a variable any more, with model sharing disabled', function () {
-      var logger, LoggedCollection, m1, m2, collection;
-
-      beforeEach(function () {
-        logger = new Logger();
-
-        LoggedCollection = Collection.extend({
-          initialize: function(models){
-            this.on("select:none", function () {
-              logger.log( "select:none event fired in selected in collection " + this._pickyCid );
-            });
-            this.on("select:some", function () {
-              logger.log( "select:some event fired in selected in collection " + this._pickyCid );
-            });
-            this.on("select:all", function () {
-              logger.log( "select:all event fired in selected in collection " + this._pickyCid );
-            });
-
-            Collection.prototype.initialize.call(this, models);
-          }
-        });
-
+      beforeEach(function(){
         m1 = new Model();
         m2 = new Model();
+
+        collection = new Collection([m1, m2]);
+        m1.select();
+
+        spyOn(m1, "trigger").andCallThrough();
+        spyOn(m2, "trigger").andCallThrough();
+        spyOn(collection, "trigger").andCallThrough();
+
+        collection.selectAll({foo: "bar"});
       });
 
-      it('should no longer respond to model events', function () {
-        // With only variable holding a collection, only one 'select:*' event
-        // should be logged.
+      it("should trigger a reselected event on the first model and pass the options object along as the last parameter", function(){
+        expect(m1.trigger).toHaveBeenCalledWith("reselected", m1, {foo: "bar"});
+      });
 
-        //noinspection JSUnusedAssignment
-        collection = new LoggedCollection([m1, m2]);
-        collection = new LoggedCollection([m1, m2]);
+      it("should trigger a selected event on the second model and pass the options object along as the last parameter", function(){
+        expect(m2.trigger).toHaveBeenCalledWith("selected", m2, {foo: "bar"});
+      });
 
-        m2.select();
-        expect(logger.entries.length).toBe(1);
+      it("should trigger a select:all event and pass the options object along as the last parameter", function(){
+        expect(collection.trigger).toHaveBeenCalledWith("select:all", collection, {foo: "bar"});
+      });
+
+      it("should trigger a reselect:any event and pass the options object along as the last parameter", function(){
+        expect(collection.trigger).toHaveBeenCalledWith("reselect:any", [m1], {foo: "bar"});
       });
     });
 
-    describe('when a collection is replaced by another one and is not referenced by a variable any more, with model sharing enabled', function () {
-      var logger, Collection, LoggedCollection, m1, m2, collection;
+    describe("when no models are selected, and selecting all with a custom option", function(){
+      var m1, m2, collection;
 
-      beforeEach(function () {
-        logger = new Logger();
-
-        Collection = Backbone.Collection.extend({
-          model: Model,
-
-          initialize: function(models){
-            var multiSelect = new Backbone.Picky.MultiSelect(this, models);
-            _.extend(this, multiSelect);
-          }
-        });
-
-        LoggedCollection = Collection.extend({
-          initialize: function(models){
-            this.on("select:none", function () {
-              logger.log( "select:none event fired in selected in collection " + this._pickyCid );
-            });
-            this.on("select:some", function () {
-              logger.log( "select:some event fired in selected in collection " + this._pickyCid );
-            });
-            this.on("select:all", function () {
-              logger.log( "select:all event fired in selected in collection " + this._pickyCid );
-            });
-
-            Collection.prototype.initialize.call(this, models);
-          }
-        });
-
+      beforeEach(function(){
         m1 = new Model();
         m2 = new Model();
+
+        collection = new Collection([m1, m2]);
+        spyOn(m1, "trigger").andCallThrough();
+        spyOn(m2, "trigger").andCallThrough();
+        spyOn(collection, "trigger").andCallThrough();
+
+        collection.selectAll({foo: "bar"});
       });
 
-      it('should no longer respond to model events after calling close on it', function () {
-        // With only variable holding a collection, only one 'select:*' event
-        // should be logged.
-        collection = new LoggedCollection([m1, m2]);
-        collection.close();
-        collection = new LoggedCollection([m1, m2]);
+      it("should trigger a selected event on the first model and pass the options object along as the last parameter", function(){
+        expect(m1.trigger).toHaveBeenCalledWith("selected", m1, {foo: "bar"});
+      });
 
-        m2.select();
-        expect(logger.entries.length).toBe(1);
+      it("should trigger a selected event on the second model and pass the options object along as the last parameter", function(){
+        expect(m2.trigger).toHaveBeenCalledWith("selected", m2, {foo: "bar"});
+      });
+
+      it("should trigger a select:all event and pass the options object along as the last parameter", function(){
+        expect(collection.trigger).toHaveBeenCalledWith("select:all", collection, {foo: "bar"});
       });
     });
 

@@ -158,63 +158,67 @@ describe("multi-select collection: toggleSelectAll", function(){
     });
   });
 
-  describe("when no models are selected, and toggling with a custom option", function(){
-    var m1, m2, collection;
+  describe('custom options', function () {
 
-    beforeEach(function(){
-      m1 = new Model();
-      m2 = new Model();
+    describe("when no models are selected, and toggling with a custom option", function(){
+      var m1, m2, collection;
 
-      collection = new Collection([m1, m2]);
+      beforeEach(function(){
+        m1 = new Model();
+        m2 = new Model();
 
-      spyOn(m1, "trigger").andCallThrough();
-      spyOn(m2, "trigger").andCallThrough();
-      spyOn(collection, "trigger").andCallThrough();
+        collection = new Collection([m1, m2]);
 
-      collection.toggleSelectAll({foo: "bar"});
+        spyOn(m1, "trigger").andCallThrough();
+        spyOn(m2, "trigger").andCallThrough();
+        spyOn(collection, "trigger").andCallThrough();
+
+        collection.toggleSelectAll({foo: "bar"});
+      });
+
+      it("should trigger a selected event on the first model and pass the options object along as the last parameter", function(){
+        expect(m1.trigger).toHaveBeenCalledWith("selected", m1, {foo: "bar"});
+      });
+
+      it("should trigger a selected event on the second model and pass the options object along as the last parameter", function(){
+        expect(m2.trigger).toHaveBeenCalledWith("selected", m2, {foo: "bar"});
+      });
+
+      it("should trigger a select:all event and pass the options object along as the last parameter", function(){
+        expect(collection.trigger).toHaveBeenCalledWith("select:all", collection, {foo: "bar"});
+      });
     });
 
-    it("should trigger a selected event on the first model and pass the options object along as the last parameter", function(){
-      expect(m1.trigger).toHaveBeenCalledWith("selected", m1, {foo: "bar"});
+    describe("when all models are selected, and toggling with a custom option", function(){
+      var m1, m2, collection;
+
+      beforeEach(function(){
+        m1 = new Model();
+        m2 = new Model();
+
+        collection = new Collection([m1, m2]);
+        collection.selectAll();
+
+        spyOn(m1, "trigger").andCallThrough();
+        spyOn(m2, "trigger").andCallThrough();
+        spyOn(collection, "trigger").andCallThrough();
+
+        collection.toggleSelectAll({foo: "bar"});
+      });
+
+      it("should trigger a deselected event on the first model and pass the options object along as the last parameter", function(){
+        expect(m1.trigger).toHaveBeenCalledWith("deselected", m1, {foo: "bar"});
+      });
+
+      it("should trigger a deselected event on the second model and pass the options object along as the last parameter", function(){
+        expect(m2.trigger).toHaveBeenCalledWith("deselected", m2, {foo: "bar"});
+      });
+
+      it("should trigger a select:none event and pass the options object along as the last parameter", function(){
+        expect(collection.trigger).toHaveBeenCalledWith("select:none", collection, {foo: "bar"});
+      });
     });
 
-    it("should trigger a selected event on the second model and pass the options object along as the last parameter", function(){
-      expect(m2.trigger).toHaveBeenCalledWith("selected", m2, {foo: "bar"});
-    });
-
-    it("should trigger a select:all event and pass the options object along as the last parameter", function(){
-      expect(collection.trigger).toHaveBeenCalledWith("select:all", collection, {foo: "bar"});
-    });
-  });
-
-  describe("when all models are selected, and toggling with a custom option", function(){
-    var m1, m2, collection;
-
-    beforeEach(function(){
-      m1 = new Model();
-      m2 = new Model();
-
-      collection = new Collection([m1, m2]);
-      collection.selectAll();
-
-      spyOn(m1, "trigger").andCallThrough();
-      spyOn(m2, "trigger").andCallThrough();
-      spyOn(collection, "trigger").andCallThrough();
-
-      collection.toggleSelectAll({foo: "bar"});
-    });
-
-    it("should trigger a deselected event on the first model and pass the options object along as the last parameter", function(){
-      expect(m1.trigger).toHaveBeenCalledWith("deselected", m1, {foo: "bar"});
-    });
-
-    it("should trigger a deselected event on the second model and pass the options object along as the last parameter", function(){
-      expect(m2.trigger).toHaveBeenCalledWith("deselected", m2, {foo: "bar"});
-    });
-
-    it("should trigger a select:none event and pass the options object along as the last parameter", function(){
-      expect(collection.trigger).toHaveBeenCalledWith("select:none", collection, {foo: "bar"});
-    });
   });
 
 });

@@ -1849,236 +1849,240 @@ describe("models shared between multiple collections", function(){
     });
   });
 
-  describe("when selecting a model in a single-select collection with a custom option", function(){
-    var model, singleCollectionA, singleCollectionB, multiCollectionA;
+  describe('custom options', function () {
 
-    beforeEach(function(){
-      model = new Model();
-      singleCollectionA = new SingleSelectCollection([model]);
-      singleCollectionB = new SingleSelectCollection([model]);
-      multiCollectionA  = new MultiSelectCollection([model]);
+    describe("when selecting a model in a single-select collection with a custom option", function(){
+      var model, singleCollectionA, singleCollectionB, multiCollectionA;
 
-      spyOn(model, "trigger").andCallThrough();
-      spyOn(singleCollectionA, "trigger").andCallThrough();
-      spyOn(singleCollectionB, "trigger").andCallThrough();
-      spyOn(multiCollectionA, "trigger").andCallThrough();
+      beforeEach(function(){
+        model = new Model();
+        singleCollectionA = new SingleSelectCollection([model]);
+        singleCollectionB = new SingleSelectCollection([model]);
+        multiCollectionA  = new MultiSelectCollection([model]);
 
-      singleCollectionA.select(model, {foo: "bar"});
+        spyOn(model, "trigger").andCallThrough();
+        spyOn(singleCollectionA, "trigger").andCallThrough();
+        spyOn(singleCollectionB, "trigger").andCallThrough();
+        spyOn(multiCollectionA, "trigger").andCallThrough();
+
+        singleCollectionA.select(model, {foo: "bar"});
+      });
+
+      it('should trigger a selected event on the model and pass the options object along as the last parameter', function () {
+        expect(model.trigger).toHaveBeenCalledWith("selected", model, {foo: "bar"});
+      });
+
+      it('should trigger a select:one event on the originating collection and pass the options object along as the last parameter', function () {
+        expect(singleCollectionA.trigger).toHaveBeenCalledWith("select:one", model, {foo: "bar"});
+      });
+
+      it('should trigger a select:one event on another single-select collection and pass the options object along as the last parameter', function () {
+        expect(singleCollectionB.trigger).toHaveBeenCalledWith("select:one", model, {foo: "bar"});
+      });
+
+      it('should trigger a select:some or selected:all event on another multi-select collection and pass the options object along as the last parameter', function () {
+        expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:all", multiCollectionA, {foo: "bar"});
+      });
     });
 
-    it('should trigger a selected event on the model and pass the options object along as the last parameter', function () {
-      expect(model.trigger).toHaveBeenCalledWith("selected", model, {foo: "bar"});
+    describe("when re-selecting a model in a single-select collection with a custom option", function(){
+      var model, singleCollectionA, singleCollectionB, multiCollectionA;
+
+      beforeEach(function(){
+        model = new Model();
+        singleCollectionA = new SingleSelectCollection([model]);
+        singleCollectionB = new SingleSelectCollection([model]);
+        multiCollectionA  = new MultiSelectCollection([model]);
+
+        model.select();
+
+        spyOn(model, "trigger").andCallThrough();
+        spyOn(singleCollectionA, "trigger").andCallThrough();
+        spyOn(singleCollectionB, "trigger").andCallThrough();
+        spyOn(multiCollectionA, "trigger").andCallThrough();
+
+        singleCollectionA.select(model, {foo: "bar"});
+      });
+
+      it('should trigger a reselected event on the model and pass the options object along as the last parameter', function () {
+        expect(model.trigger).toHaveBeenCalledWith("reselected", model, {foo: "bar"});
+      });
+
+      it("should trigger a reselect:one event on the originating collection and pass the options object along as the last parameter", function(){
+        expect(singleCollectionA.trigger).toHaveBeenCalledWith("reselect:one", model, {foo: "bar"});
+      });
+
+      it("should trigger a reselect:one event on another single-select collection and pass the options object along as the last parameter", function(){
+        expect(singleCollectionB.trigger).toHaveBeenCalledWith("reselect:one", model, {foo: "bar"});
+      });
+
+      it("should trigger a reselect:any event on another multi-select collection and pass the options object along as the last parameter", function(){
+        expect(multiCollectionA.trigger).toHaveBeenCalledWith("reselect:any", [model], {foo: "bar"});
+      });
     });
 
-    it('should trigger a select:one event on the originating collection and pass the options object along as the last parameter', function () {
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("select:one", model, {foo: "bar"});
+    describe("when a model is already selected and a different model is selected in a single-select collection with a custom option", function(){
+      var model1, model2, singleCollectionA, singleCollectionB, multiCollectionA;
+
+      beforeEach(function(){
+        model1 = new Model();
+        model2 = new Model();
+
+        singleCollectionA = new SingleSelectCollection([model1, model2]);
+        singleCollectionB = new SingleSelectCollection([model1, model2]);
+        multiCollectionA  = new MultiSelectCollection([model1, model2]);
+
+        model1.select();
+
+        spyOn(model1, "trigger").andCallThrough();
+        spyOn(model2, "trigger").andCallThrough();
+        spyOn(singleCollectionA, "trigger").andCallThrough();
+        spyOn(singleCollectionB, "trigger").andCallThrough();
+        spyOn(multiCollectionA, "trigger").andCallThrough();
+
+        singleCollectionA.select(model2, {foo: "bar"});
+      });
+
+      it('should trigger a selected event on the selected model and pass the options object along as the last parameter', function () {
+        expect(model2.trigger).toHaveBeenCalledWith("selected", model2, {foo: "bar"});
+      });
+
+      it('should trigger a deselected event on the first model and pass the options object along as the last parameter', function () {
+        expect(model1.trigger).toHaveBeenCalledWith("deselected", model1, {foo: "bar"});
+      });
+
+      it('should trigger a deselect:one event on the originating collection and pass the options object along as the last parameter', function () {
+        expect(singleCollectionA.trigger).toHaveBeenCalledWith("deselect:one", model1, {foo: "bar"});
+      });
+
+      it('should trigger a select:one event on the originating collection and pass the options object along as the last parameter', function () {
+        expect(singleCollectionA.trigger).toHaveBeenCalledWith("select:one", model2, {foo: "bar"});
+      });
+
+      it('should trigger a deselect:one event on another single-select collection and pass the options object along as the last parameter', function () {
+        expect(singleCollectionB.trigger).toHaveBeenCalledWith("deselect:one", model1, {foo: "bar"});
+      });
+
+      it('should trigger a select:one event on another single-select collection and pass the options object along as the last parameter', function () {
+        expect(singleCollectionB.trigger).toHaveBeenCalledWith("select:one", model2, {foo: "bar"});
+      });
+
+      it('should trigger a select:some event on another multi-select collection and pass the options object along as the last parameter', function () {
+        expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:some", multiCollectionA, {foo: "bar"});
+      });
     });
 
-    it('should trigger a select:one event on another single-select collection and pass the options object along as the last parameter', function () {
-      expect(singleCollectionB.trigger).toHaveBeenCalledWith("select:one", model, {foo: "bar"});
+    describe("when selecting a model in a multi-select collection with a custom option", function(){
+      var model, singleCollectionA, multiCollectionA, multiCollectionB;
+
+      beforeEach(function(){
+        model = new Model();
+        singleCollectionA = new SingleSelectCollection([model]);
+        multiCollectionA  = new MultiSelectCollection([model]);
+        multiCollectionB  = new MultiSelectCollection([model]);
+
+        spyOn(model, "trigger").andCallThrough();
+        spyOn(singleCollectionA, "trigger").andCallThrough();
+        spyOn(multiCollectionA, "trigger").andCallThrough();
+        spyOn(multiCollectionB, "trigger").andCallThrough();
+
+        multiCollectionA.select(model, {foo: "bar"});
+      });
+
+      it('should trigger a selected event on the model and pass the options object along as the last parameter', function () {
+        expect(model.trigger).toHaveBeenCalledWith("selected", model, {foo: "bar"});
+      });
+
+      it('should trigger a select:some or selected:all event on the originating collection and pass the options object along as the last parameter', function () {
+        expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:all", multiCollectionA, {foo: "bar"});
+      });
+
+      it('should trigger a select:one event on another single-select collection and pass the options object along as the last parameter', function () {
+        expect(singleCollectionA.trigger).toHaveBeenCalledWith("select:one", model, {foo: "bar"});
+      });
+
+      it('should trigger a select:some or selected:all event on another multi-select collection and pass the options object along as the last parameter', function () {
+        expect(multiCollectionB.trigger).toHaveBeenCalledWith("select:all", multiCollectionB, {foo: "bar"});
+      });
     });
 
-    it('should trigger a select:some or selected:all event on another multi-select collection and pass the options object along as the last parameter', function () {
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:all", multiCollectionA, {foo: "bar"});
-    });
-  });
+    describe("when re-selecting a model in a multi-select collection with a custom option", function(){
+      var model1, model2, singleCollectionA, multiCollectionA, multiCollectionB;
 
-  describe("when re-selecting a model in a single-select collection with a custom option", function(){
-    var model, singleCollectionA, singleCollectionB, multiCollectionA;
+      beforeEach(function(){
+        model1 = new Model();
+        model2 = new Model();
+        singleCollectionA = new SingleSelectCollection([model1, model2]);
+        multiCollectionA  = new MultiSelectCollection([model1, model2]);
+        multiCollectionB  = new MultiSelectCollection([model1, model2]);
 
-    beforeEach(function(){
-      model = new Model();
-      singleCollectionA = new SingleSelectCollection([model]);
-      singleCollectionB = new SingleSelectCollection([model]);
-      multiCollectionA  = new MultiSelectCollection([model]);
+        multiCollectionA.select(model1);
 
-      model.select();
+        spyOn(model1, "trigger").andCallThrough();
+        spyOn(singleCollectionA, "trigger").andCallThrough();
+        spyOn(multiCollectionA, "trigger").andCallThrough();
+        spyOn(multiCollectionB, "trigger").andCallThrough();
 
-      spyOn(model, "trigger").andCallThrough();
-      spyOn(singleCollectionA, "trigger").andCallThrough();
-      spyOn(singleCollectionB, "trigger").andCallThrough();
-      spyOn(multiCollectionA, "trigger").andCallThrough();
+        multiCollectionA.select(model1, {foo: "bar"});
+      });
 
-      singleCollectionA.select(model, {foo: "bar"});
-    });
+      it('should trigger a reselected event on the model and pass the options object along as the last parameter', function () {
+        expect(model1.trigger).toHaveBeenCalledWith("reselected", model1, {foo: "bar"});
+      });
 
-     it('should trigger a reselected event on the model and pass the options object along as the last parameter', function () {
-      expect(model.trigger).toHaveBeenCalledWith("reselected", model, {foo: "bar"});
-    });
+      it("should trigger a reselect:any event on the originating collection and pass the options object along as the last parameter", function(){
+        expect(multiCollectionA.trigger).toHaveBeenCalledWith("reselect:any", [model1], {foo: "bar"});
+      });
 
-    it("should trigger a reselect:one event on the originating collection and pass the options object along as the last parameter", function(){
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("reselect:one", model, {foo: "bar"});
-    });
+      it("should trigger a reselect:one event on another single-select collection and pass the options object along as the last parameter", function(){
+        expect(singleCollectionA.trigger).toHaveBeenCalledWith("reselect:one", model1, {foo: "bar"});
+      });
 
-    it("should trigger a reselect:one event on another single-select collection and pass the options object along as the last parameter", function(){
-      expect(singleCollectionB.trigger).toHaveBeenCalledWith("reselect:one", model, {foo: "bar"});
-    });
-
-    it("should trigger a reselect:any event on another multi-select collection and pass the options object along as the last parameter", function(){
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("reselect:any", [model], {foo: "bar"});
-    });
-  });
-
-  describe("when a model is already selected and a different model is selected in a single-select collection with a custom option", function(){
-    var model1, model2, singleCollectionA, singleCollectionB, multiCollectionA;
-
-    beforeEach(function(){
-      model1 = new Model();
-      model2 = new Model();
-
-      singleCollectionA = new SingleSelectCollection([model1, model2]);
-      singleCollectionB = new SingleSelectCollection([model1, model2]);
-      multiCollectionA  = new MultiSelectCollection([model1, model2]);
-
-      model1.select();
-
-      spyOn(model1, "trigger").andCallThrough();
-      spyOn(model2, "trigger").andCallThrough();
-      spyOn(singleCollectionA, "trigger").andCallThrough();
-      spyOn(singleCollectionB, "trigger").andCallThrough();
-      spyOn(multiCollectionA, "trigger").andCallThrough();
-
-      singleCollectionA.select(model2, {foo: "bar"});
+      it("should trigger a reselect:any event on another multi-select collection and pass the options object along as the last parameter", function(){
+        expect(multiCollectionB.trigger).toHaveBeenCalledWith("reselect:any", [model1], {foo: "bar"});
+      });
     });
 
-    it('should trigger a selected event on the selected model and pass the options object along as the last parameter', function () {
-      expect(model2.trigger).toHaveBeenCalledWith("selected", model2, {foo: "bar"});
+    describe("when a selected model is deselected in a multi-select collection with a custom option", function(){
+      var model1, model2, singleCollectionA, singleCollectionB, multiCollectionA, multiCollectionB;
+
+      beforeEach(function(){
+        model1 = new Model();
+        model2 = new Model();
+        singleCollectionA = new SingleSelectCollection([model1]);
+        singleCollectionB = new SingleSelectCollection([model2]);
+        multiCollectionA  = new MultiSelectCollection([model1, model2]);
+        multiCollectionB  = new MultiSelectCollection([model1, model2]);
+
+        multiCollectionA.select(model2);
+        multiCollectionA.select(model1);
+
+        spyOn(model1, "trigger").andCallThrough();
+        spyOn(model2, "trigger").andCallThrough();
+        spyOn(singleCollectionA, "trigger").andCallThrough();
+        spyOn(multiCollectionA, "trigger").andCallThrough();
+        spyOn(multiCollectionB, "trigger").andCallThrough();
+
+        multiCollectionA.deselect(model1, {foo: "bar"});
+      });
+
+      it('should trigger a deselected event on the model and pass the options object along as the last parameter', function () {
+        expect(model1.trigger).toHaveBeenCalledWith("deselected", model1, {foo: "bar"});
+      });
+
+      it('should trigger a select:some or select:none event on the originating collection and pass the options object along as the last parameter', function () {
+        expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:some", multiCollectionA, {foo: "bar"});
+      });
+
+      it('should trigger a deselect:one event on a single-select collection sharing the model and pass the options object along as the last parameter', function () {
+        expect(singleCollectionA.trigger).toHaveBeenCalledWith("deselect:one", model1, {foo: "bar"});
+      });
+
+      it('should trigger a select:some or selected:none event on another multi-select collection and pass the options object along as the last parameter', function () {
+        expect(multiCollectionB.trigger).toHaveBeenCalledWith("select:some", multiCollectionB, {foo: "bar"});
+      });
     });
 
-    it('should trigger a deselected event on the first model and pass the options object along as the last parameter', function () {
-      expect(model1.trigger).toHaveBeenCalledWith("deselected", model1, {foo: "bar"});
-    });
-
-    it('should trigger a deselect:one event on the originating collection and pass the options object along as the last parameter', function () {
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("deselect:one", model1, {foo: "bar"});
-    });
-
-    it('should trigger a select:one event on the originating collection and pass the options object along as the last parameter', function () {
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("select:one", model2, {foo: "bar"});
-    });
-
-    it('should trigger a deselect:one event on another single-select collection and pass the options object along as the last parameter', function () {
-      expect(singleCollectionB.trigger).toHaveBeenCalledWith("deselect:one", model1, {foo: "bar"});
-    });
-
-    it('should trigger a select:one event on another single-select collection and pass the options object along as the last parameter', function () {
-      expect(singleCollectionB.trigger).toHaveBeenCalledWith("select:one", model2, {foo: "bar"});
-    });
-
-    it('should trigger a select:some event on another multi-select collection and pass the options object along as the last parameter', function () {
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:some", multiCollectionA, {foo: "bar"});
-    });
-  });
-
-  describe("when selecting a model in a multi-select collection with a custom option", function(){
-    var model, singleCollectionA, multiCollectionA, multiCollectionB;
-
-    beforeEach(function(){
-      model = new Model();
-      singleCollectionA = new SingleSelectCollection([model]);
-      multiCollectionA  = new MultiSelectCollection([model]);
-      multiCollectionB  = new MultiSelectCollection([model]);
-
-      spyOn(model, "trigger").andCallThrough();
-      spyOn(singleCollectionA, "trigger").andCallThrough();
-      spyOn(multiCollectionA, "trigger").andCallThrough();
-      spyOn(multiCollectionB, "trigger").andCallThrough();
-
-      multiCollectionA.select(model, {foo: "bar"});
-    });
-
-    it('should trigger a selected event on the model and pass the options object along as the last parameter', function () {
-      expect(model.trigger).toHaveBeenCalledWith("selected", model, {foo: "bar"});
-    });
-
-    it('should trigger a select:some or selected:all event on the originating collection and pass the options object along as the last parameter', function () {
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:all", multiCollectionA, {foo: "bar"});
-    });
-
-    it('should trigger a select:one event on another single-select collection and pass the options object along as the last parameter', function () {
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("select:one", model, {foo: "bar"});
-    });
-
-    it('should trigger a select:some or selected:all event on another multi-select collection and pass the options object along as the last parameter', function () {
-      expect(multiCollectionB.trigger).toHaveBeenCalledWith("select:all", multiCollectionB, {foo: "bar"});
-    });
-  });
-
-  describe("when re-selecting a model in a multi-select collection with a custom option", function(){
-    var model1, model2, singleCollectionA, multiCollectionA, multiCollectionB;
-
-    beforeEach(function(){
-      model1 = new Model();
-      model2 = new Model();
-      singleCollectionA = new SingleSelectCollection([model1, model2]);
-      multiCollectionA  = new MultiSelectCollection([model1, model2]);
-      multiCollectionB  = new MultiSelectCollection([model1, model2]);
-
-      multiCollectionA.select(model1);
-
-      spyOn(model1, "trigger").andCallThrough();
-      spyOn(singleCollectionA, "trigger").andCallThrough();
-      spyOn(multiCollectionA, "trigger").andCallThrough();
-      spyOn(multiCollectionB, "trigger").andCallThrough();
-
-      multiCollectionA.select(model1, {foo: "bar"});
-    });
-
-    it('should trigger a reselected event on the model and pass the options object along as the last parameter', function () {
-      expect(model1.trigger).toHaveBeenCalledWith("reselected", model1, {foo: "bar"});
-    });
-
-    it("should trigger a reselect:any event on the originating collection and pass the options object along as the last parameter", function(){
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("reselect:any", [model1], {foo: "bar"});
-    });
-
-    it("should trigger a reselect:one event on another single-select collection and pass the options object along as the last parameter", function(){
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("reselect:one", model1, {foo: "bar"});
-    });
-
-    it("should trigger a reselect:any event on another multi-select collection and pass the options object along as the last parameter", function(){
-      expect(multiCollectionB.trigger).toHaveBeenCalledWith("reselect:any", [model1], {foo: "bar"});
-    });
-  });
-
-  describe("when a selected model is deselected in a multi-select collection with a custom option", function(){
-    var model1, model2, singleCollectionA, singleCollectionB, multiCollectionA, multiCollectionB;
-
-    beforeEach(function(){
-      model1 = new Model();
-      model2 = new Model();
-      singleCollectionA = new SingleSelectCollection([model1]);
-      singleCollectionB = new SingleSelectCollection([model2]);
-      multiCollectionA  = new MultiSelectCollection([model1, model2]);
-      multiCollectionB  = new MultiSelectCollection([model1, model2]);
-
-      multiCollectionA.select(model2);
-      multiCollectionA.select(model1);
-
-      spyOn(model1, "trigger").andCallThrough();
-      spyOn(model2, "trigger").andCallThrough();
-      spyOn(singleCollectionA, "trigger").andCallThrough();
-      spyOn(multiCollectionA, "trigger").andCallThrough();
-      spyOn(multiCollectionB, "trigger").andCallThrough();
-
-      multiCollectionA.deselect(model1, {foo: "bar"});
-    });
-
-    it('should trigger a deselected event on the model and pass the options object along as the last parameter', function () {
-      expect(model1.trigger).toHaveBeenCalledWith("deselected", model1, {foo: "bar"});
-    });
-
-    it('should trigger a select:some or select:none event on the originating collection and pass the options object along as the last parameter', function () {
-      expect(multiCollectionA.trigger).toHaveBeenCalledWith("select:some", multiCollectionA, {foo: "bar"});
-    });
-
-    it('should trigger a deselect:one event on a single-select collection sharing the model and pass the options object along as the last parameter', function () {
-      expect(singleCollectionA.trigger).toHaveBeenCalledWith("deselect:one", model1, {foo: "bar"});
-    });
-
-    it('should trigger a select:some or selected:none event on another multi-select collection and pass the options object along as the last parameter', function () {
-      expect(multiCollectionB.trigger).toHaveBeenCalledWith("select:some", multiCollectionB, {foo: "bar"});
-    });
   });
 
 });

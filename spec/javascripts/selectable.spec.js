@@ -198,81 +198,119 @@ describe("selectable model", function(){
     });
   });
 
-  describe("when selecting a model with a custom option", function(){
-    var model;
+  describe('custom options', function () {
 
-    beforeEach(function(){
-      model = new Model();
-      spyOn(model, "trigger").andCallThrough();
+    describe("when selecting a model with a custom option", function () {
+      var model;
 
-      model.select({foo: "bar"});
+      beforeEach(function () {
+        model = new Model();
+        spyOn(model, "trigger").andCallThrough();
+
+        model.select({foo: "bar"});
+      });
+
+      it("should trigger a selected event and pass the the options object along as the last parameter", function () {
+        expect(model.trigger).toHaveBeenCalledWith("selected", model, {foo: "bar"});
+      });
     });
 
-    it("should trigger a selected event and pass the the options object along as the last parameter", function(){
-      expect(model.trigger).toHaveBeenCalledWith("selected", model, {foo: "bar"});
+    describe("when re-selecting a model with a custom option", function () {
+      var model;
+
+      beforeEach(function () {
+        model = new Model();
+        model.select();
+
+        spyOn(model, "trigger").andCallThrough();
+        model.select({foo: "bar"});
+      });
+
+      it("should trigger a reselected event and pass the the options object along as the last parameter", function () {
+        expect(model.trigger).toHaveBeenCalledWith("reselected", model, {foo: "bar"});
+      });
     });
+
+    describe("when deselecting a model with a custom option", function () {
+      var model;
+
+      beforeEach(function () {
+        model = new Model();
+        model.select();
+
+        spyOn(model, "trigger").andCallThrough();
+        model.deselect({foo: "bar"});
+      });
+
+      it("should trigger a deselected event and pass the the options object along as the last parameter", function () {
+        expect(model.trigger).toHaveBeenCalledWith("deselected", model, {foo: "bar"});
+      });
+    });
+
+    describe("when toggling the selected status of a model that is selected, with a custom option", function () {
+      var model;
+
+      beforeEach(function () {
+        model = new Model();
+        model.select();
+
+        spyOn(model, "trigger").andCallThrough();
+        model.toggleSelected({foo: "bar"});
+      });
+
+      it("should trigger a deselected event and pass the the options object along as the last parameter", function () {
+        expect(model.trigger).toHaveBeenCalledWith("deselected", model, {foo: "bar"});
+      });
+    });
+
+    describe("when toggling the selected status of a model that is not selected, with a custom option", function () {
+      var model;
+
+      beforeEach(function () {
+        model = new Model();
+
+        spyOn(model, "trigger").andCallThrough();
+        model.toggleSelected({foo: "bar"});
+      });
+
+      it("should trigger a selected event and pass the the options object along as the last parameter", function () {
+        expect(model.trigger).toHaveBeenCalledWith("selected", model, {foo: "bar"});
+      });
+    });
+
   });
 
-  describe("when re-selecting a model with a custom option", function(){
-    var model;
+  describe('automatic invocation of onSelect, onDeselect, onReselect handlers', function () {
+    var EventHandlingModel, model;
 
-    beforeEach(function(){
-      model = new Model();
-      model.select();
+    beforeEach(function () {
 
-      spyOn(model, "trigger").andCallThrough();
-      model.select({foo: "bar"});
+      EventHandlingModel = Model.extend({
+        onSelect:   function (model, options) {},
+        onDeselect: function (model, options) {},
+        onReselect: function (model, options) {}
+      });
+
+      model = new EventHandlingModel();
+
+      spyOn(model, "onSelect").andCallThrough();
+      spyOn(model, "onDeselect").andCallThrough();
+      spyOn(model, "onReselect").andCallThrough();
     });
 
-    it("should trigger a reselected event and pass the the options object along as the last parameter", function(){
-      expect(model.trigger).toHaveBeenCalledWith("reselected", model, {foo: "bar"});
-    });
-  });
-
-  describe("when deselecting a model with a custom option", function(){
-    var model;
-
-    beforeEach(function(){
-      model = new Model();
-      model.select();
-
-      spyOn(model, "trigger").andCallThrough();
-      model.deselect({foo: "bar"});
+    it('calls the onSelect handler when triggering a selected event on the model', function () {
+      model.trigger("selected", model, {foo: "bar"});
+      expect(model.onSelect).toHaveBeenCalledWith(model, {foo: "bar"});
     });
 
-    it("should trigger a deselected event and pass the the options object along as the last parameter", function(){
-      expect(model.trigger).toHaveBeenCalledWith("deselected", model, {foo: "bar"});
-    });
-  });
-
-  describe("when toggling the selected status of a model that is selected, with a custom option", function(){
-    var model;
-
-    beforeEach(function(){
-      model = new Model();
-      model.select();
-
-      spyOn(model, "trigger").andCallThrough();
-      model.toggleSelected({foo: "bar"});
+    it('calls the onDeselect handler when triggering a deselected event on the model', function () {
+      model.trigger("deselected", model, {foo: "bar"});
+      expect(model.onDeselect).toHaveBeenCalledWith(model, {foo: "bar"});
     });
 
-    it("should trigger a deselected event and pass the the options object along as the last parameter", function(){
-      expect(model.trigger).toHaveBeenCalledWith("deselected", model, {foo: "bar"});
-    });
-  });
-
-  describe("when toggling the selected status of a model that is not selected, with a custom option", function(){
-    var model;
-
-    beforeEach(function(){
-      model = new Model();
-
-      spyOn(model, "trigger").andCallThrough();
-      model.toggleSelected({foo: "bar"});
-    });
-
-    it("should trigger a selected event and pass the the options object along as the last parameter", function(){
-      expect(model.trigger).toHaveBeenCalledWith("selected", model, {foo: "bar"});
+    it('calls the onReselect handler when triggering a reselected event on the model', function () {
+      model.trigger("reselected", model, {foo: "bar"});
+      expect(model.onReselect).toHaveBeenCalledWith(model, {foo: "bar"});
     });
   });
 
