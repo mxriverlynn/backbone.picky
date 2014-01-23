@@ -356,14 +356,14 @@ options](#custom-options), below.
 #### "select:one"
 
 Triggered when a model has been selected. Provides the selected model as the
-first parameter. Runs the `onSelect` event handler if the method exists on the
-collection.
+first parameter, and the collection as the second. Runs the `onSelect` event
+handler if the method exists on the collection.
 
 #### "deselect:one"
 
 Triggered when a model has been deselected. Provides the deselected model as the
-first parameter. Runs the `onDeselect` event handler if the method exists on the
-collection.
+first parameter, and the collection as the second.. Runs the `onDeselect` event
+handler if the method exists on the collection.
 
 The event fires when `deselect` has been called explicitly, and also when the
 selection is being replaced through another call to `select`.
@@ -371,8 +371,8 @@ selection is being replaced through another call to `select`.
 #### "reselect:one"
 
 Triggered when a model, which is already selected, is selected again. Provides
-the selected model as the first parameter. Runs the `onReselect` event handler
-if the method exists on the collection.
+the selected model as the first parameter, and the collection as the second.
+Runs the `onReselect` event handler if the method exists on the collection.
 
 ## Picky.MultiSelect
 
@@ -662,7 +662,7 @@ the event handlers as the last argument.
 
 ```js
 myCol = new SingleCollection([myModel]);
-myCol.on("select:one", function (model, options) {
+myCol.on("select:one", function (model, collection, options) {
   if (options) console.log("Selected while foo=" + options.foo);
 });
 
@@ -708,6 +708,7 @@ see all of the specs for Backbone.Picky
 
 * Event handlers with standard names are invoked automatically if they exist (`onSelect`, `onDeselect`, `onReselect`, `onSelectNone`, `onSelectSome`, `onSelectAll`)
 * Options - including arbitrary, custom ones - are passed on to event handlers
+* The collection is also passed to event handlers (single-select collection)
 * New events capture when models are re-selected: `reselected` (model), `reselect:one` (single-select collection), `reselect:any` (multi-select collection)
 * Multi-select events no longer fire when `selectAll`, `deselectAll` actions are a no-op (change in spec)
 * Added support for sharing models among collections

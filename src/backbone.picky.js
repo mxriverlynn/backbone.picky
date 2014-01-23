@@ -54,9 +54,9 @@ Backbone.Picky = (function (Backbone, _) {
       if (!(options.silent || options._silentLocally)) {
 
         if (reselected) {
-          if (!options._silentReselect) this.trigger("reselect:one", model, stripInternalOptions(options));
+          if (!options._silentReselect) this.trigger("reselect:one", model, this, stripInternalOptions(options));
         } else {
-          this.trigger("select:one", model, stripInternalOptions(options));
+          this.trigger("select:one", model, this, stripInternalOptions(options));
         }
 
       }
@@ -73,7 +73,7 @@ Backbone.Picky = (function (Backbone, _) {
 
       delete this.selected;
       if (!options._skipModelCall) model.deselect(_.omit(options, "_silentLocally"));
-      if (!(options.silent || options._silentLocally)) this.trigger("deselect:one", model, stripInternalOptions(options));
+      if (!(options.silent || options._silentLocally)) this.trigger("deselect:one", model, this, stripInternalOptions(options));
     },
 
     close: function () {

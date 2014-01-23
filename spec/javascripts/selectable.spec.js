@@ -25,7 +25,7 @@ describe("selectable model", function(){
     });
 
     it("should not trigger a reselected event", function(){
-      expect(model.trigger).not.toHaveBeenCalledWithInitial("reselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("reselected");
     });
   });
 
@@ -44,7 +44,7 @@ describe("selectable model", function(){
     });
 
     it("should not notify of selection", function(){
-      expect(model.trigger).not.toHaveBeenCalledWithInitial("selected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("selected");
     });
   });
 
@@ -64,7 +64,7 @@ describe("selectable model", function(){
     });
 
     it("should not notify of selection", function(){
-      expect(model.trigger).not.toHaveBeenCalledWithInitial("selected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("selected");
     });
 
     it("should trigger a reselected event", function(){
@@ -88,11 +88,11 @@ describe("selectable model", function(){
     });
 
     it("should not notify of selection", function(){
-      expect(model.trigger).not.toHaveBeenCalledWithInitial("selected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("selected");
     });
 
     it("should not trigger a reselected event", function(){
-      expect(model.trigger).not.toHaveBeenCalledWithInitial("reselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("reselected");
     });
   });
 
@@ -132,7 +132,7 @@ describe("selectable model", function(){
     });
 
     it("should not notify of deselection", function(){
-      expect(model.trigger).not.toHaveBeenCalledWithInitial("deselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("deselected");
     });
   });
 
@@ -151,11 +151,11 @@ describe("selectable model", function(){
     });
 
     it("should not notify of deselection", function(){
-      expect(model.trigger).not.toHaveBeenCalledWithInitial("deselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("deselected");
     });
 
     it("should not trigger a reselected event", function(){
-      expect(model.trigger).not.toHaveBeenCalledWithInitial("reselected", model);
+      expect(model.trigger).not.toHaveBeenCalledWithInitial("reselected");
     });
   });
 
@@ -286,9 +286,9 @@ describe("selectable model", function(){
     beforeEach(function () {
 
       EventHandlingModel = Model.extend({
-        onSelect:   function (model, options) {},
-        onDeselect: function (model, options) {},
-        onReselect: function (model, options) {}
+        onSelect:   function () {},
+        onDeselect: function () {},
+        onReselect: function () {}
       });
 
       model = new EventHandlingModel();
