@@ -21,10 +21,10 @@ describe("multi-select collection: general", function(){
     beforeEach(function () {
 
       EventHandlingCollection = Collection.extend({
-        onSelectNone: function (model, options) {},
-        onSelectSome: function (model, options) {},
-        onSelectAll:  function (model, options) {},
-        onReselect:   function (model, options) {}
+        onSelectNone: function () {},
+        onSelectSome: function () {},
+        onSelectAll:  function () {},
+        onReselect:   function () {}
       });
 
       model = new Model();
@@ -37,23 +37,23 @@ describe("multi-select collection: general", function(){
     });
 
     it('calls the onSelectNone handler when triggering a select:none event', function () {
-      collection.trigger("select:none", collection, {foo: "bar"});
-      expect(collection.onSelectNone).toHaveBeenCalledWith(collection, {foo: "bar"});
+      collection.trigger("select:none", { selected: [], deselected: [model] }, collection, {foo: "bar"});
+      expect(collection.onSelectNone).toHaveBeenCalledWith({ selected: [], deselected: [model] }, collection, {foo: "bar"});
     });
 
     it('calls the onSelectSome handler when triggering a select:some event', function () {
-      collection.trigger("select:some", collection, {foo: "bar"});
-      expect(collection.onSelectSome).toHaveBeenCalledWith(collection, {foo: "bar"});
+      collection.trigger("select:some", { selected: [model], deselected: [] }, collection, {foo: "bar"});
+      expect(collection.onSelectSome).toHaveBeenCalledWith({ selected: [model], deselected: [] }, collection, {foo: "bar"});
     });
 
     it('calls the onSelectAll handler when triggering a select:all event', function () {
-      collection.trigger("select:all", collection, {foo: "bar"});
-      expect(collection.onSelectAll).toHaveBeenCalledWith(collection, {foo: "bar"});
+      collection.trigger("select:all", { selected: [model], deselected: [] }, collection, {foo: "bar"});
+      expect(collection.onSelectAll).toHaveBeenCalledWith({ selected: [model], deselected: [] }, collection, {foo: "bar"});
     });
 
     it('calls the onReselect handler when triggering a reselect:any event', function () {
-      collection.trigger("reselect:any", [model], {foo: "bar"});
-      expect(collection.onReselect).toHaveBeenCalledWith([model], {foo: "bar"});
+      collection.trigger("reselect:any", [model], collection, {foo: "bar"});
+      expect(collection.onReselect).toHaveBeenCalledWith([model], collection, {foo: "bar"});
     });
   });
 

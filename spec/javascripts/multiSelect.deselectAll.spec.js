@@ -32,7 +32,7 @@ describe("multi-select collection: deselectAll", function(){
       // NB This is a change in the spec. Up to version 0.2.0, it _did_ trigger
       // a select:none event. But an event triggered by a no-op didn't make
       // sense and was inconsistent with the behaviour elsewhere.
-      expect(collection.trigger).not.toHaveBeenCalledWithInitial("select:none", collection);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("select:none");
     });
 
     it("should have a selected count of 0", function(){
@@ -59,7 +59,7 @@ describe("multi-select collection: deselectAll", function(){
     });
 
     it("should not trigger a select:none event", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWithInitial("select:none", collection);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("select:none");
     });
 
     it("should have a selected count of 0", function(){
@@ -87,11 +87,11 @@ describe("multi-select collection: deselectAll", function(){
     });
     
     it("should trigger a select:none event", function(){
-      expect(collection.trigger).toHaveBeenCalledWithInitial("select:none", collection);
+      expect(collection.trigger).toHaveBeenCalledWithInitial("select:none", { selected: [], deselected: [m1] }, collection);
     });
 
     it("should not trigger a select:some event", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWithInitial("select:some", collection);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("select:some");
     });
 
     it("should not trigger a reselect:any event", function(){
@@ -123,7 +123,7 @@ describe("multi-select collection: deselectAll", function(){
     });
 
     it("should not trigger a select:none event", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWithInitial("select:none", collection);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("select:none");
     });
 
     it("should have a selected count of 0", function(){
@@ -151,7 +151,7 @@ describe("multi-select collection: deselectAll", function(){
     });
 
     it("should trigger a select:none event", function(){
-      expect(collection.trigger).toHaveBeenCalledWithInitial("select:none", collection);
+      expect(collection.trigger).toHaveBeenCalledWithInitial("select:none", { selected: [], deselected: [m1] }, collection);
     });
 
     it("should not trigger a reselect:any event", function(){
@@ -201,11 +201,11 @@ describe("multi-select collection: deselectAll", function(){
     });
     
     it("should trigger a select:none event", function(){
-      expect(collection.trigger).toHaveBeenCalledWithInitial("select:none", collection);
+      expect(collection.trigger).toHaveBeenCalledWithInitial("select:none", { selected: [], deselected: [m1, m2] }, collection);
     });
 
     it("should not trigger a select:some event", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWithInitial("select:some", collection);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("select:some");
     });
 
     it("should not trigger a reselect:any event", function(){
@@ -270,7 +270,7 @@ describe("multi-select collection: deselectAll", function(){
     });
     
     it("should trigger a select:none event", function(){
-      expect(collection.trigger).toHaveBeenCalledWithInitial("select:none", collection);
+      expect(collection.trigger).toHaveBeenCalledWithInitial("select:none", { selected: [], deselected: [m1, m2] }, collection);
     });
 
     it("should not trigger a reselect:any event", function(){
@@ -303,7 +303,7 @@ describe("multi-select collection: deselectAll", function(){
     });
 
     it("should not trigger a select:none event", function(){
-      expect(collection.trigger).not.toHaveBeenCalledWithInitial("select:none", collection);
+      expect(collection.trigger).not.toHaveBeenCalledWithInitial("select:none");
     });
 
     it("should have a selected count of 0", function(){
@@ -343,7 +343,7 @@ describe("multi-select collection: deselectAll", function(){
     });
 
     it("should trigger a select:none event and pass the options object along as the last parameter", function(){
-      expect(collection.trigger).toHaveBeenCalledWith("select:none", collection, {foo: "bar"});
+      expect(collection.trigger).toHaveBeenCalledWith("select:none", { selected: [], deselected: [m1, m2] }, collection, {foo: "bar"});
     });
   });
 

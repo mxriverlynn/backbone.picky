@@ -552,6 +552,15 @@ The events below are triggered by the MultiSelect based on changes in selection.
 Events can be prevented from firing when Backbone.Picky methods are called with
 the `silent` option, as in `myCol.select(myModel, {silent: true})`.
 
+MultiSelect events, with the exception of `reselect:any`, pass a "diff" hash to
+event handlers as the first parameter: `{ selected: [...], deselected: [...] }`.
+The `selected` array holds models which have been newly selected by the action
+triggering the event. Likewise, models in the `deselected` array have changed
+their status from selected to deselected.
+
+_(Note that up to version 0.2, the first parameter passed to event handlers had
+been the collection.)_
+
 Event handlers with standard names are invoked automatically. Standard names are
 `onSelectNone`, `onSelectSome`, `onSelectAll` and `onReselect`. If these methods
 exist on the collection, they are run without having to be wired up with the
@@ -562,21 +571,22 @@ options](#custom-options), below.
 
 #### "select:all"
 
-Triggered when all models have been selected. Provides the collection as the
-first parameter. Runs the `onSelectAll` event handler if the method exists on
-the collection.
+Triggered when all models have been selected. Provides the ["diff" hash]
+(#multiselect-events) as the first parameter, and the collection as the second.
+Runs the `onSelectAll` event handler if the method exists on the collection.
 
 #### "select:none"
 
-Triggered when all models have been deselected. Provides the collection as the
-first parameter. Runs the `onSelectNone` event handler if the method exists on
-the collection.
+Triggered when all models have been deselected. Provides the ["diff" hash]
+(#multiselect-events) as the first parameter, and the collection as the second.
+Runs the `onSelectNone` event handler if the method exists on the collection.
 
 #### "select:some"
 
 Triggered when at least 1 model is selected, but less than all models have
-been selected. Provides the collection as the first parameter. Runs the
-`onSelectSome` event handler if the method exists on the collection.
+been selected. Provides the ["diff" hash](#multiselect-events) as the first
+parameter, and the collection as the second. Runs the `onSelectSome` event
+handler if the method exists on the collection.
 
 #### "reselect:any"
 
@@ -709,6 +719,7 @@ see all of the specs for Backbone.Picky
 * Event handlers with standard names are invoked automatically if they exist (`onSelect`, `onDeselect`, `onReselect`, `onSelectNone`, `onSelectSome`, `onSelectAll`)
 * Options - including arbitrary, custom ones - are passed on to event handlers
 * The collection is also passed to event handlers (single-select collection)
+* A "diff" hash is passed to select:* event handlers (multi-select collection)
 * New events capture when models are re-selected: `reselected` (model), `reselect:one` (single-select collection), `reselect:any` (multi-select collection)
 * Multi-select events no longer fire when `selectAll`, `deselectAll` actions are a no-op (change in spec)
 * Added support for sharing models among collections
