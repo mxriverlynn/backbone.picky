@@ -92,11 +92,6 @@ not the model is selected, and raising events when selection changes.
 
 ### Basic Usage
 
-You can create selectable models
-
-- from a selectable model type, which extends your base model,
-- from an existing model instance.
-
 To create a selectable model type, apply the mixin in its `initialize` method.
 Assuming your base type is `Backbone.Model`, augment it with
 
@@ -110,13 +105,6 @@ SelectableModel = Backbone.Model.extend({
 
 Replace `Backbone.Model` in the example above with whatever base type you work
 with.
-
-If, on the other hand, you just want to create a selectable version of a
-specific model instance, make a new object based on that model.
-
-```js
-var selectable = new Backbone.Picky.Selectable(myModel);
-```
 
 ### Selectable Methods
 
@@ -234,14 +222,7 @@ another model will cause the first one to be deselected.
 
 ### Basic Usage
 
-You can create collections supporting exclusive selections
-
-- from a single-select collection type, which extends your base collection,
-- from an existing collection instance.
-
-#### Creating a single-select collection type
-
-To create a single-select collection type, apply the mixin in its `initialize`
+To create a single-select collection type, apply the mixin in the `initialize`
 method. Assuming your base type is `Backbone.Collection`, augment it with
 
 ```js
@@ -279,22 +260,6 @@ SingleCollection = Backbone.Collection.extend({
 
 See the [section on model sharing](#sharing-models-among-collections), below,
 for more.
-
-#### Creating a single-select collection from an existing collection instance
-
-If you just want to create a single-select version of a specific collection
-instance, make a new object based on that collection.
-
-```js
-var singleSelect = new Backbone.Picky.SingleSelect(myCollection);
-```
-
-To enable [model sharing among multiple collections](#sharing-models-among-collections),
-provide the models to the SingleSelect constructor:
-
-```js
-var singleSelect = new Backbone.Picky.SingleSelect(myCollection, myCollection.models);
-```
 
 ### SingleSelect Methods
 
@@ -405,19 +370,13 @@ Runs the `onReselect` event handler if the method exists on the collection.
 
 ## Picky.MultiSelect
 
-Creates multi-select capabilities for a `Backbone.Collection`, including
+Creates multi-select capabilities for a `Backbone.Collection`, allowing one or
+more models to be selected in a collection. Picky.MultiSelect also provides
 "select all", "select none" and "select some" features.
 
 ### Basic Usage
 
-You can create collections supporting multiple selections
-
-- from a multi-select collection type, which extends your base collection,
-- from an existing collection instance.
-
-#### Creating a multi-select collection type
-
-To create a multi-select collection type, apply the mixin in its `initialize`
+To create a multi-select collection type, apply the mixin in the `initialize`
 method. Assuming your base type is `Backbone.Collection`, augment it with
 
 ```js
@@ -455,22 +414,6 @@ MultiCollection = Backbone.Collection.extend({
 
 See the [section on model sharing](#sharing-models-among-collections), below,
 for more.
-
-#### Creating a multi-select collection from an existing collection instance
-
-If you just want to create a multi-select version of a specific collection
-instance, make a new object based on that collection.
-
-```js
-var multiSelect = new Backbone.Picky.MultiSelect(myCollection);
-```
-
-To enable [model sharing among multiple collections](#sharing-models-among-collections),
-provide the models to the MultiSelect constructor:
-
-```js
-var multiSelect = new Backbone.Picky.MultiSelect(myCollection, myCollection.models);
-```
 
 ### MultiSelect Methods
 
@@ -764,6 +707,7 @@ see all of the specs for Backbone.Picky
 ### pre v0.3.0
 
 * Added `applyTo` class methods for setup
+* Removed support for creating new Picky objects solely with the constructor
 * Event handlers with standard names are invoked automatically if they exist (`onSelect`, `onDeselect`, `onReselect`, `onSelectNone`, `onSelectSome`, `onSelectAll`)
 * Options - including arbitrary, custom ones - are passed on to event handlers
 * The collection is also passed to event handlers (single-select collection)
