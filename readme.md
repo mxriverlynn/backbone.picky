@@ -90,22 +90,32 @@ Your model for a Picky collection must extend `Selectable`.
 Creates selectable capabilities for a model, including tracking whether or
 not the model is selected, and raising events when selection changes.
 
-```js
-var selectable = new Backbone.Picky.Selectable(myModel);
-```
-
 ### Basic Usage
 
-Extend your model with the `Selectable` instance to make your model
-selectable directly.
+You can create selectable models
+
+- from a selectable model type, which extends your base model,
+- from an existing model instance.
+
+To create a selectable model type, apply the mixin in its `initialize` method.
+Assuming your base type is `Backbone.Model`, augment it with
 
 ```js
 SelectableModel = Backbone.Model.extend({
   initialize: function(){
-    var selectable = new Backbone.Picky.Selectable(this);
-    _.extend(this, selectable);
+    Backbone.Picky.Selectable.applyTo(this);
   }
 });
+```
+
+Replace `Backbone.Model` in the example above with whatever base type you work
+with.
+
+If, on the other hand, you just want to create a selectable version of a
+specific model instance, make a new object based on that model.
+
+```js
+var selectable = new Backbone.Picky.Selectable(myModel);
 ```
 
 ### Selectable Methods
@@ -222,20 +232,22 @@ Creates single-select capabilities for a `Backbone.Collection`, allowing
 a single model to be exclusively selected within the collection. Selecting
 another model will cause the first one to be deselected.
 
-```js
-var singleSelect = new Backbone.Picky.SingleSelect(myCollection) ;
-```
-
 ### Basic Usage
 
-Extend your collection with the `SingleSelect` instance to make your 
-collection support exclusive selections directly.
+You can create collections supporting exclusive selections
+
+- from a single-select collection type, which extends your base collection,
+- from an existing collection instance.
+
+#### Creating a single-select collection type
+
+To create a single-select collection type, apply the mixin in its `initialize`
+method. Assuming your base type is `Backbone.Collection`, augment it with
 
 ```js
 SelectableModel = Backbone.Model.extend({
   initialize: function(){
-    var selectable = new Backbone.Picky.Selectable(this);
-    _.extend(this, selectable);
+    Backbone.Picky.Selectable.applyTo(this);
   }
 });
 
@@ -243,11 +255,13 @@ SingleCollection = Backbone.Collection.extend({
   model: SelectableModel,
 
   initialize: function(){
-    var singleSelect = new Backbone.Picky.SingleSelect(this);
-    _.extend(this, singleSelect);
+    Backbone.Picky.SingleSelect.applyTo(this);
   }
 });
 ```
+
+Replace `Backbone.Collection` in the example above with whatever base type you
+work with.
 
 If you share models among multiple collections, Backbone.Picky will handle the
 interaction for you. To turn on model-sharing mode, you must provide the models
@@ -258,14 +272,29 @@ SingleCollection = Backbone.Collection.extend({
   model: SelectableModel,
 
   initialize: function(models){
-    var singleSelect = new Backbone.Picky.SingleSelect(this, models);
-    _.extend(this, singleSelect);
+    Backbone.Picky.SingleSelect.applyTo(this, models);
   }
 });
 ```
 
 See the [section on model sharing](#sharing-models-among-collections), below,
 for more.
+
+#### Creating a single-select collection from an existing collection instance
+
+If you just want to create a single-select version of a specific collection
+instance, make a new object based on that collection.
+
+```js
+var singleSelect = new Backbone.Picky.SingleSelect(myCollection);
+```
+
+To enable [model sharing among multiple collections](#sharing-models-among-collections),
+provide the models to the SingleSelect constructor:
+
+```js
+var singleSelect = new Backbone.Picky.SingleSelect(myCollection, myCollection.models);
+```
 
 ### SingleSelect Methods
 
@@ -377,35 +406,38 @@ Runs the `onReselect` event handler if the method exists on the collection.
 ## Picky.MultiSelect
 
 Creates multi-select capabilities for a `Backbone.Collection`, including
-select all, select none and select some features.
-
-```js
-var multiSelect = new Backbone.Picky.MultiSelect(myCollection) ;
-```
+"select all", "select none" and "select some" features.
 
 ### Basic Usage
 
-Extend your collection with the `MultiSelect` instance to make your
-collection support multiple selections directly.
+You can create collections supporting multiple selections
+
+- from a multi-select collection type, which extends your base collection,
+- from an existing collection instance.
+
+#### Creating a multi-select collection type
+
+To create a multi-select collection type, apply the mixin in its `initialize`
+method. Assuming your base type is `Backbone.Collection`, augment it with
 
 ```js
 SelectableModel = Backbone.Model.extend({
   initialize: function(){
-    var selectable = new Backbone.Picky.Selectable(this);
-    _.extend(this, selectable);
+    Backbone.Picky.Selectable.applyTo(this);
   }
 });
 
 MultiCollection = Backbone.Collection.extend({
-  
   model: SelectableModel,
 
   initialize: function(){
-    var multiSelect = new Backbone.Picky.MultiSelect(this);
-    _.extend(this, multiSelect);
+    Backbone.Picky.MultiSelect.applyTo(this);
   }
 });
 ```
+
+Replace `Backbone.Collection` in the example above with whatever base type you
+work with.
 
 If you share models among different collections, Backbone.Picky will handle the
 interaction for you. To turn on model-sharing mode, you must provide the models
@@ -416,14 +448,29 @@ MultiCollection = Backbone.Collection.extend({
   model: SelectableModel,
 
   initialize: function(models){
-    var multiSelect = new Backbone.Picky.MultiSelect(this, models);
-    _.extend(this, multiSelect);
+    Backbone.Picky.MultiSelect.applyTo(this, models);
   }
 });
 ```
 
 See the [section on model sharing](#sharing-models-among-collections), below,
 for more.
+
+#### Creating a multi-select collection from an existing collection instance
+
+If you just want to create a multi-select version of a specific collection
+instance, make a new object based on that collection.
+
+```js
+var multiSelect = new Backbone.Picky.MultiSelect(myCollection);
+```
+
+To enable [model sharing among multiple collections](#sharing-models-among-collections),
+provide the models to the MultiSelect constructor:
+
+```js
+var multiSelect = new Backbone.Picky.MultiSelect(myCollection, myCollection.models);
+```
 
 ### MultiSelect Methods
 
@@ -631,8 +678,8 @@ That said, there are a few things you must and mustn't do in order to make
 sharing work.
 
 - Models passed in during instantiation must be passed on to the mixin
-  constructor. Create the mixin with `new Backbone.Picky.SingleSelect(this, models)`
-  instead of `new Backbone.Picky.SingleSelect(this, models)` (without the `models`
+  constructor. Create the mixin with `Backbone.Picky.SingleSelect.applyTo(this, models)`
+  instead of `Backbone.Picky.SingleSelect.applyTo(this)` (without the `models`
   argument).
 
   Setting up the second parameter like this turns on the "model-sharing mode".
@@ -650,7 +697,7 @@ sharing work.
 
         var myCol = new MySelectableCollection([myModel]);
         // ... do stuff
-        myCol = new MySelectableCollection([myModel]);
+        myCol = new MySelectableCollection([myModel]);  // WRONG!
 
   Instead, call `close()` before you let an obsolete collection fade away into
   oblivion:
@@ -716,6 +763,7 @@ see all of the specs for Backbone.Picky
 
 ### pre v0.3.0
 
+* Added `applyTo` class methods for setup
 * Event handlers with standard names are invoked automatically if they exist (`onSelect`, `onDeselect`, `onReselect`, `onSelectNone`, `onSelectSome`, `onSelectAll`)
 * Options - including arbitrary, custom ones - are passed on to event handlers
 * The collection is also passed to event handlers (single-select collection)

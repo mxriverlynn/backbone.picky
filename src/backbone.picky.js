@@ -284,6 +284,40 @@ Backbone.Picky = (function (Backbone, _) {
     }
   });
 
+  // Applying the mixin: class methods for setup
+  Picky.Selectable.applyTo = function (hostObject) {
+    var selectable = new Backbone.Picky.Selectable(hostObject);
+    _.extend(hostObject, selectable);
+  };
+
+  Picky.SingleSelect.applyTo = function (hostObject, models) {
+    var singleSelect;
+
+    if (arguments.length < 2) {
+      // standard mode
+      singleSelect =  new Backbone.Picky.SingleSelect(hostObject);
+    } else {
+      // model-sharing mode
+      singleSelect =  new Backbone.Picky.SingleSelect(hostObject, models);
+    }
+
+    _.extend(hostObject, singleSelect);
+  };
+
+  Picky.MultiSelect.applyTo = function (hostObject, models) {
+    var multiSelect;
+
+    if (arguments.length < 2) {
+      // standard mode
+      multiSelect =  new Backbone.Picky.MultiSelect(hostObject);
+    } else {
+      // model-sharing mode
+      multiSelect =  new Backbone.Picky.MultiSelect(hostObject, models);
+    }
+
+    _.extend(hostObject, multiSelect);
+  };
+
   // Helper Methods
   // --------------
 

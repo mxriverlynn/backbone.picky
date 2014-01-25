@@ -1,8 +1,7 @@
 describe("multi-select collection: deselectAll", function(){
   var Model = Backbone.Model.extend({
     initialize: function(){
-      var selectable = new Backbone.Picky.Selectable(this);
-      _.extend(this, selectable);
+      Backbone.Picky.Selectable.applyTo(this);
     }
   });
   
@@ -10,8 +9,7 @@ describe("multi-select collection: deselectAll", function(){
     model: Model,
 
     initialize: function(){
-      var multiSelect = new Backbone.Picky.MultiSelect(this);
-      _.extend(this, multiSelect);
+      Backbone.Picky.MultiSelect.applyTo(this);
     }
   });
   

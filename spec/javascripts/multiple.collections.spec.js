@@ -2,8 +2,7 @@ describe("models shared between multiple collections", function(){
 
   var Model = Backbone.Model.extend({
     initialize: function(){
-      var selectable = new Backbone.Picky.Selectable(this);
-      _.extend(this, selectable);
+      Backbone.Picky.Selectable.applyTo(this);
     }
   });
 
@@ -11,8 +10,7 @@ describe("models shared between multiple collections", function(){
     model: Model,
 
     initialize: function(models){
-      var singleSelect = new Backbone.Picky.SingleSelect(this, models);
-      _.extend(this, singleSelect);
+      Backbone.Picky.SingleSelect.applyTo(this, models);
     }
   });
 
@@ -20,8 +18,7 @@ describe("models shared between multiple collections", function(){
     model: Model,
 
     initialize: function(models){
-      var multiSelect = new Backbone.Picky.MultiSelect(this, models);
-      _.extend(this, multiSelect);
+      Backbone.Picky.MultiSelect.applyTo(this, models);
     }
   });
 

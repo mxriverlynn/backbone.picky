@@ -1,8 +1,7 @@
 describe("multi-select collection: general", function(){
   var Model = Backbone.Model.extend({
     initialize: function(){
-      var selectable = new Backbone.Picky.Selectable(this);
-      _.extend(this, selectable);
+      Backbone.Picky.Selectable.applyTo(this);
     }
   });
   
@@ -10,8 +9,7 @@ describe("multi-select collection: general", function(){
     model: Model,
 
     initialize: function(){
-      var multiSelect = new Backbone.Picky.MultiSelect(this);
-      _.extend(this, multiSelect);
+      Backbone.Picky.MultiSelect.applyTo(this);
     }
   });
 
@@ -108,8 +106,7 @@ describe("multi-select collection: general", function(){
           model: Model,
 
           initialize: function(models){
-            var multiSelect = new Backbone.Picky.MultiSelect(this, models);
-            _.extend(this, multiSelect);
+            Backbone.Picky.MultiSelect.applyTo(this, models);
           }
         });
 
