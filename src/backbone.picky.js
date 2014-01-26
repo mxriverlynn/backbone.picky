@@ -47,9 +47,10 @@ Backbone.Picky = (function (Backbone, _) {
   // have multiple items selected, including `selectAll` and `selectNone`
   // capabilities.
 
-  Picky.MultiSelect = function (collection) {
+  Picky.MultiSelect = function (collection, maxSelectable) {
     this.collection = collection;
     this.selected = {};
+    this.maxSelectable = maxSelectable;
   };
 
   _.extend(Picky.MultiSelect.prototype, {
@@ -58,11 +59,15 @@ Backbone.Picky = (function (Backbone, _) {
     // model knows it's selected, and hold on to
     // the selected model.
     select: function (model) {
-      if (this.selected[model.cid]) { return; }
-
-      this.selected[model.cid] = model;
-      model.select();
-      calculateSelectedLength(this);
+      if (typeof this.maxSelectable  === "undefined" || this.maxSelectable > _.size(this.selected)) {
+        if (this.selected[model.cid]) { return; }
+  
+        this.selected[model.cid] = model;
+        model.select();
+        calculateSelectedLength(this);
+      else {
+        model.deselect();
+      }
     },
 
     // Deselect a specified model, make sure the
