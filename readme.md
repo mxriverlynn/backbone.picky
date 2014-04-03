@@ -389,14 +389,14 @@ Models that are not currently selected will be selected.
 The end result will be all models in the collection are
 selected.
 
-#### MultiSelect#deselectAll
+#### MultiSelect#selectNone
 
 Deselect all models in the collection.
 
 ```js
 myCol = new MultiCollection();
 
-myCol.deselectAll();
+myCol.selectNone();
 ```
 
 Models that are selected will be deselected. 
