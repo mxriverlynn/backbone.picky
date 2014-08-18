@@ -10,6 +10,10 @@ Backbone.Picky = (function (Backbone, _) {
 
   Picky.SingleSelect = function(collection){
     this.collection = collection;
+
+    this.collection.on('reset sync', function(){
+      delete this.selected;
+    });
   };
 
   _.extend(Picky.SingleSelect.prototype, {
@@ -50,6 +54,10 @@ Backbone.Picky = (function (Backbone, _) {
   Picky.MultiSelect = function (collection) {
     this.collection = collection;
     this.selected = {};
+
+    this.collection.on('reset sync', function(){
+      this.selected = {};
+    });
   };
 
   _.extend(Picky.MultiSelect.prototype, {
