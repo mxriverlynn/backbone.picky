@@ -2,6 +2,12 @@
 
 Selectable entities as mixins for Backbone.Model and Backbone.Collection!
 
+# DEPRECATION NOTICE
+
+This project is no longer maintained and no recommended for production use. 
+
+If you need selectable Backbone models, check out [Backbone.select](https://github.com/hashchange/backbone.select).
+
 ## Source Code And Downloads
 
 You can download the raw source code from the "src" 
