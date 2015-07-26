@@ -129,7 +129,7 @@ triggering a "select" event.
 ```js
 var myModel = new SelectableModel();
 
-myModel.on("select", function(){
+myModel.on("selected", function(){
   console.log("I'm selected!");
 });
 
@@ -163,7 +163,7 @@ the `select` or `deselect` method appropriately.
 ```js
 var myModel = new SelectableModel();
 
-myModel.on("select", function(){
+myModel.on("selected", function(){
   console.log("I'm selected!");
 });
 
