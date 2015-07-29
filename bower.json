@@ -1,0 +1,25 @@
+{
+  "name": "backbone.picky",
+  "version": "0.2.0",
+  "homepage": "https://github.com/derickbailey/backbone.picky",
+  "authors": [
+    "Derick Bailey <derickbailey@gmail.com>"
+  ],
+  "description": "selectable entities as mixins for Backbone.Model and Backbone.Collection",
+  "main": "lib/backbone.picky.js",
+  "keywords": [
+    "backbone"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "Gruntfile.js",
+    "node_modules",
+    "bower_components",
+    "test",
+    "public",
+    "reports",
+    "spec",
+    "src",
+    "tests"
+  ]
+}
