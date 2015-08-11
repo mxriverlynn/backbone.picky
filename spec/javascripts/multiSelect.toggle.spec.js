@@ -1,7 +1,7 @@
 describe("multi-select collection toggle", function(){
   var Model = Backbone.Model.extend({
     initialize: function(){
-      var selectable = new Backbone.Picky.Selectable();
+      var selectable = new Backbone.Picky.Selectable(this);
       _.extend(this, selectable);
     }
   });
@@ -10,7 +10,7 @@ describe("multi-select collection toggle", function(){
     model: Model,
 
     initialize: function(){
-      var multiSelect = new Backbone.Picky.MultiSelect();
+      var multiSelect = new Backbone.Picky.MultiSelect(this);
       _.extend(this, multiSelect);
     }
   });
@@ -42,6 +42,33 @@ describe("multi-select collection toggle", function(){
     });
   });
   
+  describe("when no models are selected, and toggling with options.silent enabled", function(){
+    var m1, m2, collection;
+
+    beforeEach(function(){
+      m1 = new Model();
+      m2 = new Model();
+
+      collection = new Collection([m1, m2]);
+      spyOn(collection, "trigger").andCallThrough();
+
+      collection.toggleSelectAll({silent: true});
+    });
+
+    it("should not trigger 'all' selected event", function(){
+      expect(collection.trigger).not.toHaveBeenCalledWith("select:all", collection);
+    });
+
+    it("should have a selected count of 2", function(){
+      expect(collection.selectedLength).toBe(2);
+    });
+
+    it("should have 2 models in the selected list", function(){
+      var size = _.size(collection.selected);
+      expect(size).toBe(2);
+    });
+  });
+
   describe("when some models are selected, and toggling", function(){
     var m1, m2, collection;
 
@@ -89,6 +116,36 @@ describe("multi-select collection toggle", function(){
     
     it("should trigger 'none' selected event", function(){
       expect(collection.trigger).toHaveBeenCalledWith("select:none", collection);
+    });
+
+    it("should have a selected count of 0", function(){
+      expect(collection.selectedLength).toBe(0);
+    });
+
+    it("should have 0 models in the selected list", function(){
+      var size = _.size(collection.selected);
+      expect(size).toBe(0);
+    });
+  });
+
+  describe("when all models are selected, and toggling with options.silent enabled", function(){
+    var m1, m2, collection;
+
+    beforeEach(function(){
+      m1 = new Model();
+      m2 = new Model();
+
+      collection = new Collection([m1, m2]);
+      m1.select();
+      m2.select();
+
+      spyOn(collection, "trigger").andCallThrough();
+
+      collection.toggleSelectAll({silent: true});
+    });
+
+    it("should not trigger 'none' selected event", function(){
+      expect(collection.trigger).not.toHaveBeenCalledWith("select:none", collection);
     });
 
     it("should have a selected count of 0", function(){
